@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جزيرة العلوم – مغامرة التاج الملكي 👑</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;font-family:'Tajawal',sans-serif;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+.screen{position:relative;aspect-ratio:3/2;width:min(100vw,calc(100vh * 3 / 2));height:min(100vh,calc(100vw * 2 / 3));
+  background-image:url("/island_bg.png");
+  background-size:100% 100%;background-position:center center;background-repeat:no-repeat;
+  overflow:hidden;animation:screenIn .8s ease-out;
+}
+@keyframes screenIn{from{opacity:0}to{opacity:1}}
+.anim-layer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.sky-shimmer{position:absolute;top:0;left:0;width:100%;height:35%;background:linear-gradient(180deg,rgba(100,160,255,.06) 0%,transparent 100%);animation:skyPulse 8s ease-in-out infinite}
+@keyframes skyPulse{0%,100%{opacity:.3}50%{opacity:.8}}
+.water-glow{position:absolute;bottom:0;left:0;width:100%;height:18%;background:linear-gradient(0deg,rgba(0,150,255,.12) 0%,transparent 100%);animation:waterGlow 3s ease-in-out infinite}
+@keyframes waterGlow{0%,100%{opacity:.5}50%{opacity:1}}
+.crown-glow{position:absolute;top:2%;right:18%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,220,50,.28) 0%,transparent 70%);animation:crownPulse 2.5s ease-in-out infinite}
+@keyframes crownPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}}
+.gem-glow{position:absolute;border-radius:50%;animation:gemPulse 2s ease-in-out infinite;pointer-events:none}
+.gem-glow.gem-btn{pointer-events:all}
+@keyframes gemPulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.45);opacity:1}}
+.sparkle{position:absolute;border-radius:50%;animation:sparkleFade 4s ease-in-out infinite;pointer-events:none}
+@keyframes sparkleFade{0%{transform:translateY(0) scale(0);opacity:0}30%{opacity:1;transform:translateY(-15px) scale(1)}100%{transform:translateY(-40px) scale(0);opacity:0}}
+.bird{position:absolute;font-size:1.2rem;animation:birdFly 12s linear infinite;opacity:.7;pointer-events:none;z-index:2}
+@keyframes birdFly{0%{transform:translateX(-80px) translateY(0)}50%{transform:translateX(50vw) translateY(-30px)}100%{transform:translateX(105vw) translateY(10px)}}
+.butterfly{position:absolute;animation:butterflyFloat 6s ease-in-out infinite;pointer-events:none;z-index:2;font-size:1.4rem}
+@keyframes butterflyFloat{0%{transform:translate(0,0) rotate(-5deg)}25%{transform:translate(20px,-20px) rotate(5deg)}50%{transform:translate(-10px,-35px) rotate(-3deg)}75%{transform:translate(15px,-15px) rotate(4deg)}100%{transform:translate(0,0) rotate(-5deg)}}
+.gem-btn{position:absolute;border-radius:50%;cursor:pointer;z-index:15;background:transparent;border:none;transition:transform .2s ease,filter .2s ease}
+.gem-btn:hover{transform:scale(1.35) !important;filter:brightness(1.5)}
+.gem-btn:active{transform:scale(1.15) !important}
+.btn-main{
+  position:absolute;bottom:18%;left:50%;transform:translateX(-50%);z-index:20;
+  background:linear-gradient(135deg,#1a3a8f,#2855c8,#1a3a8f);
+  border:3px solid #ffd700;border-radius:50px;
+  padding:.85rem 4rem;font-family:'Tajawal',sans-serif;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:900;color:#ffd700;cursor:pointer;
+  text-shadow:0 0 10px rgba(255,215,0,.6);
+  box-shadow:0 0 20px rgba(255,215,0,.4),0 0 40px rgba(0,80,200,.3),inset 0 1px 0 rgba(255,255,255,.2);
+  letter-spacing:.5px;white-space:nowrap;animation:btnFloat 3s ease-in-out infinite;transition:box-shadow .2s,transform .15s;
+}
+.btn-main:hover{box-shadow:0 0 35px rgba(255,215,0,.7),0 0 60px rgba(0,80,200,.5);transform:translateX(-50%) scale(1.04)}
+.btn-main:active{transform:translateX(-50%) scale(.97)}
+@keyframes btnFloat{0%,100%{box-shadow:0 0 20px rgba(255,215,0,.4),0 0 40px rgba(0,80,200,.3)}50%{box-shadow:0 0 30px rgba(255,215,0,.65),0 0 60px rgba(0,80,200,.45)}}
+.btn-row{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:1rem;align-items:center;flex-wrap:nowrap}
+.btn-sec{background:rgba(15,25,80,.75);border:2px solid rgba(255,215,0,.7);border-radius:40px;padding:.55rem 1.4rem;font-family:'Tajawal',sans-serif;font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:700;color:#ffe080;cursor:pointer;backdrop-filter:blur(8px);white-space:nowrap;transition:all .2s ease;box-shadow:0 0 12px rgba(255,215,0,.2)}
+.btn-sec:hover{background:rgba(255,215,0,.15);border-color:#ffd700;color:#fff;box-shadow:0 0 20px rgba(255,215,0,.4);transform:translateY(-3px)}
+.btn-sec:active{transform:translateY(0) scale(.97)}
+.btn-sound{position:absolute;top:2%;left:2%;z-index:30;background:rgba(10,20,70,.8);border:2px solid rgba(255,215,0,.6);border-radius:50%;width:48px;height:48px;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(6px)}
+.btn-sound:hover{background:rgba(255,215,0,.2);transform:scale(1.1)}
+.features-list{position:absolute;top:38%;right:1.5%;z-index:15;display:flex;flex-direction:column;gap:.5rem}
+.feat-item{background:rgba(10,20,70,.65);border:1px solid rgba(255,215,0,.35);border-radius:8px;padding:.3rem .7rem;font-family:'Tajawal',sans-serif;font-size:clamp(.7rem,1.2vw,.9rem);color:#ffe080;font-weight:700;backdrop-filter:blur(4px);white-space:nowrap}
+.popup-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,60,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+.popup-overlay.active{display:flex}
+.popup-box{background:linear-gradient(135deg,#0a1a5f,#0d2870);border:2px solid #ffd700;border-radius:20px;padding:2rem 2.5rem;max-width:420px;width:90%;text-align:center;box-shadow:0 0 40px rgba(255,215,0,.3),0 20px 60px rgba(0,0,0,.5);font-family:'Tajawal',sans-serif;animation:popIn .3s ease-out}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.popup-icon{font-size:2.5rem;margin-bottom:.5rem}
+.popup-title{color:#ffd700;font-size:1.4rem;font-weight:900;margin-bottom:.5rem}
+.popup-body{color:#e0e8ff;font-size:1rem;line-height:1.8;margin-bottom:1.2rem}
+.popup-close{background:linear-gradient(135deg,#1a3a8f,#2855c8);border:2px solid #ffd700;border-radius:30px;padding:.6rem 2.5rem;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;color:#ffd700;cursor:pointer;transition:all .2s}
+.popup-close:hover{background:linear-gradient(135deg,#2855c8,#3a6add);box-shadow:0 0 15px rgba(255,215,0,.4)}
+@media(max-width:768px){.btn-main{padding:.7rem 2.5rem;font-size:1.1rem}.btn-row{gap:.5rem}.btn-sec{padding:.45rem .9rem;font-size:.8rem}.features-list{display:none}}
+</style>
+</head>
+<body>
+<div class="screen" id="mainScreen">
+  <div class="anim-layer">
+    <div class="sky-shimmer"></div>
+    <div class="water-glow"></div>
+    <div class="crown-glow"></div>
+  </div>
+
+  <!-- الجواهر القابلة للنقر — إحداثيات مضبوطة بصرياً -->
+  <div class="gem-glow gem-btn" style="top:47%;left:33%;width:52px;height:52px;background:radial-gradient(circle,rgba(0,255,120,.5),transparent 65%);animation-delay:0s" onclick="enterPalace(1)" title="قلعة المعرفة"></div>
+  <div class="gem-glow gem-btn" style="top:41%;left:53.7%;width:54px;height:54px;background:radial-gradient(circle,rgba(50,150,255,.5),transparent 65%);animation-delay:.7s" onclick="enterPalace(2)" title="قلعة الفهم"></div>
+  <div class="gem-glow gem-btn" style="top:35%;left:69%;width:50px;height:50px;background:radial-gradient(circle,rgba(255,210,0,.5),transparent 65%);animation-delay:1.4s" onclick="enterPalace(3)" title="قلعة التطبيق"></div>
+  <div class="gem-glow gem-btn" style="top:29%;left:83.5%;width:46px;height:46px;background:radial-gradient(circle,rgba(255,50,60,.5),transparent 65%);animation-delay:2.1s" onclick="enterPalace(4)" title="قلعة التحليل"></div>
+  <div class="gem-glow gem-btn" style="top:3.8%;left:71%;width:60px;height:60px;background:radial-gradient(circle,rgba(255,215,0,.55),transparent 65%);animation-delay:0s;animation-duration:1.8s" onclick="enterPalace(5)" title="تحدي النهاية"></div>
+  <button class="btn-sound" id="soundBtn" onclick="toggleSound()">🔇</button>
+
+  <button class="btn-main" onclick="startAdventure()">🚀 ابدأ المغامرة ⏳</button>
+  <div class="btn-row">
+    <button class="btn-sec" onclick="showCertificates()">📜 الشهادات</button>
+    <button class="btn-sec" onclick="showLeaderboard()">🏆 سجل الأبطال</button>
+    <button class="btn-sec" onclick="showHowToPlay()">🗺️ كيف ألعب؟</button>
+  </div>
+</div>
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="popup-icon" id="popupIcon"></div>
+    <div class="popup-title" id="popupTitle"></div>
+    <div class="popup-body" id="popupBody"></div>
+    <button class="popup-close" onclick="closePopup()">حسناً 👑</button>
+  </div>
+</div>
+<script>
+let soundOn=false;
+const enc=[
+  "أحسنتِ! كل خطوة تقربكِ من التاج الملكي",
+  "استمري، أنتِ قادرة على اكتشاف أسرار الجزيرة",
+  "بقي القليل للوصول إلى القلعة الملكية",
+  "رائع! الجواهر تنتظركِ"
+];
+function toggleSound(){
+  soundOn=!soundOn;
+  document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
+  if(soundOn){speak("مرحباً بكِ في جزيرة العلوم. المغامرة تبدأ الآن");}
+  else{speechSynthesis.cancel();}
+}
+function speak(t){
+  if(!soundOn)return;
+  speechSynthesis.cancel();
+  const m=new SpeechSynthesisUtterance(t);
+  m.lang='ar-AE';m.rate=0.9;
+  speechSynthesis.speak(m);
+}
+function showPopup(icon,title,body){
+  document.getElementById('popupIcon').textContent=icon;
+  document.getElementById('popupTitle').textContent=title;
+  document.getElementById('popupBody').innerHTML=body;
+  document.getElementById('popup').classList.add('active');
+}
+function closePopup(){document.getElementById('popup').classList.remove('active');}
+function startAdventure(){
+  speak(enc[0]);
+  // تحقق هل الطالبة سجّلت مسبقاً
+  let data = null;
+  try{ data = JSON.parse(localStorage.getItem('scienceIslandStudent')); }catch(e){}
+  if(data && data.name){
+    // مسجّلة — اذهب للخريطة مباشرة
+    location.href='map.html';
+  } else {
+    // غير مسجّلة — اذهب للتسجيل
+    location.href='register.html';
+  }
+}
+function enterPalace(n){
+  const p=[null,
+    {name:'قلعة المعرفة',gem:'🟢',level:'التذكّر',c:'#00cc66'},
+    {name:'قلعة الفهم',gem:'🔵',level:'الفهم',c:'#3399ff'},
+    {name:'قلعة التطبيق',gem:'🟡',level:'التطبيق',c:'#ffcc00'},
+    {name:'قلعة التحليل',gem:'🔴',level:'التحليل',c:'#ff3355'},
+    {name:'القلعة الملكية',gem:'👑',level:'تحدي النهاية',c:'#ffd700'}
+  ][n];
+  speak('أهلاً بكِ في '+p.name);
+  showPopup(p.gem,p.name,'<strong style="color:'+p.c+'">'+p.level+'</strong><br><br>أجيبي على الأسئلة واجمعي الجوهرة!<br><br><em style="color:rgba(255,255,255,.6)">سيُفتح بعد اكتمال التسجيل</em>');
+}
+function showCertificates(){showPopup('📜','الشهادات الملكية','شهاداتكِ ستظهر هنا بعد إكمال المغامرة<br><strong style="color:#ffd700">اجمعي كل الجواهر للحصول على<br>شهادة ملكة جزيرة العلوم 👑</strong>');}
+function showLeaderboard(){showPopup('🏆','سجل الأبطال','أفضل الطالبات في جزيرة العلوم<br>ستظهر هنا بعد بدء المغامرات<br><strong style="color:#ffd700">كوني الأولى! 🌟</strong>');}
+function showHowToPlay(){showPopup('🗺️','كيف تلعبين؟','1️⃣ سجّلي اسمكِ والشعبة<br>2️⃣ ابدئي من قصر المعرفة 💚<br>3️⃣ أجيبي على الأسئلة واجمعي الجواهر<br>4️⃣ اصعدي للقلعة الملكية 🏰<br>5️⃣ توّجي نفسكِ ملكة الجزيرة 👑');}
+function addSparkle(){
+  const gems=[{top:'52%',left:'37%'},{top:'44%',left:'49%'},{top:'36%',left:'61%'},{top:'28%',left:'71%'}];
+  const colors=['#00ffcc','#ffd700','#ff4499','#88ffcc','#ffaa00'];
+  const s=document.createElement('div');
+  s.className='sparkle';
+  const g=gems[Math.floor(Math.random()*gems.length)];
+  const c=colors[Math.floor(Math.random()*colors.length)];
+  const ox=((Math.random()-.5)*4)+'%';
+  const oy=((Math.random()-.5)*4)+'%';
+  s.style.cssText='top:calc('+g.top+' + '+oy+');left:calc('+g.left+' + '+ox+');width:5px;height:5px;background:'+c+';animation-duration:'+(2+Math.random()*2)+'s;animation-delay:0s';
+  document.querySelector('.anim-layer').appendChild(s);
+  setTimeout(()=>s.remove(),4000);
+}
+setInterval(addSparkle,600);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
+</script>
+</body>
+</html>

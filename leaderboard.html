@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🏆 سجل الأبطال</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
+  background:linear-gradient(160deg,#040e2e,#081840,#040e2e);color:#fff;overflow-x:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem;
+  padding:.5rem 1rem;background:rgba(4,8,40,.92);
+  border-bottom:1.5px solid rgba(255,215,0,.3);backdrop-filter:blur(10px)}
+.tbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.35);
+  border-radius:18px;padding:.27rem .8rem;font-family:"Tajawal",sans-serif;
+  font-size:.75rem;font-weight:700;color:rgba(200,220,255,.85);cursor:pointer;transition:all .2s}
+.tbtn:hover{background:rgba(255,215,0,.12);color:#ffd700}
+.tbtn.del{border-color:rgba(255,80,80,.4);color:rgba(255,130,130,.7)}
+.tbtn.del:hover{background:rgba(255,50,50,.15);color:#ff8888}
+.wrap{max-width:760px;margin:0 auto;padding:1.4rem 1rem 3rem}
+.lbh{text-align:center;margin-bottom:1.3rem}
+.lbi{font-size:2.4rem;display:block;animation:trophyGlow 2.5s ease-in-out infinite;
+  filter:drop-shadow(0 0 8px rgba(255,215,0,.6))}
+@keyframes trophyGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,215,0,.5))}50%{filter:drop-shadow(0 0 20px rgba(255,215,0,.9))}}
+.lbt{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700;
+  text-shadow:0 0 12px rgba(255,215,0,.4);margin-top:.2rem}
+.lbs{color:rgba(160,200,255,.6);font-size:.82rem;margin-top:.12rem}
+table{width:100%;border-collapse:collapse;margin-top:.4rem}
+th{background:rgba(255,215,0,.1);color:#ffd700;font-size:.8rem;font-weight:800;
+  padding:.58rem .65rem;text-align:center;border-bottom:1.5px solid rgba(255,215,0,.22)}
+td{padding:.58rem .65rem;text-align:center;border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:.83rem;color:#ddeeff;vertical-align:middle}
+tr:hover td{background:rgba(255,215,0,.04)}
+tr:nth-child(1) td{color:#ffd700;font-weight:800;font-size:.9rem}
+tr:nth-child(2) td{color:#c0c0c0;font-weight:700}
+tr:nth-child(3) td{color:#cd7f32;font-weight:700}
+.rb{display:inline-flex;align-items:center;justify-content:center;
+  width:27px;height:27px;border-radius:50%;font-size:.78rem;font-weight:900}
+.r1{background:rgba(255,215,0,.18);border:1.5px solid #ffd700;color:#ffd700}
+.r2{background:rgba(192,192,192,.18);border:1.5px solid #c0c0c0;color:#c0c0c0}
+.r3{background:rgba(205,127,50,.18);border:1.5px solid #cd7f32;color:#cd7f32}
+.rn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:rgba(200,220,255,.6)}
+.gc{font-size:.95rem;letter-spacing:.08rem}
+.pts{color:#ffd700;font-weight:800}
+.empty{text-align:center;padding:3rem 1rem;color:rgba(160,200,255,.45)}
+.ei{font-size:3rem;display:block;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="tbtn" onclick="location.href='map.html'">↩ الخريطة</button>
+  <span style="font-size:.82rem;color:#ffd700;font-weight:700">🏆 سجل الأبطال</span>
+  <button class="tbtn del" onclick="clearLB()">🗑️ مسح</button>
+</div>
+<div class="wrap">
+  <div class="lbh">
+    <span class="lbi">🏆</span>
+    <div class="lbt">سجل أبطال جزيرة العلوم</div>
+    <div class="lbs">أفضل الطالبات — مرتبات تنازلياً حسب النقاط</div>
+  </div>
+  <div id="lbContent"></div>
+</div>
+<script>
+const gems=(n)=>["","💚","💚💙","💚💙💛","💚💙💛🔴"][Math.min(n,4)]||"💚💙💛🔴";
+const rc=(i)=>i===0?"r1":i===1?"r2":i===2?"r3":"rn";
+const re=(i)=>i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+function load(){
+  let lb=[];try{lb=JSON.parse(localStorage.getItem("scienceIslandLeaderboard")||"[]");}catch(e){}
+  const w=document.getElementById("lbContent");
+  if(!lb.length){
+    w.innerHTML=`<div class="empty"><span class="ei">🏝️</span>لا يوجد أبطال بعد!<br><small style="font-size:.8rem;color:rgba(160,200,255,.35);margin-top:.3rem;display:block">أكملي المغامرة لتظهري هنا</small></div>`;
+    return;
+  }
+  const rows=lb.map((e,i)=>`<tr>
+    <td><span class="rb ${rc(i)}">${i+1}${re(i)}</span></td>
+    <td style="text-align:right;font-weight:700">${e.title||""} ${e.name}</td>
+    <td>${e.cls||"—"}</td>
+    <td class="gc">${gems(e.gems)} <span style="font-size:.68rem;color:rgba(200,220,255,.5)">(${e.gems}/4)</span></td>
+    <td class="pts">${(e.points||0).toLocaleString("ar-EG")}</td>
+    <td style="font-size:.7rem;color:rgba(160,200,255,.5)">${e.date||"—"}</td>
+  </tr>`).join("");
+  w.innerHTML=`<table>
+    <thead><tr><th>#</th><th>الطالبة</th><th>الشعبة</th><th>الجواهر</th><th>النقاط</th><th>التاريخ</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+function clearLB(){
+  if(confirm("مسح سجل الأبطال؟")){localStorage.removeItem("scienceIslandLeaderboard");load();}
+}
+load();
+</script>
+</body>
+</html>

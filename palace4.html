@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>❤️ قصر التحليل – جزيرة العلوم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
+  background:linear-gradient(160deg,#040e2e 0%,#081840 50%,#040e2e 100%);
+  color:#fff;overflow-x:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem;
+  padding:.5rem 1rem;background:rgba(4,8,40,.92);
+  border-bottom:1.5px solid rgba(255,215,0,.3);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:50}
+.tb-name{font-size:.78rem;font-weight:700;color:#ffd700;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-ttl{font-size:.78rem;font-weight:700;color:rgba(200,220,255,.8)}
+.tb-gems{font-size:.78rem;color:rgba(180,210,255,.65)}
+.wrap{max-width:700px;margin:0 auto;padding:1.2rem 1rem 4rem}
+.ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
+.pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
+  animation:iconPulse 2.5s ease-in-out infinite;
+  filter:drop-shadow(0 0 8px #ff6677)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #ff6677)}50%{filter:drop-shadow(0 0 18px #ff6677)}}
+.ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700;text-shadow:0 0 14px rgba(255,215,0,.4)}
+.psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
+.progw{margin-bottom:1rem}
+.proginfo{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(180,210,255,.6);margin-bottom:.28rem}
+.progtrack{height:9px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;border:1px solid rgba(255,215,0,.15)}
+.progfill{height:100%;background:linear-gradient(90deg,#ee2244,#ff6677);border-radius:5px;transition:width .5s;box-shadow:0 0 7px #ff6677}
+.qcard{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.28);
+  border-radius:16px;padding:1.3rem 1.2rem;margin-bottom:.9rem;
+  animation:cardIn .38s ease-out}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.qnum{color:rgba(255,215,0,.62);font-size:.74rem;font-weight:700;margin-bottom:.4rem}
+.qtext{font-size:clamp(.94rem,2.5vw,1.15rem);font-weight:700;line-height:1.65;color:#e8f0ff;margin-bottom:.95rem}
+.opts{display:grid;gap:.58rem}
+.opt{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.2);
+  border-radius:11px;padding:.65rem .9rem;
+  font-family:"Tajawal",sans-serif;font-size:.93rem;font-weight:600;
+  color:#ddeeff;text-align:right;cursor:pointer;
+  transition:all .17s;display:flex;align-items:center;gap:.52rem}
+.opt:hover:not(:disabled){background:rgba(255,215,0,.1);border-color:#ffd700;color:#fff;transform:translateX(-2px)}
+.opt.correct{background:rgba(0,200,80,.16);border-color:#00dd66;color:#aaffcc;box-shadow:0 0 12px rgba(0,200,80,.3)}
+.opt.wrong{background:rgba(210,40,50,.14);border-color:#ff4455;color:#ffaaaa}
+.opt:disabled{cursor:default;transform:none}
+.optl{width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.74rem;font-weight:900;color:#ffd700}
+.res{text-align:center;font-size:.98rem;font-weight:700;padding:.4rem;margin-top:.65rem;border-radius:7px;display:none}
+.res.ok{color:#00ee77;display:block}
+.res.no{color:#ff6677;display:block}
+.btnnext{width:100%;margin-top:.85rem;
+  background:linear-gradient(135deg,#1a3a8f,#2855c8);
+  border:2px solid #ffd700;border-radius:45px;padding:.68rem;
+  font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:800;
+  color:#ffd700;cursor:pointer;transition:all .2s;display:none}
+.btnnext.show{display:block}
+.btnnext:hover{box-shadow:0 0 16px rgba(255,215,0,.38);transform:scale(1.02)}
+/* ── شاشة النهاية ── */
+.endscreen{display:none;text-align:center;padding:1.8rem .8rem;animation:cardIn .5s}
+.endscreen.show{display:block}
+.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #ff6677)}
+@keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
+.endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;
+  text-shadow:0 0 18px rgba(255,215,0,.5);margin-bottom:.35rem}
+.stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
+.enddetail{color:rgba(175,210,255,.8);font-size:.92rem;line-height:1.7;margin-bottom:1rem}
+.passmsg{font-size:1rem;font-weight:700;color:#ffd700;margin:.3rem 0 .8rem}
+.btnmap{display:inline-block;margin-top:.8rem;
+  background:linear-gradient(135deg,#c8960a,#ffd700);
+  border:none;border-radius:45px;padding:.78rem 2.2rem;
+  font-family:"Tajawal",sans-serif;font-size:1rem;font-weight:900;
+  color:#1a0800;cursor:pointer;
+  box-shadow:0 0 18px rgba(255,215,0,.38);transition:all .2s}
+.btnmap:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(255,215,0,.52)}
+/* ── شاشة الفشل ── */
+.failscreen{display:none;text-align:center;padding:1.8rem .8rem;animation:cardIn .4s}
+.failscreen.show{display:block}
+.fail-icon{font-size:3rem;display:block;margin-bottom:.4rem}
+.fail-title{color:#ff8888;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
+.fail-msg{color:rgba(200,180,180,.8);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
+/* احتفال */
+.cl{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="cl" id="cl"></div>
+<div class="topbar">
+  <span class="tb-name" id="tbName">—</span>
+  <span class="tb-ttl">❤️ قصر التحليل</span>
+  <span class="tb-gems">💎 <span id="tbGems">0</span>/4</span>
+  <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
+</div>
+<div class="wrap">
+  <div class="ph">
+    <span class="pi">❤️</span>
+    <div class="ptitle">قصر التحليل</div>
+    <div class="psub">مستوى: التحليل · أجيبي على الأسئلة واجمعي الجوهرة!</div>
+  </div>
+  <div class="progw">
+    <div class="proginfo">
+      <span id="progLbl">السؤال 1 من 10</span>
+      <span id="progPts">النقاط: 0</span>
+    </div>
+    <div class="progtrack"><div class="progfill" id="pf" style="width:0%"></div></div>
+  </div>
+  <div id="qSection">
+    <div class="qcard" id="qCard">
+      <div class="qnum"  id="qNum">السؤال 1</div>
+      <div class="qtext" id="qText"></div>
+      <div class="opts"  id="opts"></div>
+      <div class="res"   id="res"></div>
+    </div>
+    <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
+  </div>
+  <div class="endscreen" id="endScreen">
+    <span class="endgem">🔴</span>
+    <div class="endtitle">أحسنتِ! جمعتِ جوهرة التحليل الحمراء!</div>
+    <div class="stars"   id="starsRow"></div>
+    <div class="enddetail" id="endDetail"></div>
+    <button class="btnmap" onclick="location.href='map.html'">🗺️ العودة للخريطة</button>
+  </div>
+  <div class="failscreen" id="failScreen">
+    <span class="fail-icon">💪</span>
+    <div class="fail-title">قاربتِ على النجاح!</div>
+    <div class="fail-msg" id="failMsg"></div>
+    <button class="btnmap" onclick="restart()" style="background:linear-gradient(135deg,#1a3a8f,#2855c8);color:#ffd700;box-shadow:none">🔄 إعادة المحاولة</button>
+    <br>
+    <button class="btnmap" onclick="location.href='map.html'" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,215,0,.3);color:rgba(200,215,255,.7);font-size:.85rem;padding:.5rem 1.5rem;margin-top:.5rem">↩ الخريطة</button>
+  </div>
+</div>
+<script>
+const QS=[{"text": "كيف يؤثر الاستهلاك المتزايد للموارد الطبيعية؟", "opts": ["لا يؤثر في الموارد", "يؤدي إلى تناقص بعض الموارد وتغير توزيعها", "يزيد كمية الموارد دائماً", "يزيد كمية المياه العذبة"], "ans": 1, "bloom": "التحليل"}, {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "ans": 0, "bloom": "التحليل"}, {"text": "إذا وصلت تراكيز المادة على جانبي الغشاء إلى التساوي، فإن الجزيئات:", "opts": ["تتوقف عن الحركة.", "تستمر في الحركة في الاتجاهين.", "تتحرك في اتجاه واحد فقط.", "تتحول إلى طاقة."], "ans": 1, "bloom": "التحليل"}, {"text": "لماذا تختلف الموارد الطبيعية من منطقة إلى أخرى؟", "opts": ["لأن الموارد موزعة بالتساوي", "بسبب العوامل الطبيعية واستهلاك البشر", "بسبب دوران الأرض حول الشمس", "بسبب أطوار القمر"], "ans": 1, "bloom": "التحليل"}, {"text": "ما سبب ظهور أطوار القمر المختلفة؟", "opts": ["دوران الشمس حول القمر", "تغير شكل الجزء المضيء الذي نراه من القمر", "وقوع ظل الأرض على القمر", "اختلاف سرعة دوران القمر"], "ans": 1, "bloom": "التحليل"}, {"text": "ما السبب الرئيس لتعاقب الفصول الأربعة على الأرض؟", "opts": ["دوران الأرض حول محورها", "دوران القمر حول الأرض", "ميل محور الأرض أثناء دورانها حول الشمس", "تغير المسافة بين الأرض والشمس"], "ans": 2, "bloom": "التحليل"}, {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "ans": 1, "bloom": "التحليل"}, {"text": "أي العبارات الآتية تفسر اختلاف أشكال الخلايا المتخصصة؟", "opts": ["جميع الخلايا لها الوظيفة نفسها.", "يختلف شكل الخلية ليتناسب مع وظيفتها.", "تختلف أشكال الخلايا بسبب عمر الكائن الحي.", "لا توجد علاقة بين الشكل والوظيفة."], "ans": 1, "bloom": "التحليل"}, {"text": "ما العلاقة بين البناء الضوئي والتنفس الخلوي؟", "opts": ["كلتاهما تحدثان في الميتوكوندريا.", "نواتج البناء الضوئي تستخدم في التنفس الخلوي.", "كلتاهما تحتاجان إلى الأكسجين.", "لا توجد علاقة بينهما."], "ans": 1, "bloom": "التحليل"}, {"text": "أي العبارات الآتية ليست من مزايا الوقود الأحفوري؟", "opts": ["سهل النقل", "رخيص نسبياً", "ملوث للبيئة", "سهل تحويله لأشكال أخرى من الطاقة"], "ans": 2, "bloom": "التحليل"}];
+const PID=4;
+const PASS=6;
+let cur=0,score=0,done=false;
+let student=null,prog={gems:[],level:1,points:0};
+try{
+  student=JSON.parse(localStorage.getItem("scienceIslandStudent")||"null");
+  const pr=JSON.parse(localStorage.getItem("scienceIslandProgress")||"{}");
+  if(Array.isArray(pr.gems))prog.gems=pr.gems;
+  if(pr.level)prog.level=pr.level;
+  if(pr.points)prog.points=pr.points;
+}catch(e){}
+if(student&&student.name){
+  const lbl=student.titleLabel||(student.title==="princess"?"الأميرة":"الأمير");
+  document.getElementById("tbName").textContent=lbl+" "+student.name;
+}
+document.getElementById("tbGems").textContent=prog.gems.length;
+const TOTAL=QS.length;
+function showQ(){
+  if(cur>=TOTAL){endPalace();return;}
+  const q=QS[cur];done=false;
+  document.getElementById("qNum").textContent="السؤال "+(cur+1)+" من "+TOTAL;
+  document.getElementById("qText").textContent=q.text;
+  document.getElementById("progLbl").textContent="السؤال "+(cur+1)+" من "+TOTAL;
+  document.getElementById("progPts").textContent="النقاط: "+score;
+  document.getElementById("pf").style.width=(cur/TOTAL*100)+"%";
+  document.getElementById("res").className="res";document.getElementById("res").textContent="";
+  document.getElementById("btnNext").classList.remove("show");
+  const ow=document.getElementById("opts");ow.innerHTML="";
+  const L=["أ","ب","ج","د"];
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement("button");b.className="opt";
+    b.innerHTML=`<span class="optl">${L[i]}</span>${opt}`;
+    b.onclick=()=>check(i,b,q);
+    ow.appendChild(b);
+  });
+  const c=document.getElementById("qCard");c.style.animation="none";
+  requestAnimationFrame(()=>{c.style.animation="cardIn .38s ease-out";});
+}
+function check(idx,btn,q){
+  if(done)return;done=true;
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  const r=document.getElementById("res");
+  if(idx===q.ans){
+    btn.classList.add("correct");score++;
+    r.textContent="✅ إجابة صحيحة! +10 نقطة";r.className="res ok";
+    speak("أحسنتِ! إجابة صحيحة.");
+  }else{
+    btn.classList.add("wrong");
+    document.querySelectorAll(".opt")[q.ans].classList.add("correct");
+    r.textContent="❌ الإجابة الصحيحة: "+q.opts[q.ans];r.className="res no";
+    speak("الإجابة الصحيحة هي "+["أ","ب","ج","د"][q.ans]);
+  }
+  const nb=document.getElementById("btnNext");nb.classList.add("show");
+  nb.textContent=(cur<TOTAL-1)?"التالي ←":"إنهاء القصر 🏁";
+}
+function nextQ(){cur++;showQ();}
+function endPalace(){
+  document.getElementById("qSection").style.display="none";
+  document.getElementById("pf").style.width="100%";
+  if(score>=PASS){
+    document.getElementById("endScreen").classList.add("show");
+    const s=score>=9?"⭐⭐⭐":score>=7?"⭐⭐":"⭐";
+    document.getElementById("starsRow").textContent=s;
+    document.getElementById("endDetail").innerHTML=
+      `أجبتِ بشكل صحيح على <strong style="color:#ffd700">${score} / ${TOTAL}</strong><br>حصلتِ على ${score*10} نقطة 🏆`;
+    confetti();speak("تهانينا! لقد حصلتِ على الجوهرة. أحسنتِ يا بطلتنا.");
+    save();
+  }else{
+    document.getElementById("failScreen").classList.add("show");
+    document.getElementById("failMsg").innerHTML=
+      `أجبتِ بشكل صحيح على <strong style="color:#ffd700">${score} / ${TOTAL}</strong><br>تحتاجين 6 إجابات صحيحة على الأقل.`;
+    speak("حاولي مرة أخرى. أنتِ تستطيعين!");
+  }
+}
+function save(){
+  if(!prog.gems.includes(PID))prog.gems.push(PID);
+  prog.points+=(score*10);prog.level=Math.max(prog.level,prog.gems.length+1);
+  try{localStorage.setItem("scienceIslandProgress",JSON.stringify(prog));}catch(e){}
+}
+/*HELPER*/
+function savePartial(){
+  try{
+    const pr=JSON.parse(localStorage.getItem("scienceIslandProgress")||"{}");
+    pr.gems=pr.gems||[];
+    pr.points=(pr.points||0);
+    pr.palaceProgress=pr.palaceProgress||{};
+    // store best score for this palace
+    const prev=pr.palaceProgress[PID]||{score:0,answered:0};
+    if(score>prev.score||cur>prev.answered){
+      pr.palaceProgress[PID]={score:score,answered:cur};
+    }
+    localStorage.setItem("scienceIslandProgress",JSON.stringify(pr));
+  }catch(e){}
+}
+function exitPalace(){
+  if(confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")){
+    savePartial();
+    location.href='map.html';
+  }
+}
+window.addEventListener("beforeunload",savePartial);
+
+function restart(){
+  cur=0;score=0;done=false;
+  document.getElementById("endScreen").classList.remove("show");
+  document.getElementById("failScreen").classList.remove("show");
+  document.getElementById("qSection").style.display="";
+  showQ();
+}
+function confetti(){
+  const w=document.getElementById("cl");
+  const cols=["#ffd700","#00ff88","#ff88cc","#88ddff","#ffaa00","#cc88ff"];
+  for(let i=0;i<90;i++){
+    const c=document.createElement("div");c.className="cp";
+    const sz=6+Math.random()*8;
+    c.style.cssText="left:"+(Math.random()*100)+"vw;background:"+cols[~~(Math.random()*cols.length)]+
+      ";animation-duration:"+(2+Math.random()*3)+"s;animation-delay:"+(Math.random()*1.2)+"s;"+
+      "width:"+sz+"px;height:"+sz+"px;border-radius:"+(Math.random()>.5?"50%":"2px")+";";
+    w.appendChild(c);setTimeout(()=>c.remove(),5500);
+  }
+}
+function speak(t){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang="ar-SA";u.rate=.88;u.pitch=1.06;speechSynthesis.speak(u);
+}
+showQ();
+</script>
+</body>
+</html>
