@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>💛 قصر التطبيق – جزيرة العلوم</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
+<title>قصر المعرفة – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -21,18 +21,16 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
 .pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
   animation:iconPulse 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px #ffee55)}
-@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #ffee55)}50%{filter:drop-shadow(0 0 18px #ffee55)}}
-.ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700;text-shadow:0 0 14px rgba(255,215,0,.4)}
+  filter:drop-shadow(0 0 8px #00ff88)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #00ff88)}50%{filter:drop-shadow(0 0 18px #00ff88)}}
+.ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700}
 .psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
 .progw{margin-bottom:1rem}
 .proginfo{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(180,210,255,.6);margin-bottom:.28rem}
 .progtrack{height:9px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;border:1px solid rgba(255,215,0,.15)}
-.progfill{height:100%;background:linear-gradient(90deg,#ffcc00,#ffee55);border-radius:5px;transition:width .5s;box-shadow:0 0 7px #ffee55}
+.progfill{height:100%;background:linear-gradient(90deg,#00cc55,#00ff88);border-radius:5px;transition:width .5s}
 .qcard{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.28);
-  border-radius:16px;padding:1.3rem 1.2rem;margin-bottom:.9rem;
-  animation:cardIn .38s ease-out}
-@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  border-radius:16px;padding:1.3rem 1.2rem;margin-bottom:.9rem}
 .qnum{color:rgba(255,215,0,.62);font-size:.74rem;font-weight:700;margin-bottom:.4rem}
 .qtext{font-size:clamp(.94rem,2.5vw,1.15rem);font-weight:700;line-height:1.65;color:#e8f0ff;margin-bottom:.95rem}
 .opts{display:grid;gap:.58rem}
@@ -41,10 +39,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   font-family:"Tajawal",sans-serif;font-size:.93rem;font-weight:600;
   color:#ddeeff;text-align:right;cursor:pointer;
   transition:all .17s;display:flex;align-items:center;gap:.52rem}
-.opt:hover:not(:disabled){background:rgba(255,215,0,.1);border-color:#ffd700;color:#fff;transform:translateX(-2px)}
-.opt.correct{background:rgba(0,200,80,.16);border-color:#00dd66;color:#aaffcc;box-shadow:0 0 12px rgba(0,200,80,.3)}
+.opt:hover:not(:disabled){background:rgba(255,215,0,.1);border-color:#ffd700;color:#fff}
+.opt.correct{background:rgba(0,200,80,.16);border-color:#00dd66;color:#aaffcc}
 .opt.wrong{background:rgba(210,40,50,.14);border-color:#ff4455;color:#ffaaaa}
-.opt:disabled{cursor:default;transform:none}
+.opt:disabled{cursor:default}
 .optl{width:24px;height:24px;border-radius:50%;flex-shrink:0;
   background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);
   display:flex;align-items:center;justify-content:center;
@@ -56,52 +54,47 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   background:linear-gradient(135deg,#1a3a8f,#2855c8);
   border:2px solid #ffd700;border-radius:45px;padding:.68rem;
   font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:800;
-  color:#ffd700;cursor:pointer;transition:all .2s;display:none}
+  color:#ffd700;cursor:pointer;display:none}
 .btnnext.show{display:block}
-.btnnext:hover{box-shadow:0 0 16px rgba(255,215,0,.38);transform:scale(1.02)}
-/* ── شاشة النهاية ── */
-.endscreen{display:none;text-align:center;padding:1.8rem .8rem;animation:cardIn .5s}
+.endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
-.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
-  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #ffee55)}
-@keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
-.endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;
-  text-shadow:0 0 18px rgba(255,215,0,.5);margin-bottom:.35rem}
+.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem}
+.endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
 .enddetail{color:rgba(175,210,255,.8);font-size:.92rem;line-height:1.7;margin-bottom:1rem}
-.passmsg{font-size:1rem;font-weight:700;color:#ffd700;margin:.3rem 0 .8rem}
 .btnmap{display:inline-block;margin-top:.8rem;
   background:linear-gradient(135deg,#c8960a,#ffd700);
   border:none;border-radius:45px;padding:.78rem 2.2rem;
   font-family:"Tajawal",sans-serif;font-size:1rem;font-weight:900;
-  color:#1a0800;cursor:pointer;
-  box-shadow:0 0 18px rgba(255,215,0,.38);transition:all .2s}
-.btnmap:hover{transform:scale(1.04);box-shadow:0 0 28px rgba(255,215,0,.52)}
-/* ── شاشة الفشل ── */
-.failscreen{display:none;text-align:center;padding:1.8rem .8rem;animation:cardIn .4s}
+  color:#1a0800;cursor:pointer}
+.failscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .failscreen.show{display:block}
 .fail-icon{font-size:3rem;display:block;margin-bottom:.4rem}
 .fail-title{color:#ff8888;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
 .fail-msg{color:rgba(200,180,180,.8);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
-/* احتفال */
 .cl{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
 .cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
 @keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media (max-width: 768px) {
+  .wrap{padding:1rem}
+  .qcard{padding:1rem}
+  .opt{padding:.5rem .7rem;font-size:.85rem}
+}
 </style>
 </head>
 <body>
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
-  <span class="tb-ttl">💛 قصر التطبيق</span>
+  <span class="tb-ttl">💚 قصر المعرفة</span>
   <span class="tb-gems">💎 <span id="tbGems">0</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
 <div class="wrap">
   <div class="ph">
-    <span class="pi">💛</span>
-    <div class="ptitle">قصر التطبيق</div>
-    <div class="psub">مستوى: التطبيق · أجيبي على الأسئلة واجمعي الجوهرة!</div>
+    <span class="pi">💚</span>
+    <div class="ptitle">قصر المعرفة</div>
+    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة!</div>
   </div>
   <div class="progw">
     <div class="proginfo">
@@ -112,17 +105,17 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   </div>
   <div id="qSection">
     <div class="qcard" id="qCard">
-      <div class="qnum"  id="qNum">السؤال 1</div>
+      <div class="qnum" id="qNum">السؤال 1</div>
       <div class="qtext" id="qText"></div>
-      <div class="opts"  id="opts"></div>
-      <div class="res"   id="res"></div>
+      <div class="opts" id="opts"></div>
+      <div class="res" id="res"></div>
     </div>
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
   <div class="endscreen" id="endScreen">
-    <span class="endgem">💛</span>
-    <div class="endtitle">أحسنتِ! جمعتِ جوهرة التطبيق الذهبية!</div>
-    <div class="stars"   id="starsRow"></div>
+    <span class="endgem">💚</span>
+    <div class="endtitle">أحسنتِ! جمعتِ جوهرة المعرفة الخضراء!</div>
+    <div class="stars" id="starsRow">⭐⭐⭐</div>
     <div class="enddetail" id="endDetail"></div>
     <button class="btnmap" onclick="location.href='map.html'">🗺️ العودة للخريطة</button>
   </div>
@@ -130,141 +123,179 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     <span class="fail-icon">💪</span>
     <div class="fail-title">قاربتِ على النجاح!</div>
     <div class="fail-msg" id="failMsg"></div>
-    <button class="btnmap" onclick="restart()" style="background:linear-gradient(135deg,#1a3a8f,#2855c8);color:#ffd700;box-shadow:none">🔄 إعادة المحاولة</button>
+    <button class="btnmap" onclick="restart()" style="background:linear-gradient(135deg,#1a3a8f,#2855c8);color:#ffd700">🔄 إعادة المحاولة</button>
     <br>
     <button class="btnmap" onclick="location.href='map.html'" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,215,0,.3);color:rgba(200,215,255,.7);font-size:.85rem;padding:.5rem 1.5rem;margin-top:.5rem">↩ الخريطة</button>
   </div>
 </div>
+
 <script>
-const QS=[{"text": "أي المواد الآتية تنتقل عبر الغشاء البلازمي بالانتشار؟", "opts": ["المواد من التركيز المنخفض إلى المرتفع", "المواد من التركيز المرتفع إلى المنخفض", "المواد عكس تدرج التركيز", "المواد باستخدام الحويصلات"], "ans": 1, "bloom": "التطبيق"}, {"text": "أي العوامل الآتية قد يؤثر في جودة المياه؟", "opts": ["استخدام الأسمدة الزراعية", "المد والجزر", "أطوار القمر", "دوران الأرض"], "ans": 0, "bloom": "التطبيق"}, {"text": "ما الذي يقلل كمية المادة العضوية الملقاة في مواقع دفن النفايات؟", "opts": ["الطاقة الشمسية", "الطاقة المائية", "طاقة الكتلة الحيوية", "طاقة الرياح"], "ans": 2, "bloom": "التطبيق"}, {"text": "إذا كان القمر يقع بين الأرض والشمس، فما الظاهرة التي تحدث؟", "opts": ["خسوف القمر", "كسوف الشمس", "المد والجزر", "الفصول الأربعة"], "ans": 1, "bloom": "التطبيق"}, {"text": "إذا احتاجت الخلية إلى نقل مادة من منطقة ذات تركيز منخفض إلى منطقة ذات تركيز مرتفع، فإنها تستخدم:", "opts": ["الانتشار", "الاسموزية", "الانتشار الميسر", "النقل النشط"], "ans": 3, "bloom": "التطبيق"}, {"text": "إذا كانت الأرض تقع بين الشمس والقمر، فما الظاهرة التي تحدث؟", "opts": ["كسوف الشمس", "خسوف القمر", "المد والجزر", "أطوار القمر"], "ans": 1, "bloom": "التطبيق"}, {"text": "أي العمليات الآتية تتطلب وجود بروتينات ناقلة في الغشاء البلازمي؟", "opts": ["الابتلاع الخلوي", "الإخراج الخلوي", "الانتشار الميسر", "التخمر"], "ans": 2, "bloom": "التطبيق"}, {"text": "أي طور قمري يرتبط غالباً بضعف المد والجزر؟", "opts": ["البدر", "المحاق", "التربيع الأول", "الخسوف"], "ans": 2, "bloom": "التطبيق"}, {"text": "أي الأنشطة الآتية قد يؤدي إلى انخفاض مستوى المياه الجوفية؟", "opts": ["زراعة الأشجار", "استخدام الطاقة الشمسية", "الري المكثف للمحاصيل", "إعادة التدوير"], "ans": 2, "bloom": "التطبيق"}, {"text": "أي الترتيبات الآتية يمثل مستويات التنظيم من الأصغر إلى الأكبر؟", "opts": ["جهاز ← عضو ← نسيج ← خلية", "خلية ← نسيج ← عضو ← جهاز", "نسيج ← خلية ← عضو ← جهاز", "عضو ← جهاز ← خلية ← نسيج"], "ans": 1, "bloom": "التطبيق"}];
-const PID=3;
-const PASS=6;
-let cur=0,score=0,done=false;
-let student=null,prog={gems:[],level:1,points:0};
-try{
-  student=JSON.parse(localStorage.getItem("scienceIslandStudent")||"null");
-  const pr=JSON.parse(localStorage.getItem("scienceIslandProgress")||"{}");
-  if(Array.isArray(pr.gems))prog.gems=pr.gems;
-  if(pr.level)prog.level=pr.level;
-  if(pr.points)prog.points=pr.points;
-}catch(e){}
-if(student&&student.name){
-  const lbl=student.titleLabel||(student.title==="princess"?"الأميرة":"الأمير");
-  document.getElementById("tbName").textContent=lbl+" "+student.name;
+const PID = 1;
+const TOTAL = 10;
+const PASS_SCORE = 10; // Need 10/10 to pass
+
+const QS=[
+  {"text": "أي المواد الآتية تنتقل عبر الغشاء البلازمي بالانتشار؟", "opts": ["المواد من التركيز المنخفض إلى المرتفع", "المواد من التركيز المرتفع إلى المنخفض", "المواد عكس تدرج التركيز", "المواد باستخدام الحويصلات"], "ans": 1, "bloom": "التطبيق"}, 
+  {"text": "أي العوامل الآتية قد يؤثر في جودة المياه؟", "opts": ["استخدام الأسمدة الزراعية", "المد والجزر", "أطوار القمر", "دوران الأرض"], "ans": 0, "bloom": "التطبيق"}, 
+  {"text": "ما الذي يقلل كمية المادة العضوية الملقاة في مواقع دفن النفايات؟", "opts": ["الطاقة الشمسية", "الطاقة المائية", "طاقة الكتلة الحيوية", "طاقة الرياح"], "ans": 2, "bloom": "التطبيق"}, 
+  {"text": "إذا كان القمر يقع بين الأرض والشمس، فما الظاهرة التي تحدث؟", "opts": ["خسوف القمر", "كسوف الشمس", "المد والجزر", "الفصول الأربعة"], "ans": 1, "bloom": "التطبيق"}, 
+  {"text": "إذا احتاجت الخلية إلى نقل مادة من منطقة ذات تركيز منخفض إلى منطقة ذات تركيز مرتفع، فإنها تستخدم:", "opts": ["الانتشار", "الاسموزية", "الانتشار الميسر", "النقل النشط"], "ans": 3, "bloom": "التطبيق"}, 
+  {"text": "إذا كانت الأرض تقع بين الشمس والقمر، فما الظاهرة التي تحدث؟", "opts": ["كسوف الشمس", "خسوف القمر", "المد والجزر", "أطوار القمر"], "ans": 1, "bloom": "التطبيق"}, 
+  {"text": "أي العمليات الآتية تتطلب وجود بروتينات ناقلة في الغشاء البلازمي؟", "opts": ["الابتلاع الخلوي", "الإخراج الخلوي", "الانتشار الميسر", "التخمر"], "ans": 2, "bloom": "التطبيق"}, 
+  {"text": "أي طور قمري يرتبط غالباً بضعف المد والجزر؟", "opts": ["البدر", "المحاق", "التربيع الأول", "الخسوف"], "ans": 2, "bloom": "التطبيق"}, 
+  {"text": "أي الأنشطة الآتية قد يؤدي إلى انخفاض مستوى المياه الجوفية؟", "opts": ["زراعة الأشجار", "استخدام الطاقة الشمسية", "الري المكثف للمحاصيل", "إعادة التدوير"], "ans": 2, "bloom": "التطبيق"}, 
+  {"text": "أي الترتيبات الآتية يمثل مستويات التنظيم من الأصغر إلى الأكبر؟", "opts": ["جهاز ← عضو ← نسيج ← خلية", "خلية ← نسيج ← عضو ← جهاز", "نسيج ← خلية ← عضو ← جهاز", "عضو ← جهاز ← خلية ← نسيج"], "ans": 1, "bloom": "التطبيق"}
+];
+
+
+let cur = 0, score = 0, done = false;
+let student = null, progress = null, currentStudentCode = null;
+let isAlreadyCompleted = false;
+
+function loadData() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    isAlreadyCompleted = urlParams.get('completed') === 'true';
+    
+    currentStudentCode = localStorage.getItem('currentStudentCode');
+    if (currentStudentCode) {
+      const storedProgress = localStorage.getItem('scienceIslandProgress_' + currentStudentCode);
+      if (storedProgress) {
+        progress = JSON.parse(storedProgress);
+      }
+    }
+    student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
+    if (student && student.name) {
+      document.getElementById("tbName").textContent = "الأميرة " + student.name;
+    }
+    document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
+    
+    // If already completed with 10/10, show completion screen immediately
+    if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
+      document.getElementById("qSection").style.display = "none";
+      document.getElementById("endScreen").classList.add("show");
+      const existingScore = progress.castleScores ? progress.castleScores[PID] : 0;
+      document.getElementById("endDetail").innerHTML = `لقد أكملتِ هذا القصر بالفعل وحصلتِ على ${existingScore} نقطة!<br>يمكنكِ التوجه للقصر التالي. 🎉`;
+      document.getElementById("starsRow").textContent = "🏆🏆🏆";
+      return;
+    }
+  } catch(e) { console.error(e); }
+  
+  if (!isAlreadyCompleted) {
+    showQ();
+  }
 }
-document.getElementById("tbGems").textContent=prog.gems.length;
-const TOTAL=QS.length;
-function showQ(){
-  if(cur>=TOTAL){endPalace();return;}
-  const q=QS[cur];done=false;
-  document.getElementById("qNum").textContent="السؤال "+(cur+1)+" من "+TOTAL;
-  document.getElementById("qText").textContent=q.text;
-  document.getElementById("progLbl").textContent="السؤال "+(cur+1)+" من "+TOTAL;
-  document.getElementById("progPts").textContent="النقاط: "+score;
-  document.getElementById("pf").style.width=(cur/TOTAL*100)+"%";
-  document.getElementById("res").className="res";document.getElementById("res").textContent="";
+
+function saveProgress() {
+  if (!currentStudentCode) return;
+  try {
+    const dataToSave = {
+      gems: progress.gems || [],
+      level: progress.level || 1,
+      points: progress.points || 0,
+      completedCastles: progress.completedCastles || [],
+      castleScores: progress.castleScores || {}
+    };
+    localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
+  } catch(e) { console.error(e); }
+}
+
+function showQ() {
+  if (cur >= TOTAL) { endPalace(); return; }
+  const q = QS[cur]; done = false;
+  document.getElementById("qNum").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
+  document.getElementById("qText").textContent = q.text;
+  document.getElementById("progLbl").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
+  document.getElementById("progPts").textContent = "النقاط: " + score;
+  document.getElementById("pf").style.width = (cur / TOTAL * 100) + "%";
+  document.getElementById("res").className = "res";
+  document.getElementById("res").innerHTML = "";
   document.getElementById("btnNext").classList.remove("show");
-  const ow=document.getElementById("opts");ow.innerHTML="";
-  const L=["أ","ب","ج","د"];
-  q.opts.forEach((opt,i)=>{
-    const b=document.createElement("button");b.className="opt";
-    b.innerHTML=`<span class="optl">${L[i]}</span>${opt}`;
-    b.onclick=()=>check(i,b,q);
+  const ow = document.getElementById("opts"); ow.innerHTML = "";
+  const L = ["أ", "ب", "ج", "د"];
+  q.opts.forEach((opt, i) => {
+    const b = document.createElement("button"); b.className = "opt";
+    b.innerHTML = `<span class="optl">${L[i]}</span>${opt}`;
+    b.onclick = () => check(i, b, q);
     ow.appendChild(b);
   });
-  const c=document.getElementById("qCard");c.style.animation="none";
-  requestAnimationFrame(()=>{c.style.animation="cardIn .38s ease-out";});
 }
-function check(idx,btn,q){
-  if(done)return;done=true;
-  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
-  const r=document.getElementById("res");
-  if(idx===q.ans){
-    btn.classList.add("correct");score++;
-    r.textContent="✅ إجابة صحيحة! +10 نقطة";r.className="res ok";
-    speak("أحسنتِ! إجابة صحيحة.");
-  }else{
+
+function check(idx, btn, q) {
+  if (done) return; done = true;
+  document.querySelectorAll(".opt").forEach(b => b.disabled = true);
+  const r = document.getElementById("res");
+  if (idx === q.ans) {
+    btn.classList.add("correct"); score++;
+    r.textContent = "✅ إجابة صحيحة!"; r.className = "res ok";
+  } else {
     btn.classList.add("wrong");
     document.querySelectorAll(".opt")[q.ans].classList.add("correct");
-    r.textContent="❌ الإجابة الصحيحة: "+q.opts[q.ans];r.className="res no";
-    speak("الإجابة الصحيحة هي "+["أ","ب","ج","د"][q.ans]);
+    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.ans]; r.className = "res no";
   }
-  const nb=document.getElementById("btnNext");nb.classList.add("show");
-  nb.textContent=(cur<TOTAL-1)?"التالي ←":"إنهاء القصر 🏁";
+  const nb = document.getElementById("btnNext"); nb.classList.add("show");
+  nb.textContent = (cur < TOTAL - 1) ? "التالي ←" : "🏁 إنهاء القصر";
 }
-function nextQ(){cur++;showQ();}
-function endPalace(){
-  document.getElementById("qSection").style.display="none";
-  document.getElementById("pf").style.width="100%";
-  if(score>=PASS){
-    document.getElementById("endScreen").classList.add("show");
-    const s=score>=9?"⭐⭐⭐":score>=7?"⭐⭐":"⭐";
-    document.getElementById("starsRow").textContent=s;
-    document.getElementById("endDetail").innerHTML=
-      `أجبتِ بشكل صحيح على <strong style="color:#ffd700">${score} / ${TOTAL}</strong><br>حصلتِ على ${score*10} نقطة 🏆`;
-    confetti();speak("تهانينا! لقد حصلتِ على الجوهرة. أحسنتِ يا بطلتنا.");
-    save();
-  }else{
-    document.getElementById("failScreen").classList.add("show");
-    document.getElementById("failMsg").innerHTML=
-      `أجبتِ بشكل صحيح على <strong style="color:#ffd700">${score} / ${TOTAL}</strong><br>تحتاجين 6 إجابات صحيحة على الأقل.`;
-    speak("حاولي مرة أخرى. أنتِ تستطيعين!");
-  }
-}
-function save(){
-  if(!prog.gems.includes(PID))prog.gems.push(PID);
-  prog.points+=(score*10);prog.level=Math.max(prog.level,prog.gems.length+1);
-  try{localStorage.setItem("scienceIslandProgress",JSON.stringify(prog));}catch(e){}
-}
-/*HELPER*/
-function savePartial(){
-  try{
-    const pr=JSON.parse(localStorage.getItem("scienceIslandProgress")||"{}");
-    pr.gems=pr.gems||[];
-    pr.points=(pr.points||0);
-    pr.palaceProgress=pr.palaceProgress||{};
-    // store best score for this palace
-    const prev=pr.palaceProgress[PID]||{score:0,answered:0};
-    if(score>prev.score||cur>prev.answered){
-      pr.palaceProgress[PID]={score:score,answered:cur};
-    }
-    localStorage.setItem("scienceIslandProgress",JSON.stringify(pr));
-  }catch(e){}
-}
-function exitPalace(){
-  if(confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")){
-    savePartial();
-    location.href='map.html';
-  }
-}
-window.addEventListener("beforeunload",savePartial);
 
-function restart(){
-  cur=0;score=0;done=false;
+function nextQ() { cur++; showQ(); }
+
+function endPalace() {
+  document.getElementById("qSection").style.display = "none";
+  document.getElementById("pf").style.width = "100%";
+  
+  if (score >= PASS_SCORE) {
+    // Only award points and gem if not already completed
+    if (!isAlreadyCompleted && progress && !progress.completedCastles?.includes(PID)) {
+      const pointsEarned = 100;
+      if (!progress.gems) progress.gems = [];
+      if (!progress.gems.includes(PID)) progress.gems.push(PID);
+      progress.points = (progress.points || 0) + pointsEarned;
+      if (!progress.completedCastles) progress.completedCastles = [];
+      progress.completedCastles.push(PID);
+      if (!progress.castleScores) progress.castleScores = {};
+      progress.castleScores[PID] = pointsEarned;
+      saveProgress();
+    }
+    
+    document.getElementById("endScreen").classList.add("show");
+    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة 🏆`;
+    document.getElementById("starsRow").textContent = "⭐⭐⭐";
+    confetti();
+  } else {
+    document.getElementById("failScreen").classList.add("show");
+    document.getElementById("failMsg").innerHTML = `أجبتِ بشكل صحيح على ${score} من 10 أسئلة.<br>تحتاجين إجابات صحيحة لجميع الأسئلة العشرة للحصول على الجوهرة و100 نقطة.`;
+  }
+}
+
+function restart() {
+  cur = 0; score = 0; done = false;
   document.getElementById("endScreen").classList.remove("show");
   document.getElementById("failScreen").classList.remove("show");
-  document.getElementById("qSection").style.display="";
+  document.getElementById("qSection").style.display = "";
   showQ();
 }
-function confetti(){
-  const w=document.getElementById("cl");
-  const cols=["#ffd700","#00ff88","#ff88cc","#88ddff","#ffaa00","#cc88ff"];
-  for(let i=0;i<90;i++){
-    const c=document.createElement("div");c.className="cp";
-    const sz=6+Math.random()*8;
-    c.style.cssText="left:"+(Math.random()*100)+"vw;background:"+cols[~~(Math.random()*cols.length)]+
-      ";animation-duration:"+(2+Math.random()*3)+"s;animation-delay:"+(Math.random()*1.2)+"s;"+
-      "width:"+sz+"px;height:"+sz+"px;border-radius:"+(Math.random()>.5?"50%":"2px")+";";
-    w.appendChild(c);setTimeout(()=>c.remove(),5500);
+
+function exitPalace() {
+  if (confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")) {
+    saveProgress();
+    location.href = 'map.html';
   }
 }
-function speak(t){
-  if(!('speechSynthesis' in window))return;
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang="ar-SA";u.rate=.88;u.pitch=1.06;speechSynthesis.speak(u);
+
+function confetti() {
+  const w = document.getElementById("cl");
+  const cols = ["#ffd700", "#00ff88", "#ff88cc", "#88ddff", "#ffaa00", "#cc88ff"];
+  for (let i = 0; i < 90; i++) {
+    const c = document.createElement("div"); c.className = "cp";
+    const sz = 6 + Math.random() * 8;
+    c.style.cssText = "left:" + (Math.random() * 100) + "vw;background:" + cols[~~(Math.random() * cols.length)] +
+      ";animation-duration:" + (2 + Math.random() * 3) + "s;animation-delay:" + (Math.random() * 1.2) + "s;" +
+      "width:" + sz + "px;height:" + sz + "px;border-radius:" + (Math.random() > .5 ? "50%" : "2px") + ";";
+    w.appendChild(c); setTimeout(() => c.remove(), 5500);
+  }
 }
-showQ();
+
+loadData();
 </script>
 </body>
 </html>
