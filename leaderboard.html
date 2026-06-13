@@ -87,6 +87,20 @@ function load(){
 function clearLB(){
   if(confirm("مسح سجل الأبطال؟")){localStorage.removeItem("scienceIslandLeaderboard");load();}
 }
+
+// Add this function to leaderboard.html to load teacher-uploaded data
+async function loadTeacherData() {
+  try {
+    // Try to fetch from GitHub (you'll need to host the JSON files)
+    const response = await fetch('./leaderboard/students_data.json');
+    if (response.ok) {
+      const data = await response.json();
+      return data.students || [];
+    }
+  } catch(e) { console.log('No teacher data found'); }
+  return [];
+}
+
 load();
 </script>
 </body>
