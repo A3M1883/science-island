@@ -10,14 +10,13 @@
 html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
 
 .screen{position:relative;aspect-ratio:3/2;width:min(100vw,calc(100vh * 3 / 2));height:min(100vh,calc(100vw * 2 / 3));
-  background-image:url("map.jpg");
+  background-image:url("map.jpeg");
   background-size:100% 100%;
   background-position:center;
   background-repeat:no-repeat;
   overflow:hidden;
 }
 
-/* ══ مناطق النقر الشفافة فوق القصور ══ */
 .castle-zone{
   position:absolute;
   cursor:pointer;
@@ -40,7 +39,6 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
 }
 .castle-zone:hover::after{opacity:1}
 
-/* ══ اسم اللاعبة - أعلى اليسار ══ */
 .player-overlay{
   position:absolute;
   top: 2%;
@@ -58,13 +56,11 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
   font-size: clamp(0.7rem, 1.8vw, 1rem);
   font-weight:700;
   text-align:center;
-  text-shadow:0 0 8px rgba(255,215,0,.5),0 2px 4px rgba(0,0,0,.9);
   white-space: nowrap;
   border: 1px solid rgba(255,215,0,0.4);
   display: inline-block;
 }
 
-/* ══ إحصائيات - أعلى اليمين ══ */
 .stats-overlay{
   position:absolute;
   top: 2%;
@@ -102,76 +98,23 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
   text-align:left;
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
-  .player-overlay {
-    top: 1%;
-    left: 1%;
-  }
-  .player-name {
-    padding: 3px 10px;
-    font-size: 0.7rem;
-    white-space: nowrap;
-  }
-  .stats-overlay {
-    top: 1%;
-    right: 1%;
-    padding: 4px 10px;
-    gap: 0.25rem;
-  }
-  .stat-row {
-    gap: 0.35rem;
-  }
-  .stat-lbl, .stat-val {
-    font-size: 0.6rem;
-  }
-  .stat-val {
-    min-width: 30px;
-  }
+  .player-overlay { top: 1%; left: 1%; }
+  .player-name { padding: 3px 10px; font-size: 0.7rem; }
+  .stats-overlay { top: 1%; right: 1%; padding: 4px 10px; gap: 0.25rem; }
+  .stat-row { gap: 0.35rem; }
+  .stat-lbl, .stat-val { font-size: 0.6rem; }
+  .stat-val { min-width: 30px; }
 }
 
 @media (max-width: 480px) {
-  .player-name {
-    font-size: 0.55rem;
-    padding: 2px 8px;
-  }
-  .stat-lbl, .stat-val {
-    font-size: 0.5rem;
-  }
-  .stat-val {
-    min-width: 25px;
-  }
-  .stats-overlay {
-    padding: 3px 6px;
-    gap: 0.15rem;
-  }
-  .stat-row {
-    gap: 0.2rem;
-  }
+  .player-name { font-size: 0.55rem; padding: 2px 8px; }
+  .stat-lbl, .stat-val { font-size: 0.5rem; }
+  .stat-val { min-width: 25px; }
+  .stats-overlay { padding: 3px 6px; gap: 0.15rem; }
+  .stat-row { gap: 0.2rem; }
 }
 
-/* توهج جواهر المفتاح في الشريط السفلي */
-.gem-glow-strip{
-  position:absolute;
-  bottom: 3%;
-  left: 50%;
-  transform:translateX(-50%);
-  z-index:25;
-  display:flex;
-  gap:clamp(1rem, 3vw, 3rem);
-  pointer-events:none;
-}
-
-.gem-dot{
-  width:clamp(12px, 2vw, 20px);
-  height:clamp(12px, 2vw, 20px);
-  border-radius:50%;
-  animation:gemPulse 2s ease-in-out infinite;
-  opacity:.65;
-}
-@keyframes gemPulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.5);opacity:1}}
-
-/* ══ مودال ══ */
 .modal-overlay{
   display:none;position:fixed;inset:0;z-index:200;
   background:rgba(0,0,50,.78);backdrop-filter:blur(5px);
@@ -183,30 +126,24 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
   border:2px solid rgba(255,215,0,.65);border-radius:18px;
   padding:1.8rem 2rem;max-width:360px;width:90%;
   text-align:center;
-  box-shadow:0 0 40px rgba(255,215,0,.2),0 20px 60px rgba(0,0,0,.6);
-  animation:mIn .3s ease-out;
 }
-@keyframes mIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .modal-icon{font-size:2.2rem;margin-bottom:.5rem}
 .modal-title{color:#ffd700;font-size:1.1rem;font-weight:900;margin-bottom:.4rem}
-.modal-msg{color:#ddeeff;font-size:.9rem;line-height:1.75;margin-bottom:1.2rem;font-weight:600}
+.modal-msg{color:#ddeeff;font-size:.9rem;line-height:1.75;margin-bottom:1.2rem}
 .modal-close{
   background:linear-gradient(135deg,#1a3a8f,#2855c8);
   border:2px solid #ffd700;border-radius:28px;
   padding:.5rem 1.8rem;
   font-family:"Tajawal",sans-serif;font-size:.9rem;font-weight:700;
-  color:#ffd700;cursor:pointer;transition:all .2s;
+  color:#ffd700;cursor:pointer;
 }
-.modal-close:hover{box-shadow:0 0 14px rgba(255,215,0,.45)}
 
-/* لا تسجيل */
 .no-reg{display:none;position:fixed;inset:0;z-index:300;background:rgba(4,8,36,.97);flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center}
 .no-reg.show{display:flex}
 </style>
 </head>
 <body>
 
-<!-- لا يوجد تسجيل -->
 <div class="no-reg" id="noReg">
   <div style="font-size:3rem">🏝️</div>
   <div style="color:#ffd700;font-size:1.3rem;font-weight:800">يرجى التسجيل أولاً</div>
@@ -214,44 +151,36 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
   <button onclick="location.href='register.html'" style="background:linear-gradient(135deg,#c8960a,#ffd700);border:none;border-radius:28px;padding:.65rem 1.8rem;font-family:Tajawal,sans-serif;font-size:.95rem;font-weight:800;color:#1a0800;cursor:pointer;margin-top:.3rem">📝 التسجيل</button>
 </div>
 
-<!-- الشاشة الرئيسية -->
 <div class="screen" id="mainScreen">
 
-  <!-- ══ اسم اللاعبة - أعلى اليسار ══ -->
   <div class="player-overlay">
     <div class="player-name" id="playerName">الأميرة ...</div>
   </div>
 
-  <!-- ══ إحصائيات - أعلى اليمين ══ -->
   <div class="stats-overlay">
     <div class="stat-row"><span class="stat-lbl">⭐ المستوى</span><span class="stat-val" id="statLevel">—</span></div>
     <div class="stat-row"><span class="stat-lbl">💎 الجواهر</span><span class="stat-val" id="statGems">—</span></div>
     <div class="stat-row"><span class="stat-lbl">🏆 النقاط</span><span class="stat-val" id="statPoints">—</span></div>
   </div>
 
-  <!-- ══ القلاع - مناطق نقر شفافة ══ -->
-
-  <!-- قصر الفهم (الثاني في الترتيب) -->
-  <div class="castle-zone" id="c2" style="top:32%;left:72%;width:14%;height:22%" onclick="enterCastle(2)"></div>
-
-  <!-- قصر المعرفة (الأول في الترتيب) -->
+  <!-- قصر المعرفة (c1) - متاح دائماً أولاً -->
   <div class="castle-zone" id="c1" style="top:38%;left:13%;width:14%;height:22%" onclick="enterCastle(1)"></div>
 
-  <!-- قصر التطبيق -->
+  <!-- قصر الفهم (c2) - يحتاج 1 جوهرة -->
+  <div class="castle-zone" id="c2" style="top:32%;left:72%;width:14%;height:22%" onclick="enterCastle(2)"></div>
+
+  <!-- قصر التطبيق (c3) - يحتاج 2 جوهرة -->
   <div class="castle-zone" id="c3" style="top:59%;left:60%;width:14%;height:22%" onclick="enterCastle(3)"></div>
 
-  <!-- قصر التحليل -->
+  <!-- قصر التحليل (c4) - يحتاج 3 جوهرة -->
   <div class="castle-zone" id="c4" style="top:58%;left:30%;width:14%;height:22%" onclick="enterCastle(4)"></div>
 
-  <!-- القلعة الملكية -->
+  <!-- القلعة الملكية (c5) - تحتاج 4 جواهر -->
   <div class="castle-zone" id="c5" style="top:15%;left:37%;width:26%;height:28%;border-radius:8px" onclick="enterCastle(5)"></div>
 
-  <!-- حاوية البريق المتطاير -->
   <div id="sparkleLayer" style="position:absolute;inset:0;z-index:10;pointer-events:none"></div>
-
 </div>
 
-<!-- مودال -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
     <div class="modal-icon" id="modalIcon"></div>
@@ -262,18 +191,14 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
 </div>
 
 <script>
-// ترتيب القصور المطلوب: قصر الفهم (2) ← قصر المعرفة (1) ← قصر التطبيق (3) ← قصر التحليل (4) ← القلعة الملكية (5)
-const CASTLE_ORDER = [2, 1, 3, 4, 5];
-
 const CASTLES = {
-  1:{icon:"💚", name:"قصر المعرفة", sub:"التذكر – اذكر وتعلم", color:"#00cc55", page:"palace1.html"},
-  2:{icon:"💙", name:"قصر الفهم", sub:"الفهم – افهم واستوعب", color:"#2288ff", page:"palace2.html"},
-  3:{icon:"🧡", name:"قصر التطبيق", sub:"التطبيق – أطبق وأبدع", color:"#ff8800", page:"palace3.html"},
-  4:{icon:"💜", name:"قصر التحليل", sub:"التحليل – أحلل وأفكر", color:"#cc44ff", page:"palace4.html"},
-  5:{icon:"👑", name:"القلعة الملكية الكبرى", sub:"تحدي التاج الملكي", color:"#ffd700", page:"palace5.html"}
+  1:{icon:"💚", name:"قصر المعرفة", requiredGems:0, color:"#00cc55", page:"palace1.html"},
+  2:{icon:"💙", name:"قصر الفهم", requiredGems:1, color:"#2288ff", page:"palace2.html"},
+  3:{icon:"🧡", name:"قصر التطبيق", requiredGems:2, color:"#ff8800", page:"palace3.html"},
+  4:{icon:"💜", name:"قصر التحليل", requiredGems:3, color:"#cc44ff", page:"palace4.html"},
+  5:{icon:"👑", name:"القلعة الملكية الكبرى", requiredGems:4, color:"#ffd700", page:"palace5.html"}
 };
 
-/* ══ تحميل البيانات من localStorage ══ */
 let student = null;
 let progress = {gems: [], level: 1, points: 0, completedCastles: [], castleScores: {}};
 let currentStudentCode = null;
@@ -295,49 +220,43 @@ function loadData() {
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
     if (student && student.name) {
       document.getElementById("playerName").textContent = "الأميرة " + student.name;
-    } else {
-      document.getElementById("playerName").textContent = "الأميرة";
     }
   } catch(e) { console.error(e); }
+}
+
+function refreshData() {
+  currentStudentCode = localStorage.getItem('currentStudentCode');
+  if (currentStudentCode) {
+    const storedProgress = localStorage.getItem('scienceIslandProgress_' + currentStudentCode);
+    if (storedProgress) {
+      const parsed = JSON.parse(storedProgress);
+      progress.gems = parsed.gems || [];
+      progress.level = parsed.level || 1;
+      progress.points = parsed.points || 0;
+      progress.completedCastles = parsed.completedCastles || [];
+      progress.castleScores = parsed.castleScores || {};
+    }
+  }
+  updateStats();
 }
 
 function updateStats(){
   document.getElementById("statLevel").textContent = progress.level;
-  document.getElementById("statGems").textContent = progress.gems.length + " / 4";
-  document.getElementById("statPoints").textContent = progress.points.toLocaleString("ar-EG");
+  const gemCount = progress.gems ? progress.gems.length : 0;
+  document.getElementById("statGems").textContent = gemCount + " / 4";
+  document.getElementById("statPoints").textContent = (progress.points || 0).toLocaleString("ar-EG");
 }
 
 function isCastleAvailable(castleId) {
-  const currentIndex = CASTLE_ORDER.indexOf(castleId);
-  if (currentIndex === 0) return true; // First castle in order always available
+  const castle = CASTLES[castleId];
+  const requiredGems = castle.requiredGems;
+  const currentGems = progress.gems ? progress.gems.length : 0;
   
-  // Check if previous castle in order is completed with 10/10
-  const previousCastle = CASTLE_ORDER[currentIndex - 1];
-  return progress.completedCastles.includes(previousCastle);
-}
-
-function getNextCastle() {
-  for (let i = 0; i < CASTLE_ORDER.length; i++) {
-    if (!progress.completedCastles.includes(CASTLE_ORDER[i])) {
-      return CASTLE_ORDER[i];
-    }
+  // Check if player has enough gems
+  if (currentGems >= requiredGems) {
+    return true;
   }
-  return null; // All castles completed
-}
-
-function saveProgress() {
-  try {
-    if (currentStudentCode) {
-      const dataToSave = {
-        gems: progress.gems,
-        level: progress.level,
-        points: progress.points,
-        completedCastles: progress.completedCastles,
-        castleScores: progress.castleScores
-      };
-      localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
-    }
-  } catch(e) { console.error(e); }
+  return false;
 }
 
 function openModal(icon, title, msg){
@@ -353,29 +272,17 @@ function closeModal(){
 
 function enterCastle(id){
   const c = CASTLES[id];
+  const currentGems = progress.gems ? progress.gems.length : 0;
   
-  if (id === 5) {
-    const allFour = [1,2,3,4].every(i => progress.gems && progress.gems.includes(i));
-    if(!allFour){
-      openModal("🔒","القلعة الملكية مغلقة",
-        `يجب جمع الجواهر الأربع أولاً لفتح تحدي النهاية.<br>
-         <small style="color:rgba(180,220,255,.7)">
-           جمعتِ حتى الآن: ${progress.gems ? progress.gems.length : 0} / 4 جواهر
-         </small>`);
-      return;
-    }
-    const isCompleted = progress.completedCastles && progress.completedCastles.includes(5);
-    location.href = c.page + "?completed=" + (isCompleted ? 'true' : 'false');
-    return;
-  }
-  
-  // Check castle availability based on order
+  // Check if player has enough gems to enter
   if (!isCastleAvailable(id)) {
-    const orderIndex = CASTLE_ORDER.indexOf(id);
-    const requiredCastle = CASTLE_ORDER[orderIndex - 1];
+    const neededGems = c.requiredGems - currentGems;
     openModal("🔒", "القصر مغلق", 
-      `يجب إكمال ${CASTLES[requiredCastle].name} أولاً (بدرجة 10/10)<br>
-       <small style="color:rgba(180,220,255,.7)">ترتيب القصور: قصر الفهم → قصر المعرفة → قصر التطبيق → قصر التحليل → القلعة الملكية</small>`);
+      `تحتاجين إلى ${c.requiredGems} جوهرة لفتح ${c.name}.<br>
+       <small style="color:rgba(180,220,255,.7)">
+         لديكِ حالياً ${currentGems} من 4 جواهر<br>
+         ركزي على جمع الجواهر أولاً!
+       </small>`);
     return;
   }
   
@@ -384,10 +291,20 @@ function enterCastle(id){
   location.href = c.page + "?completed=" + (isCompleted ? 'true' : 'false') + "&castleId=" + id;
 }
 
+// Refresh data when page is shown (including when coming back from palace)
+window.addEventListener('pageshow', function(event) {
+  refreshData();
+});
+
+// Also refresh on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  refreshData();
+});
+
+// Initial load
 loadData();
 updateStats();
 
-// Check if user is registered
 if(!student || !student.name){
   document.getElementById("noReg").classList.add("show");
 }
@@ -396,10 +313,8 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
 });
 
-/* ══ بريق متطاير حول الجواهر ══ */
-const GEM_CENTERS = [
-  {x:19,y:55},{x:79,y:55},{x:73,y:78},{x:29,y:78},{x:50,y:42}
-];
+// Sparkle effects
+const GEM_CENTERS = [{x:19,y:55},{x:79,y:55},{x:73,y:78},{x:29,y:78},{x:50,y:42}];
 const SP_COLORS = ["#ffd700","#00ffcc","#ff88ff","#88ddff","#ffaa00","#aaffaa"];
 
 function spawnSpark(){
@@ -417,7 +332,6 @@ function spawnSpark(){
   setTimeout(()=>el.remove(),4500);
 }
 
-// Add sparkle styles if not present
 if (!document.querySelector('#sparkleStyle')) {
   const style = document.createElement('style');
   style.id = 'sparkleStyle';
