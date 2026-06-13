@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
+<title>بوابة المعلمة – جزيرة العلوم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:linear-gradient(160deg,#040e2e,#081840,#040e2e);min-height:100vh;color:#fff;padding:2rem}
+.container{max-width:600px;margin:0 auto}
+.card{background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:2rem;margin-bottom:1.5rem}
+.title{color:#ffd700;font-size:1.5rem;font-weight:900;margin-bottom:1rem;text-align:center}
+.input-group{margin-bottom:1rem}
+.input-group label{display:block;margin-bottom:.5rem;color:rgba(255,215,0,.7)}
+.input-group input{width:100%;padding:.8rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,215,0,.3);border-radius:10px;color:#fff;font-family:'Tajawal',sans-serif}
+.btn{width:100%;padding:.8rem;background:linear-gradient(135deg,#c8960a,#ffd700);border:none;border-radius:10px;font-family:'Tajawal',sans-serif;font-weight:900;color:#1a0800;cursor:pointer;margin-top:1rem}
+.result-box{background:rgba(0,0,0,.5);border-radius:10px;padding:1rem;margin-top:1rem;display:none}
+.result-box.show{display:block}
+.data-preview{font-size:.8rem;color:#aaa;margin-top:.5rem;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="title">👩‍🏫 بوابة المعلمة</div>
+    <p style="text-align:center;margin-bottom:1rem">أدخلي كود الطالبة لعرض بياناتها وتصديرها</p>
+    
+    <div class="input-group">
+      <label>🔑 كود الطالبة</label>
+      <input type="text" id="studentCode" placeholder="مثال: SAR-6-ABC123">
+    </div>
+    
+    <button class="btn" onclick="loadStudentData()">📊 عرض البيانات</button>
+    
+    <div id="result" class="result-box">
+      <h3 style="color:#ffd700;margin-bottom:.5rem">📋 بيانات الطالبة</h3>
+      <div id="studentInfo"></div>
+      <div class="data-preview" id="jsonData"></div>
+      <button class="btn" onclick="exportToGitHub()" style="background:linear-gradient(135deg,#1a3a8f,#2855c8);color:#ffd700">📤 تصدير JSON للتحميل</button>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="title">📤 رفع البيانات إلى GitHub</div>
+    <p style="text-align:center;margin-bottom:1rem;font-size:.85rem">قم بتحميل ملف JSON الناتج إلى مستودع GitHub لعرضه في لوحة المتصدرين</p>
+    <ol style="padding-right:1.5rem;color:#ccc;font-size:.8rem">
+      <li>حمّلي ملف JSON بالضغط على زر "تصدير JSON للتحميل"</li>
+      <li>اذهبي إلى مستودع GitHub الخاص بك</li>
+      <li>ارفع الملف إلى مجلد /leaderboard/</li>
+      <li>سيتم تحديث لوحة المتصدرين تلقائياً</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+function loadStudentData() {
+  const code = document.getElementById('studentCode').value.trim();
+  const resultDiv = document.getElementById('result');
+  const studentInfo = document.getElementById('studentInfo');
+  const jsonData = document.getElementById('jsonData');
+  
+  if (!code) {
+    alert('الرجاء إدخال كود الطالبة');
+    return;
+  }
+  
+  try {
+    // Load student data
+    const studentData = localStorage.getItem('scienceIslandStudent_' + code);
+    const progressData = localStorage.getItem('scienceIslandProgress_' + code);
+    
+    if (!studentData && !progressData) {
+      studentInfo.innerHTML = '<p style="color:#ff8888">❌ لا توجد بيانات لهذا الكود</p>';
+      resultDiv.classList.add('show');
+      return;
+    }
+    
+    const student = studentData ? JSON.parse(studentData) : null;
+    const progress = progressData ? JSON.parse(progressData) : { gems: [], points: 0, completedCastles: [] };
+    
+    const exportData = {
+      studentCode: code,
+      student: student,
+      progress: progress,
+      exportDate: new Date().toISOString()
+    };
+    
+    studentInfo.innerHTML = `
+      <p><strong>👤 الاسم:</strong> ${student ? 'الأميرة ' + student.name : 'غير متوفر'}</p>
+      <p><strong>📚 الشعبة:</strong> ${student ? student.cls : '-'}</p>
+      <p><strong>👩‍🏫 معلمة العلوم:</strong> ${student ? student.teacher : '-'}</p>
+      <p><strong>🏫 المدرسة:</strong> ${student ? student.school : '-'}</p>
+      <p><strong>💎 الجواهر المجمعة:</strong> ${progress.gems?.length || 0}/4</p>
+      <p><strong>🏆 النقاط:</strong> ${progress.points || 0}</p>
+      <p><strong>✅ القصور المكتملة:</strong> ${progress.completedCastles?.length || 0}/5</p>
+      <p><strong>📅 تاريخ التصدير:</strong> ${new Date().toLocaleDateString('ar-AE')}</p>
+    `;
+    
+    jsonData.textContent = JSON.stringify(exportData, null, 2);
+    resultDiv.classList.add('show');
+    
+    // Store for export
+    window.currentExportData = exportData;
+    
+  } catch(e) {
+    console.error(e);
+    studentInfo.innerHTML = '<p style="color:#ff8888">❌ خطأ في تحميل البيانات</p>';
+    resultDiv.classList.add('show');
+  }
+}
+
+function exportToGitHub() {
+  if (!window.currentExportData) {
+    alert('لا توجد بيانات للتصدير. حمّلي بيانات الطالبة أولاً.');
+    return;
+  }
+  
+  const dataStr = JSON.stringify(window.currentExportData, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `student_${window.currentExportData.studentCode}_data.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert('✅ تم تصدير الملف! يمكنك الآن رفعه إلى GitHub.');
+}
+</script>
+</body>
+</html>
