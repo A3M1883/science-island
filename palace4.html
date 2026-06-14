@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
-<title>قصر المعرفة – جزيرة العلوم</title>
+<title>💎 قصر التحليل – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -21,14 +21,14 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
 .pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
   animation:iconPulse 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px #00ff88)}
-@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #00ff88)}50%{filter:drop-shadow(0 0 18px #00ff88)}}
+  filter:drop-shadow(0 0 8px #cc44ff)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #cc44ff)}50%{filter:drop-shadow(0 0 18px #cc44ff)}}
 .ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700}
 .psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
 .progw{margin-bottom:1rem}
 .proginfo{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(180,210,255,.6);margin-bottom:.28rem}
 .progtrack{height:9px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;border:1px solid rgba(255,215,0,.15)}
-.progfill{height:100%;background:linear-gradient(90deg,#00cc55,#00ff88);border-radius:5px;transition:width .5s}
+.progfill{height:100%;background:linear-gradient(90deg,#cc44ff,#dd77ff);border-radius:5px;transition:width .5s}
 .qcard{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.28);
   border-radius:16px;padding:1.3rem 1.2rem;margin-bottom:.9rem}
 .qnum{color:rgba(255,215,0,.62);font-size:.74rem;font-weight:700;margin-bottom:.4rem}
@@ -58,7 +58,9 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .btnnext.show{display:block}
 .endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
-.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem}
+.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #dd77ff)}
+@keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
 .endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
 .enddetail{color:rgba(175,210,255,.8);font-size:.92rem;line-height:1.7;margin-bottom:1rem}
@@ -86,15 +88,15 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
-  <span class="tb-ttl">💚 قصر المعرفة</span>
+  <span class="tb-ttl">💎 قصر التحليل</span>
   <span class="tb-gems">💎 <span id="tbGems">0</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
 <div class="wrap">
   <div class="ph">
-    <span class="pi">💚</span>
-    <div class="ptitle">قصر المعرفة</div>
-    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة!</div>
+    <span class="pi">💎</span>
+    <div class="ptitle">قصر التحليل</div>
+    <div class="psub">مستوى: التحليل · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة البنفسجية!</div>
   </div>
   <div class="progw">
     <div class="proginfo">
@@ -105,7 +107,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   </div>
   <div id="qSection">
     <div class="qcard" id="qCard">
-      <div class="qnum" id="qNum">السؤال 1</div>
+      <div class="qnum" id="qNum">السؤال 1 من 10</div>
       <div class="qtext" id="qText"></div>
       <div class="opts" id="opts"></div>
       <div class="res" id="res"></div>
@@ -113,8 +115,8 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
   <div class="endscreen" id="endScreen">
-    <span class="endgem">💚</span>
-    <div class="endtitle">أحسنتِ! جمعتِ جوهرة المعرفة الخضراء!</div>
+    <span class="endgem">💎</span>
+    <div class="endtitle">أحسنتِ! جمعتِ جوهرة التحليل !</div>
     <div class="stars" id="starsRow">⭐⭐⭐</div>
     <div class="enddetail" id="endDetail"></div>
     <button class="btnmap" onclick="location.href='map.html'">🗺️ العودة للخريطة</button>
@@ -130,23 +132,67 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 
 <script>
-const PID = 4;
+const PID = 4;  // Palace ID (4 for purple gem)
 const TOTAL = 10;
-const PASS_SCORE = 10; // Need 10/10 to pass
+const PASS_SCORE = 10;
 
-const QS=[
-  {"text": "كيف يؤثر الاستهلاك المتزايد للموارد الطبيعية؟", "opts": ["لا يؤثر في الموارد", "يؤدي إلى تناقص بعض الموارد وتغير توزيعها", "يزيد كمية الموارد دائماً", "يزيد كمية المياه العذبة"], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "ans": 0, "bloom": "التحليل"}, 
-  {"text": "إذا وصلت تراكيز المادة على جانبي الغشاء إلى التساوي، فإن الجزيئات:", "opts": ["تتوقف عن الحركة.", "تستمر في الحركة في الاتجاهين.", "تتحرك في اتجاه واحد فقط.", "تتحول إلى طاقة."], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "لماذا تختلف الموارد الطبيعية من منطقة إلى أخرى؟", "opts": ["لأن الموارد موزعة بالتساوي", "بسبب العوامل الطبيعية واستهلاك البشر", "بسبب دوران الأرض حول الشمس", "بسبب أطوار القمر"], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "ما سبب ظهور أطوار القمر المختلفة؟", "opts": ["دوران الشمس حول القمر", "تغير شكل الجزء المضيء الذي نراه من القمر", "وقوع ظل الأرض على القمر", "اختلاف سرعة دوران القمر"], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "ما السبب الرئيس لتعاقب الفصول الأربعة على الأرض؟", "opts": ["دوران الأرض حول محورها", "دوران القمر حول الأرض", "ميل محور الأرض أثناء دورانها حول الشمس", "تغير المسافة بين الأرض والشمس"], "ans": 2, "bloom": "التحليل"}, 
-  {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "أي العبارات الآتية تفسر اختلاف أشكال الخلايا المتخصصة؟", "opts": ["جميع الخلايا لها الوظيفة نفسها.", "يختلف شكل الخلية ليتناسب مع وظيفتها.", "تختلف أشكال الخلايا بسبب عمر الكائن الحي.", "لا توجد علاقة بين الشكل والوظيفة."], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "ما العلاقة بين البناء الضوئي والتنفس الخلوي؟", "opts": ["كلتاهما تحدثان في الميتوكوندريا.", "نواتج البناء الضوئي تستخدم في التنفس الخلوي.", "كلتاهما تحتاجان إلى الأكسجين.", "لا توجد علاقة بينهما."], "ans": 1, "bloom": "التحليل"}, 
-  {"text": "أي العبارات الآتية ليست من مزايا الوقود الأحفوري؟", "opts": ["سهل النقل", "رخيص نسبياً", "ملوث للبيئة", "سهل تحويله لأشكال أخرى من الطاقة"], "ans": 2, "bloom": "التحليل"}
+// Original questions with correct answers (index based on original order)
+const ORIGINAL_QS = [
+  {"text": "كيف يؤثر الاستهلاك المتزايد للموارد الطبيعية؟", "opts": ["لا يؤثر في الموارد", "يؤدي إلى تناقص بعض الموارد وتغير توزيعها", "يزيد كمية الموارد دائماً", "يزيد كمية المياه العذبة"], "correctIndex": 1},
+  {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "correctIndex": 0},
+  {"text": "إذا وصلت تراكيز المادة على جانبي الغشاء إلى التساوي، فإن الجزيئات:", "opts": ["تتوقف عن الحركة.", "تستمر في الحركة في الاتجاهين.", "تتحرك في اتجاه واحد فقط.", "تتحول إلى طاقة."], "correctIndex": 1},
+  {"text": "لماذا تختلف الموارد الطبيعية من منطقة إلى أخرى؟", "opts": ["لأن الموارد موزعة بالتساوي", "بسبب العوامل الطبيعية واستهلاك البشر", "بسبب دوران الأرض حول الشمس", "بسبب أطوار القمر"], "correctIndex": 1},
+  {"text": "ما سبب ظهور أطوار القمر المختلفة؟", "opts": ["دوران الشمس حول القمر", "تغير شكل الجزء المضيء الذي نراه من القمر", "وقوع ظل الأرض على القمر", "اختلاف سرعة دوران القمر"], "correctIndex": 1},
+  {"text": "ما السبب الرئيس لتعاقب الفصول الأربعة على الأرض؟", "opts": ["دوران الأرض حول محورها", "دوران القمر حول الأرض", "ميل محور الأرض أثناء دورانها حول الشمس", "تغير المسافة بين الأرض والشمس"], "correctIndex": 2},
+  {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "correctIndex": 1},
+  {"text": "أي العبارات الآتية تفسر اختلاف أشكال الخلايا المتخصصة؟", "opts": ["جميع الخلايا لها الوظيفة نفسها.", "يختلف شكل الخلية ليتناسب مع وظيفتها.", "تختلف أشكال الخلايا بسبب عمر الكائن الحي.", "لا توجد علاقة بين الشكل والوظيفة."], "correctIndex": 1},
+  {"text": "ما العلاقة بين البناء الضوئي والتنفس الخلوي؟", "opts": ["كلتاهما تحدثان في الميتوكوندريا.", "نواتج البناء الضوئي تستخدم في التنفس الخلوي.", "كلتاهما تحتاجان إلى الأكسجين.", "لا توجد علاقة بينهما."], "correctIndex": 1},
+  {"text": "أي العبارات الآتية ليست من مزايا الوقود الأحفوري؟", "opts": ["سهل النقل", "رخيص نسبياً", "ملوث للبيئة", "سهل تحويله لأشكال أخرى من الطاقة"], "correctIndex": 2}
 ];
 
+// Function to shuffle array (Fisher-Yates)
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Function to randomize options for a question
+function randomizeQuestion(q) {
+  // Create array of option objects with their original indices
+  const optionsWithIndices = q.opts.map((opt, idx) => ({
+    text: opt,
+    originalIndex: idx,
+    isCorrect: idx === q.correctIndex
+  }));
+  
+  // Shuffle the options
+  const shuffled = shuffleArray([...optionsWithIndices]);
+  
+  // Find the new index of the correct answer
+  const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
+  
+  // Return the randomized question
+  return {
+    text: q.text,
+    opts: shuffled.map(opt => opt.text),
+    correctIndex: newCorrectIndex
+  };
+}
+
+// Generate randomized question set
+function generateRandomizedQuestions() {
+  const randomized = [];
+  for (let i = 0; i < ORIGINAL_QS.length; i++) {
+    randomized.push(randomizeQuestion(ORIGINAL_QS[i]));
+  }
+  return randomized;
+}
+
+// Store the current randomized questions
+let QS = [];
 
 let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
@@ -162,6 +208,8 @@ function loadData() {
       const storedProgress = localStorage.getItem('scienceIslandProgress_' + currentStudentCode);
       if (storedProgress) {
         progress = JSON.parse(storedProgress);
+      } else {
+        progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
       }
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
@@ -170,7 +218,9 @@ function loadData() {
     }
     document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
     
-    // If already completed with 10/10, show completion screen immediately
+    // Generate randomized questions (new order every time)
+    QS = generateRandomizedQuestions();
+    
     if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
       document.getElementById("qSection").style.display = "none";
       document.getElementById("endScreen").classList.add("show");
@@ -186,17 +236,40 @@ function loadData() {
   }
 }
 
+function updateLeaderboard() {
+  if (!student || !student.name) return;
+  let lb = [];
+  try { lb = JSON.parse(localStorage.getItem("scienceIslandLeaderboard") || "[]"); } catch(e) {}
+  
+  const entry = {
+    name: student.name,
+    title: "الأميرة",
+    cls: student.cls || "—",
+    gems: progress.gems ? progress.gems.length : 0,
+    points: progress.points || 0,
+    date: new Date().toLocaleDateString("ar-AE")
+  };
+  
+  const idx = lb.findIndex(e => e.name === entry.name);
+  if (idx >= 0) {
+    if (entry.points >= lb[idx].points) lb[idx] = entry;
+  } else {
+    lb.push(entry);
+  }
+  lb.sort((a, b) => b.points - a.points);
+  try { localStorage.setItem("scienceIslandLeaderboard", JSON.stringify(lb)); } catch(e) {}
+}
+
 function saveProgress() {
   if (!currentStudentCode) return;
   try {
-    // Initialize progress if needed
     if (!progress) {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
-    // Only award points and gem if not already completed AND score is 10/10
+    console.log("Saving progress - Score: " + score + ", PID: " + PID + ", isAlreadyCompleted: " + isAlreadyCompleted);
+    
     if (!isAlreadyCompleted && score === 10) {
-      // Add the gem for THIS castle (PID)
       if (!progress.gems) progress.gems = [];
       if (!progress.gems.includes(PID)) {
         progress.gems.push(PID);
@@ -209,6 +282,7 @@ function saveProgress() {
       if (!progress.completedCastles) progress.completedCastles = [];
       if (!progress.completedCastles.includes(PID)) {
         progress.completedCastles.push(PID);
+        console.log("Castle " + PID + " marked as completed!");
       }
       
       if (!progress.castleScores) progress.castleScores = {};
@@ -225,17 +299,19 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    // Update leaderboard
+    console.log("Saved data:", dataToSave);
+    
     updateLeaderboard();
   } catch(e) { console.error(e); }
 }
+
 function showQ() {
   if (cur >= TOTAL) { endPalace(); return; }
   const q = QS[cur]; done = false;
   document.getElementById("qNum").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
   document.getElementById("qText").textContent = q.text;
   document.getElementById("progLbl").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
-  document.getElementById("progPts").textContent = "النقاط: " + score;
+  document.getElementById("progPts").textContent = "النقاط: " + (score * 10);
   document.getElementById("pf").style.width = (cur / TOTAL * 100) + "%";
   document.getElementById("res").className = "res";
   document.getElementById("res").innerHTML = "";
@@ -254,14 +330,16 @@ function check(idx, btn, q) {
   if (done) return; done = true;
   document.querySelectorAll(".opt").forEach(b => b.disabled = true);
   const r = document.getElementById("res");
-  if (idx === q.ans) {
+  if (idx === q.correctIndex) {
     btn.classList.add("correct"); score++;
-    r.textContent = "✅ إجابة صحيحة!"; r.className = "res ok";
+    r.textContent = "✅ إجابة صحيحة! (+10 نقاط)"; r.className = "res ok";
   } else {
     btn.classList.add("wrong");
-    document.querySelectorAll(".opt")[q.ans].classList.add("correct");
-    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.ans]; r.className = "res no";
+    // Highlight the correct answer
+    document.querySelectorAll(".opt")[q.correctIndex].classList.add("correct");
+    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.correctIndex]; r.className = "res no";
   }
+  document.getElementById("progPts").textContent = "النقاط: " + (score * 10);
   const nb = document.getElementById("btnNext"); nb.classList.add("show");
   nb.textContent = (cur < TOTAL - 1) ? "التالي ←" : "🏁 إنهاء القصر";
 }
@@ -273,21 +351,9 @@ function endPalace() {
   document.getElementById("pf").style.width = "100%";
   
   if (score >= PASS_SCORE) {
-    // Only award points and gem if not already completed
-    if (!isAlreadyCompleted && progress && !progress.completedCastles?.includes(PID)) {
-      const pointsEarned = 100;
-      if (!progress.gems) progress.gems = [];
-      if (!progress.gems.includes(PID)) progress.gems.push(PID);
-      progress.points = (progress.points || 0) + pointsEarned;
-      if (!progress.completedCastles) progress.completedCastles = [];
-      progress.completedCastles.push(PID);
-      if (!progress.castleScores) progress.castleScores = {};
-      progress.castleScores[PID] = pointsEarned;
-      saveProgress();
-    }
-    
+    saveProgress();
     document.getElementById("endScreen").classList.add("show");
-    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة 🏆`;
+    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة والجوهرة البنفسجية! 🎉💜`;
     document.getElementById("starsRow").textContent = "⭐⭐⭐";
     confetti();
   } else {
@@ -297,6 +363,8 @@ function endPalace() {
 }
 
 function restart() {
+  // Generate new random order when retrying
+  QS = generateRandomizedQuestions();
   cur = 0; score = 0; done = false;
   document.getElementById("endScreen").classList.remove("show");
   document.getElementById("failScreen").classList.remove("show");
@@ -305,8 +373,7 @@ function restart() {
 }
 
 function exitPalace() {
-  if (confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")) {
-    saveProgress();
+  if (confirm("هل تريدين الخروج؟")) {
     location.href = 'map.html';
   }
 }
