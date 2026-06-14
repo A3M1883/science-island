@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
-<title>قصر المعرفة – جزيرة العلوم</title>
+<title>💚 قصر المعرفة – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -58,7 +58,9 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .btnnext.show{display:block}
 .endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
-.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem}
+.endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #00ff88)}
+@keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
 .endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
 .enddetail{color:rgba(175,210,255,.8);font-size:.92rem;line-height:1.7;margin-bottom:1rem}
@@ -94,7 +96,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   <div class="ph">
     <span class="pi">💚</span>
     <div class="ptitle">قصر المعرفة</div>
-    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة!</div>
+    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الخضراء!</div>
   </div>
   <div class="progw">
     <div class="proginfo">
@@ -105,7 +107,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   </div>
   <div id="qSection">
     <div class="qcard" id="qCard">
-      <div class="qnum" id="qNum">السؤال 1</div>
+      <div class="qnum" id="qNum">السؤال 1 من 10</div>
       <div class="qtext" id="qText"></div>
       <div class="opts" id="opts"></div>
       <div class="res" id="res"></div>
@@ -130,22 +132,67 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 
 <script>
-const PID = 1;
+const PID = 1;  // Palace ID (1 for green gem)
 const TOTAL = 10;
-const PASS_SCORE = 10; // Need 10/10 to pass
+const PASS_SCORE = 10;
 
-const QS=[
-  {"text": "يستخرج الألومنيوم من:", "opts": ["خام الهيماتيت", "خام البوكسيت", "الكبريت", "الفلوريت"], "ans": 1, "bloom": "التذكر"}, 
-  {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "ans": 1, "bloom": "التذكر"}, 
-  {"text": "في أي عضية تحدث عملية التنفس الخلوي؟", "opts": ["البلاستيدات الخضراء", "جهاز جولجي", "الميتوكوندريا", "الفجوة"], "ans": 2, "bloom": "التذكر"}, 
-  {"text": "ما أكبر جسم في النظام الشمسي؟", "opts": ["الأرض", "المشتري", "الشمس", "زحل"], "ans": 2, "bloom": "التذكر"}, 
-  {"text": "ما أسرع الكواكب دوراناً حول الشمس؟", "opts": ["الأرض", "المريخ", "عطارد", "زحل"], "ans": 2, "bloom": "التذكر"}, 
-  {"text": "ما المقصود بالاستصلاح؟", "opts": ["إزالة الغابات", "إعادة تغطية الأراضي المنقبة بالتربة وزراعتها بالنباتات", "استخراج المعادن", "بناء السدود"], "ans": 1, "bloom": "التذكر"}, 
-  {"text": "ما المقصود بالانسياب السطحي؟", "opts": ["المياه الجوفية", "مياه البحار", "مياه الأمطار التي لا تتشربها الأرض فتجري على سطحها", "المياه المتبخرة"], "ans": 2, "bloom": "التذكر"}, 
-  {"text": "ما نوع المادة العضوية التي يتكون منها الفحم؟", "opts": ["بقايا العوالق البحرية", "بقايا نباتات المستنقعات", "بقايا الزواحف", "بقايا الديناصورات"], "ans": 1, "bloom": "التذكر"}, 
-  {"text": "ما المقصود بالمحميات؟", "opts": ["مناطق استخراج المعادن", "مناطق يمنع فيها قطع الأشجار أو البناء إلا وفق ضوابط محددة", "مناطق تخزين الوقود الأحفوري", "مناطق لا تحتوي على نباتات"], "ans": 1, "bloom": "التذكر"}, 
-  {"text": "أي الموارد الآتية يعد من الموارد المعدنية الفلزية؟", "opts": ["الكبريت", "الفلوريت", "الحديد", "الهاليت"], "ans": 2, "bloom": "التذكر"}
+// Original questions with correct answers (index based on original order)
+const ORIGINAL_QS = [
+  {"text": "يستخرج الألومنيوم من:", "opts": ["خام الهيماتيت", "خام البوكسيت", "الكبريت", "الفلوريت"], "correctIndex": 1},
+  {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "correctIndex": 1},
+  {"text": "في أي عضية تحدث عملية التنفس الخلوي؟", "opts": ["البلاستيدات الخضراء", "جهاز جولجي", "الميتوكوندريا", "الفجوة"], "correctIndex": 2},
+  {"text": "ما أكبر جسم في النظام الشمسي؟", "opts": ["الأرض", "المشتري", "الشمس", "زحل"], "correctIndex": 2},
+  {"text": "ما أسرع الكواكب دوراناً حول الشمس؟", "opts": ["الأرض", "المريخ", "عطارد", "زحل"], "correctIndex": 2},
+  {"text": "ما المقصود بالاستصلاح؟", "opts": ["إزالة الغابات", "إعادة تغطية الأراضي المنقبة بالتربة وزراعتها بالنباتات", "استخراج المعادن", "بناء السدود"], "correctIndex": 1},
+  {"text": "ما المقصود بالانسياب السطحي؟", "opts": ["المياه الجوفية", "مياه البحار", "مياه الأمطار التي لا تتشربها الأرض فتجري على سطحها", "المياه المتبخرة"], "correctIndex": 2},
+  {"text": "ما نوع المادة العضوية التي يتكون منها الفحم؟", "opts": ["بقايا العوالق البحرية", "بقايا نباتات المستنقعات", "بقايا الزواحف", "بقايا الديناصورات"], "correctIndex": 1},
+  {"text": "ما المقصود بالمحميات؟", "opts": ["مناطق استخراج المعادن", "مناطق يمنع فيها قطع الأشجار أو البناء إلا وفق ضوابط محددة", "مناطق تخزين الوقود الأحفوري", "مناطق لا تحتوي على نباتات"], "correctIndex": 1},
+  {"text": "أي الموارد الآتية يعد من الموارد المعدنية الفلزية؟", "opts": ["الكبريت", "الفلوريت", "الحديد", "الهاليت"], "correctIndex": 2}
 ];
+
+// Function to shuffle array (Fisher-Yates)
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Function to randomize options for a question
+function randomizeQuestion(q) {
+  // Create array of option objects with their original indices
+  const optionsWithIndices = q.opts.map((opt, idx) => ({
+    text: opt,
+    originalIndex: idx,
+    isCorrect: idx === q.correctIndex
+  }));
+  
+  // Shuffle the options
+  const shuffled = shuffleArray([...optionsWithIndices]);
+  
+  // Find the new index of the correct answer
+  const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
+  
+  // Return the randomized question
+  return {
+    text: q.text,
+    opts: shuffled.map(opt => opt.text),
+    correctIndex: newCorrectIndex
+  };
+}
+
+// Generate randomized question set
+function generateRandomizedQuestions() {
+  const randomized = [];
+  for (let i = 0; i < ORIGINAL_QS.length; i++) {
+    randomized.push(randomizeQuestion(ORIGINAL_QS[i]));
+  }
+  return randomized;
+}
+
+// Store the current randomized questions
+let QS = [];
 
 let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
@@ -161,6 +208,8 @@ function loadData() {
       const storedProgress = localStorage.getItem('scienceIslandProgress_' + currentStudentCode);
       if (storedProgress) {
         progress = JSON.parse(storedProgress);
+      } else {
+        progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
       }
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
@@ -169,7 +218,9 @@ function loadData() {
     }
     document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
     
-    // If already completed with 10/10, show completion screen immediately
+    // Generate randomized questions (new order every time)
+    QS = generateRandomizedQuestions();
+    
     if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
       document.getElementById("qSection").style.display = "none";
       document.getElementById("endScreen").classList.add("show");
@@ -185,17 +236,40 @@ function loadData() {
   }
 }
 
+function updateLeaderboard() {
+  if (!student || !student.name) return;
+  let lb = [];
+  try { lb = JSON.parse(localStorage.getItem("scienceIslandLeaderboard") || "[]"); } catch(e) {}
+  
+  const entry = {
+    name: student.name,
+    title: "الأميرة",
+    cls: student.cls || "—",
+    gems: progress.gems ? progress.gems.length : 0,
+    points: progress.points || 0,
+    date: new Date().toLocaleDateString("ar-AE")
+  };
+  
+  const idx = lb.findIndex(e => e.name === entry.name);
+  if (idx >= 0) {
+    if (entry.points >= lb[idx].points) lb[idx] = entry;
+  } else {
+    lb.push(entry);
+  }
+  lb.sort((a, b) => b.points - a.points);
+  try { localStorage.setItem("scienceIslandLeaderboard", JSON.stringify(lb)); } catch(e) {}
+}
+
 function saveProgress() {
   if (!currentStudentCode) return;
   try {
-    // Initialize progress if needed
     if (!progress) {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
-    // Only award points and gem if not already completed AND score is 10/10
+    console.log("Saving progress - Score: " + score + ", PID: " + PID + ", isAlreadyCompleted: " + isAlreadyCompleted);
+    
     if (!isAlreadyCompleted && score === 10) {
-      // Add the gem for THIS castle (PID)
       if (!progress.gems) progress.gems = [];
       if (!progress.gems.includes(PID)) {
         progress.gems.push(PID);
@@ -208,6 +282,7 @@ function saveProgress() {
       if (!progress.completedCastles) progress.completedCastles = [];
       if (!progress.completedCastles.includes(PID)) {
         progress.completedCastles.push(PID);
+        console.log("Castle " + PID + " marked as completed!");
       }
       
       if (!progress.castleScores) progress.castleScores = {};
@@ -224,7 +299,8 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    // Update leaderboard
+    console.log("Saved data:", dataToSave);
+    
     updateLeaderboard();
   } catch(e) { console.error(e); }
 }
@@ -235,7 +311,7 @@ function showQ() {
   document.getElementById("qNum").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
   document.getElementById("qText").textContent = q.text;
   document.getElementById("progLbl").textContent = "السؤال " + (cur + 1) + " من " + TOTAL;
-  document.getElementById("progPts").textContent = "النقاط: " + score;
+  document.getElementById("progPts").textContent = "النقاط: " + (score * 10);
   document.getElementById("pf").style.width = (cur / TOTAL * 100) + "%";
   document.getElementById("res").className = "res";
   document.getElementById("res").innerHTML = "";
@@ -254,14 +330,16 @@ function check(idx, btn, q) {
   if (done) return; done = true;
   document.querySelectorAll(".opt").forEach(b => b.disabled = true);
   const r = document.getElementById("res");
-  if (idx === q.ans) {
+  if (idx === q.correctIndex) {
     btn.classList.add("correct"); score++;
-    r.textContent = "✅ إجابة صحيحة!"; r.className = "res ok";
+    r.textContent = "✅ إجابة صحيحة! (+10 نقاط)"; r.className = "res ok";
   } else {
     btn.classList.add("wrong");
-    document.querySelectorAll(".opt")[q.ans].classList.add("correct");
-    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.ans]; r.className = "res no";
+    // Highlight the correct answer
+    document.querySelectorAll(".opt")[q.correctIndex].classList.add("correct");
+    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.correctIndex]; r.className = "res no";
   }
+  document.getElementById("progPts").textContent = "النقاط: " + (score * 10);
   const nb = document.getElementById("btnNext"); nb.classList.add("show");
   nb.textContent = (cur < TOTAL - 1) ? "التالي ←" : "🏁 إنهاء القصر";
 }
@@ -273,21 +351,9 @@ function endPalace() {
   document.getElementById("pf").style.width = "100%";
   
   if (score >= PASS_SCORE) {
-    // Only award points and gem if not already completed
-    if (!isAlreadyCompleted && progress && !progress.completedCastles?.includes(PID)) {
-      const pointsEarned = 100;
-      if (!progress.gems) progress.gems = [];
-      if (!progress.gems.includes(PID)) progress.gems.push(PID);
-      progress.points = (progress.points || 0) + pointsEarned;
-      if (!progress.completedCastles) progress.completedCastles = [];
-      progress.completedCastles.push(PID);
-      if (!progress.castleScores) progress.castleScores = {};
-      progress.castleScores[PID] = pointsEarned;
-      saveProgress();
-    }
-    
+    saveProgress();
     document.getElementById("endScreen").classList.add("show");
-    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة 🏆`;
+    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة والجوهرة الخضراء! 🎉💚`;
     document.getElementById("starsRow").textContent = "⭐⭐⭐";
     confetti();
   } else {
@@ -297,6 +363,8 @@ function endPalace() {
 }
 
 function restart() {
+  // Generate new random order when retrying
+  QS = generateRandomizedQuestions();
   cur = 0; score = 0; done = false;
   document.getElementById("endScreen").classList.remove("show");
   document.getElementById("failScreen").classList.remove("show");
@@ -305,8 +373,7 @@ function restart() {
 }
 
 function exitPalace() {
-  if (confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")) {
-    saveProgress();
+  if (confirm("هل تريدين الخروج؟")) {
     location.href = 'map.html';
   }
 }
