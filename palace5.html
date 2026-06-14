@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
-<title>👑 تحدي النهاية – جزيرة العلوم</title>
+<title>👑 القلعة الملكية – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -43,8 +43,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .opt:disabled{cursor:default}
 .optl{width:24px;height:24px;border-radius:50%;flex-shrink:0;
   background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.74rem;font-weight:900;color:#ffd700}
+  display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:900;color:#ffd700}
 .res{text-align:center;font-size:.98rem;font-weight:700;padding:.4rem;margin-top:.65rem;border-radius:7px;display:none}
 .res.ok{color:#00ee77;display:block}
 .res.no{color:#ff6677;display:block}
@@ -104,7 +103,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
-  <span class="tb-ttl">👑 تحدي النهاية</span>
+  <span class="tb-ttl">👑 القلعة الملكية</span>
   <span class="tb-gems">💎 <span id="tbGems">4</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
@@ -135,7 +134,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   <div class="victory" id="victoryScreen">
     <span class="vcrown">👑</span>
     <div class="vtitle">تهانينا يا ملكة جزيرة العلوم!</div>
-    <div class="gems-won">💚 💙 💛 🔴 👑</div>
+    <div class="gems-won">💙 💚 🧡 💜 👑</div>
     <div class="vsub">لقد جمعتِ الجواهر الأربعة وحصلتِ على التاج الملكي!</div>
     <div class="vname" id="vName">—</div>
     <div class="score-card">
@@ -163,22 +162,67 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 
 <script>
-const PID = 5;
+const PID = 5;  // Palace ID (5 for crown)
 const TOTAL = 10;
-const PASS_SCORE = 10; // Need 10/10 to pass
+const PASS_SCORE = 10;
 
-const QS = [
-  {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "ans": 1},
-  {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "ans": 0},
-  {"text": "ما المقصود بالمحميات؟", "opts": ["مناطق استخراج المعادن", "مناطق يمنع فيها قطع الأشجار أو البناء إلا وفق ضوابط محددة", "مناطق تخزين الوقود الأحفوري", "مناطق لا تحتوي على نباتات"], "ans": 1},
-  {"text": "أي العبارات الآتية صحيحة بالنسبة للخلايا وحيدة الخلية؟", "opts": ["لا تقم بجميع العمليات الحيوية.", "تحتاج إلى أنسجة وأعضاء للبقاء.", "تقوم بجميع العمليات الحيوية داخل خلية واحدة.", "لا تحتوي على غشاء خلوي."], "ans": 2},
-  {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "ans": 1},
-  {"text": "إلى أي نوع من المجرات تنتمي مجرة درب التبانة؟", "opts": ["غير المنتظمة", "الإهليلجية", "الحلزونية", "القزمة"], "ans": 2},
-  {"text": "ما نوع المادة العضوية التي يتكون منها النفط والغاز الطبيعي؟", "opts": ["بقايا نباتات المستنقعات", "بقايا الكائنات والعوالق البحرية", "بقايا الزواحف", "بقايا الطيور"], "ans": 1},
-  {"text": "أي العوامل الطبيعية الآتية قد يؤدي إلى انخفاض كمية المياه المتاحة؟", "opts": ["الجفاف", "تحلية المياه", "معالجة المياه", "إعادة استخدام المياه"], "ans": 0},
-  {"text": "إذا توقفت الميتوكوندريا عن العمل، فما العملية التي ستتأثر مباشرة؟", "opts": ["تخزين الماء", "تحرير الطاقة من الغذاء", "تصنيع البروتينات", "انقسام الخلية"], "ans": 1},
-  {"text": "عندما يكون القمر والأرض والشمس على استقامة واحدة، فإن المد الناتج يسمى:", "opts": ["المد المنخفض", "المد التام (المد الربيعي)", "المد الضعيف", "المد المعتدل"], "ans": 1}
+// Original questions with correct answers (index based on original order)
+const ORIGINAL_QS = [
+  {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "correctIndex": 1},
+  {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "correctIndex": 0},
+  {"text": "ما المقصود بالمحميات؟", "opts": ["مناطق استخراج المعادن", "مناطق يمنع فيها قطع الأشجار أو البناء إلا وفق ضوابط محددة", "مناطق تخزين الوقود الأحفوري", "مناطق لا تحتوي على نباتات"], "correctIndex": 1},
+  {"text": "أي العبارات الآتية صحيحة بالنسبة للخلايا وحيدة الخلية؟", "opts": ["لا تقوم بجميع العمليات الحيوية.", "تحتاج إلى أنسجة وأعضاء للبقاء.", "تقوم بجميع العمليات الحيوية داخل خلية واحدة.", "لا تحتوي على غشاء خلوي."], "correctIndex": 2},
+  {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "correctIndex": 1},
+  {"text": "إلى أي نوع من المجرات تنتمي مجرة درب التبانة؟", "opts": ["غير المنتظمة", "الإهليلجية", "الحلزونية", "القزمة"], "correctIndex": 2},
+  {"text": "ما نوع المادة العضوية التي يتكون منها النفط والغاز الطبيعي؟", "opts": ["بقايا نباتات المستنقعات", "بقايا الكائنات والعوالق البحرية", "بقايا الزواحف", "بقايا الطيور"], "correctIndex": 1},
+  {"text": "أي العوامل الطبيعية الآتية قد يؤدي إلى انخفاض كمية المياه المتاحة؟", "opts": ["الجفاف", "تحلية المياه", "معالجة المياه", "إعادة استخدام المياه"], "correctIndex": 0},
+  {"text": "إذا توقفت الميتوكوندريا عن العمل، فما العملية التي ستتأثر مباشرة؟", "opts": ["تخزين الماء", "تحرير الطاقة من الغذاء", "تصنيع البروتينات", "انقسام الخلية"], "correctIndex": 1},
+  {"text": "عندما يكون القمر والأرض والشمس على استقامة واحدة، فإن المد الناتج يسمى:", "opts": ["المد المنخفض", "المد التام (المد الربيعي)", "المد الضعيف", "المد المعتدل"], "correctIndex": 1}
 ];
+
+// Function to shuffle array (Fisher-Yates)
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Function to randomize options for a question
+function randomizeQuestion(q) {
+  // Create array of option objects with their original indices
+  const optionsWithIndices = q.opts.map((opt, idx) => ({
+    text: opt,
+    originalIndex: idx,
+    isCorrect: idx === q.correctIndex
+  }));
+  
+  // Shuffle the options
+  const shuffled = shuffleArray([...optionsWithIndices]);
+  
+  // Find the new index of the correct answer
+  const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
+  
+  // Return the randomized question
+  return {
+    text: q.text,
+    opts: shuffled.map(opt => opt.text),
+    correctIndex: newCorrectIndex
+  };
+}
+
+// Generate randomized question set
+function generateRandomizedQuestions() {
+  const randomized = [];
+  for (let i = 0; i < ORIGINAL_QS.length; i++) {
+    randomized.push(randomizeQuestion(ORIGINAL_QS[i]));
+  }
+  return randomized;
+}
+
+// Store the current randomized questions
+let QS = [];
 
 let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
@@ -194,6 +238,8 @@ function loadData() {
       const storedProgress = localStorage.getItem('scienceIslandProgress_' + currentStudentCode);
       if (storedProgress) {
         progress = JSON.parse(storedProgress);
+      } else {
+        progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
       }
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
@@ -202,7 +248,9 @@ function loadData() {
     }
     document.getElementById("tbGems").textContent = "4"; // Always 4/4 for final challenge
     
-    // If already completed with 10/10, show victory screen immediately
+    // Generate randomized questions (new order every time)
+    QS = generateRandomizedQuestions();
+    
     if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
       document.getElementById("qSection").style.display = "none";
       showVictoryScreen(true);
@@ -245,18 +293,17 @@ function showVictoryScreen(isReloaded = false) {
 function saveProgress() {
   if (!currentStudentCode) return;
   try {
-    // Initialize progress if needed
     if (!progress) {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
-    // Only award points and gem if not already completed AND score is 10/10
+    console.log("Saving progress - Score: " + score + ", PID: " + PID + ", isAlreadyCompleted: " + isAlreadyCompleted);
+    
     if (!isAlreadyCompleted && score === 10) {
-      // Add the gem for THIS castle (PID)
       if (!progress.gems) progress.gems = [];
       if (!progress.gems.includes(PID)) {
         progress.gems.push(PID);
-        console.log("Gem " + PID + " added! Total gems: " + progress.gems.length);
+        console.log("Crown added! Total items: " + progress.gems.length);
       }
       
       const pointsEarned = 100;
@@ -265,6 +312,7 @@ function saveProgress() {
       if (!progress.completedCastles) progress.completedCastles = [];
       if (!progress.completedCastles.includes(PID)) {
         progress.completedCastles.push(PID);
+        console.log("Castle " + PID + " marked as completed!");
       }
       
       if (!progress.castleScores) progress.castleScores = {};
@@ -281,7 +329,8 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    // Update leaderboard
+    console.log("Saved data:", dataToSave);
+    
     updateLeaderboard();
   } catch(e) { console.error(e); }
 }
@@ -295,7 +344,7 @@ function updateLeaderboard() {
     name: student.name,
     title: "الأميرة",
     cls: student.cls || "—",
-    gems: progress.gems ? progress.gems.length : 0,
+    gems: progress.gems ? progress.gems.length - 1 : 0, // Subtract 1 for the crown (gem 5)
     points: progress.points || 0,
     date: new Date().toLocaleDateString("ar-AE")
   };
@@ -335,13 +384,13 @@ function check(idx, btn, q) {
   if (done) return; done = true;
   document.querySelectorAll(".opt").forEach(b => b.disabled = true);
   const r = document.getElementById("res");
-  if (idx === q.ans) {
+  if (idx === q.correctIndex) {
     btn.classList.add("correct"); score++;
     r.textContent = "✅ إجابة صحيحة! (+10 نقاط)"; r.className = "res ok";
   } else {
     btn.classList.add("wrong");
-    document.querySelectorAll(".opt")[q.ans].classList.add("correct");
-    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.ans]; r.className = "res no";
+    document.querySelectorAll(".opt")[q.correctIndex].classList.add("correct");
+    r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.correctIndex]; r.className = "res no";
   }
   document.getElementById("progPts").textContent = "النقاط: " + (score * 10);
   const nb = document.getElementById("btnNext"); nb.classList.add("show");
@@ -364,6 +413,8 @@ function endPalace() {
 }
 
 function restart() {
+  // Generate new random order when retrying
+  QS = generateRandomizedQuestions();
   cur = 0; score = 0; done = false;
   document.getElementById("victoryScreen").classList.remove("show");
   document.getElementById("failScreen").classList.remove("show");
@@ -372,7 +423,7 @@ function restart() {
 }
 
 function exitPalace() {
-  if (confirm("هل تريدين الخروج؟ سيتم حفظ تقدمك.")) {
+  if (confirm("هل تريدين الخروج؟")) {
     location.href = 'map.html';
   }
 }
