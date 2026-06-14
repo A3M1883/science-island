@@ -189,21 +189,27 @@ function loadData() {
 function saveProgress() {
   if (!currentStudentCode) return;
   try {
+    // Initialize progress if needed
     if (!progress) {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
     // Only award points and gem if not already completed AND score is 10/10
     if (!isAlreadyCompleted && score === 10) {
-      if (!progress.gems) progress.gems = [];
       // Add the gem for THIS castle (PID)
-      if (!progress.gems.includes(PID)) progress.gems.push(PID);
+      if (!progress.gems) progress.gems = [];
+      if (!progress.gems.includes(PID)) {
+        progress.gems.push(PID);
+        console.log("Gem " + PID + " added! Total gems: " + progress.gems.length);
+      }
       
       const pointsEarned = 100;
       progress.points = (progress.points || 0) + pointsEarned;
       
       if (!progress.completedCastles) progress.completedCastles = [];
-      if (!progress.completedCastles.includes(PID)) progress.completedCastles.push(PID);
+      if (!progress.completedCastles.includes(PID)) {
+        progress.completedCastles.push(PID);
+      }
       
       if (!progress.castleScores) progress.castleScores = {};
       progress.castleScores[PID] = pointsEarned;
@@ -219,7 +225,7 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    // Also update leaderboard
+    // Update leaderboard
     updateLeaderboard();
   } catch(e) { console.error(e); }
 }
