@@ -17,6 +17,9 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   font-size:.75rem;font-weight:700;color:rgba(200,220,255,.85);cursor:pointer;transition:all .2s}
 .tbtn:hover{background:rgba(255,215,0,.12);color:#ffd700}
 .wrap{max-width:860px;margin:0 auto;padding:1.4rem 1rem 3rem}
+.loading{display:flex;justify-content:center;align-items:center;padding:3rem;gap:.5rem}
+.spinner{width:30px;height:30px;border:3px solid rgba(255,215,0,.3);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 /* ── الشهادة ── */
 #certBox{
   background:linear-gradient(160deg,#f8f0d0,#faeab8,#eddca0);
@@ -30,128 +33,4 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .cc{position:absolute;font-size:1.6rem;color:rgba(200,150,10,.38)}
 .cc.tl{top:16px;left:20px} .cc.tr{top:16px;right:20px}
 .cc.bl{bottom:16px;left:20px} .cc.br{bottom:16px;right:20px}
-.c-logo{font-size:2.8rem;display:block;margin-bottom:.25rem;filter:drop-shadow(0 0 10px rgba(200,150,10,.5))}
-.c-org{font-size:.82rem;color:#6a3a00;margin-bottom:.1rem}
-.c-school{font-size:.88rem;font-weight:700;color:#4a2800;margin-bottom:.08rem}
-.c-unit{font-size:.78rem;color:#6a3a00;margin-bottom:.9rem}
-.c-title{font-size:clamp(1.4rem,3.8vw,2.1rem);font-weight:700;color:#8b4500;
-  border-top:1.5px solid rgba(200,150,10,.45);border-bottom:1.5px solid rgba(200,150,10,.45);
-  padding:.55rem 0;margin:.55rem 0;text-shadow:0 1px 2px rgba(200,150,10,.3)}
-.c-body{font-size:.9rem;color:#4a2800;line-height:2;margin-bottom:.4rem}
-.c-name{font-size:clamp(1.5rem,4.2vw,2.3rem);font-weight:700;color:#6b3000;
-  border-bottom:1.5px solid rgba(200,150,10,.55);padding-bottom:.28rem;margin:.28rem 0 .45rem}
-.c-details{font-size:.83rem;color:#6a3a00;line-height:1.85;margin-bottom:.75rem}
-.c-gems{display:flex;justify-content:center;gap:.55rem;font-size:1.35rem;margin:.55rem 0}
-.c-date{font-size:.76rem;color:#8b5a30;margin-top:.35rem}
-.c-footer{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;
-  margin-top:1.4rem;border-top:1px solid rgba(200,150,10,.32);padding-top:.9rem}
-.csig{text-align:center}
-.sigline{width:78%;height:1px;background:rgba(100,50,0,.38);margin:.45rem auto .13rem}
-.signame{font-size:.78rem;font-weight:700;color:#5a2800}
-.sigrole{font-size:.68rem;color:#7a4000}
-/* أزرار */
-.btnrow{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.3rem}
-.btn-g{background:linear-gradient(135deg,#c8960a,#ffd700);border:none;border-radius:38px;
-  padding:.72rem 1.9rem;font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:900;
-  color:#1a0800;cursor:pointer;box-shadow:0 0 16px rgba(255,215,0,.33);transition:all .2s}
-.btn-g:hover{transform:scale(1.04);box-shadow:0 0 26px rgba(255,215,0,.5)}
-.btn-o{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,215,0,.35);border-radius:38px;
-  padding:.72rem 1.9rem;font-family:"Tajawal",sans-serif;font-size:.92rem;font-weight:700;
-  color:rgba(200,220,255,.85);cursor:pointer;transition:all .2s}
-.btn-o:hover{background:rgba(255,215,0,.1);color:#ffd700;border-color:#ffd700}
-.cl{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
-.cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
-@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
-</style>
-</head>
-<body>
-<div class="cl" id="cl"></div>
-<div class="topbar">
-  <button class="tbtn" onclick="location.href='map.html'">↩ الخريطة</button>
-  <span style="font-size:.82rem;color:#ffd700;font-weight:700">📜 شهادة الإنجاز</span>
-  <button class="tbtn" onclick="location.href='leaderboard.html'">🏆 سجل الأبطال</button>
-</div>
-<div class="wrap">
-<div id="certBox">
-  <span class="cc tl">✦</span><span class="cc tr">✦</span>
-  <span class="cc bl">✦</span><span class="cc br">✦</span>
-  <span class="c-logo">👑</span>
-  <div class="c-org">مجمع زايد التعليمي – البرشاء</div>
-  <div class="c-school">الحلقة الثانية والثالثة</div>
-  <div class="c-unit">مادة العلوم – الصف السادس</div>
-  <div class="c-title">شهادة ملكة جزيرة العلوم</div>
-  <div class="c-body">تُقدَّم هذه الشهادة إلى الطالبة المتميزة</div>
-  <div class="c-name" id="cName">—</div>
-  <div class="c-details" id="cDetails">—</div>
-  <div class="c-body">لإكمالها مغامرة التاج الملكي وجمعها جميع الجواهر الأربع</div>
-  <div class="c-gems">💚 💙 💛 🔴</div>
-  <div class="c-body" id="cScore">وحصولها على التاج الملكي 👑</div>
-  <div class="c-date" id="cDate">—</div>
-  <div class="c-footer">
-    <div class="csig"><div class="sigline"></div><div class="signame">أ. ألفت صادق الدغيدي</div><div class="sigrole">تصميم وابتكار</div></div>
-    <div class="csig"><div class="sigline"></div><div class="signame">أ. منى البلوشي</div><div class="sigrole">النائب الأكاديمي</div></div>
-    <div class="csig"><div class="sigline"></div><div class="signame">أ. ميمونة الجوهري</div><div class="sigrole">مديرة المجمع</div></div>
-  </div>
-</div>
-<div class="btnrow">
-  <button class="btn-g" onclick="printCert()">🖨️ طباعة / PDF</button>
-  <button class="btn-o" onclick="location.href='leaderboard.html'">🏆 سجل الأبطال</button>
-  <button class="btn-o" onclick="location.href='map.html'">🗺️ الخريطة</button>
-</div>
-</div>
-<script>
-let student=null,prog={gems:[],level:1,points:0};
-try{
-  student=JSON.parse(localStorage.getItem("scienceIslandStudent")||"null");
-  const pr=JSON.parse(localStorage.getItem("scienceIslandProgress")||"{}");
-  if(Array.isArray(pr.gems))prog.gems=pr.gems;
-  if(pr.level)prog.level=pr.level;
-  if(pr.points)prog.points=pr.points;
-}catch(e){}
-function fill(){
-  if(!student||!student.name)return;
-  const lbl=student.titleLabel||(student.title==="princess"?"الأميرة":"الأمير");
-  document.getElementById("cName").textContent=lbl+" "+student.name;
-  document.getElementById("cDetails").innerHTML=
-    `الشعبة: <strong>${student.cls||"—"}</strong> &nbsp;|&nbsp; المدرسة: <strong>${student.school||"—"}</strong><br>معلمة المادة: <strong>${student.teacher||"—"}</strong>`;
-  document.getElementById("cScore").textContent=
-    `حصلت على ${prog.gems.length} جوهرة بإجمالي ${prog.points} نقطة 🏆`;
-  document.getElementById("cDate").textContent=
-    "تاريخ الإنجاز: "+new Date().toLocaleDateString("ar-AE",{year:"numeric",month:"long",day:"numeric"});
-  saveLB();confetti();
-}
-fill();
-function saveLB(){
-  if(!student||!student.name)return;
-  let lb=[];try{lb=JSON.parse(localStorage.getItem("scienceIslandLeaderboard")||"[]");}catch(e){}
-  const lbl=student.titleLabel||(student.title==="princess"?"الأميرة":"الأمير");
-  const e={name:student.name,title:lbl,cls:student.cls||"—",gems:prog.gems.length,points:prog.points,date:new Date().toLocaleDateString("ar-AE")};
-  const i=lb.findIndex(x=>x.name===e.name);
-  if(i>=0){if(e.points>=lb[i].points)lb[i]=e;}else lb.push(e);
-  lb.sort((a,b)=>b.points-a.points);
-  try{localStorage.setItem("scienceIslandLeaderboard",JSON.stringify(lb));}catch(e){}
-}
-function printCert(){
-  const style=document.querySelector("style").textContent;
-  const body=document.getElementById("certBox").outerHTML;
-  const w=window.open("","_blank");
-  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>${style} body{background:#f8f0d0;padding:1.5rem} .cl,.topbar,.btnrow{display:none!important} @media print{body{padding:0}}</style>
-    </head><body>${body}<script>window.onload=()=>window.print();<\/script></body></html>`);
-  w.document.close();
-}
-function confetti(){
-  const w=document.getElementById("cl");
-  const cols=["#ffd700","#00ff88","#ff88cc","#88ddff","#ffaa00","#cc88ff"];
-  for(let i=0;i<80;i++){
-    const c=document.createElement("div");c.className="cp";const sz=6+Math.random()*8;
-    c.style.cssText="left:"+(Math.random()*100)+"vw;background:"+cols[~~(Math.random()*cols.length)]+
-      ";animation-duration:"+(3+Math.random()*3)+"s;animation-delay:"+(Math.random()*2)+"s;"+
-      "width:"+sz+"px;height:"+sz+"px;border-radius:"+(Math.random()>.5?"50%":"2px")+";";
-    w.appendChild(c);setTimeout(()=>c.remove(),7000);
-  }
-}
-</script>
-</body>
-</html>
+.c-logo
