@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
-<title>💎 قصر المعرفة – جزيرة العلوم</title>
+<title>💚 قصر المعرفة – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -21,8 +21,8 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
 .pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
   animation:iconPulse 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px #00ff88)}
-@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #00ff88)}50%{filter:drop-shadow(0 0 18px #00ff88)}}
+  filter:drop-shadow(0 0 8px #00cc55)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #00cc55)}50%{filter:drop-shadow(0 0 18px #00cc55)}}
 .ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700}
 .psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
 .progw{margin-bottom:1rem}
@@ -59,7 +59,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
 .endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
-  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #00ff88)}
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #00cc55)}
 @keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
 .endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
@@ -96,13 +96,13 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
-  <span class="tb-ttl">💎 قصر المعرفة</span>
+  <span class="tb-ttl">💚 قصر المعرفة</span>
   <span class="tb-gems">💎 <span id="tbGems">0</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
 <div class="wrap">
   <div class="ph">
-    <span class="pi">💎</span>
+    <span class="pi">💚</span>
     <div class="ptitle">قصر المعرفة</div>
     <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الخضراء!</div>
   </div>
@@ -123,7 +123,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
   <div class="endscreen" id="endScreen">
-    <span class="endgem">💎</span>
+    <span class="endgem">💚</span>
     <div class="endtitle">أحسنتِ! جمعتِ جوهرة المعرفة!</div>
     <div class="stars" id="starsRow">⭐⭐⭐</div>
     <div class="enddetail" id="endDetail"></div>
@@ -148,11 +148,11 @@ const GITHUB_REPO = 'a3m1883/science-island';
 const DATA_FILE_PATH = 'data/students.json';
 // ============================================
 
-const PID = 1;
+const PID = 1;  // Palace ID (1 for GREEN gem 💚)
 const TOTAL = 10;
 const PASS_SCORE = 10;
 
-// Original questions
+// Original questions for Palace 1 (المعرفة) - GREEN GEM
 const ORIGINAL_QS = [
   {"text": "يستخرج الألومنيوم من:", "opts": ["خام الهيماتيت", "خام البوكسيت", "الكبريت", "الفلوريت"], "correctIndex": 1},
   {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "correctIndex": 1},
@@ -166,6 +166,7 @@ const ORIGINAL_QS = [
   {"text": "أي الموارد الآتية يعد من الموارد المعدنية الفلزية؟", "opts": ["الكبريت", "الفلوريت", "الحديد", "الهاليت"], "correctIndex": 2}
 ];
 
+// Function to shuffle array
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -174,14 +175,17 @@ function shuffleArray(arr) {
   return arr;
 }
 
+// Function to randomize options for a question
 function randomizeQuestion(q) {
   const optionsWithIndices = q.opts.map((opt, idx) => ({
     text: opt,
     originalIndex: idx,
     isCorrect: idx === q.correctIndex
   }));
+  
   const shuffled = shuffleArray([...optionsWithIndices]);
   const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
+  
   return {
     text: q.text,
     opts: shuffled.map(opt => opt.text),
@@ -189,6 +193,7 @@ function randomizeQuestion(q) {
   };
 }
 
+// Generate randomized question set
 function generateRandomizedQuestions() {
   const randomized = [];
   for (let i = 0; i < ORIGINAL_QS.length; i++) {
@@ -197,7 +202,9 @@ function generateRandomizedQuestions() {
   return randomized;
 }
 
+// Store the current randomized questions
 let QS = [];
+
 let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
