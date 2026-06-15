@@ -62,10 +62,18 @@ html,body{width:100%;height:100%;font-family:'Tajawal',sans-serif;overflow:hidde
 .popup-body{color:#e0e8ff;font-size:1rem;line-height:1.8;margin-bottom:1.2rem}
 .popup-close{background:linear-gradient(135deg,#1a3a8f,#2855c8);border:2px solid #ffd700;border-radius:30px;padding:.6rem 2.5rem;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;color:#ffd700;cursor:pointer;transition:all .2s}
 .popup-close:hover{background:linear-gradient(135deg,#2855c8,#3a6add);box-shadow:0 0 15px rgba(255,215,0,.4)}
+.loading-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,215,0,.3);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:768px){.btn-main{padding:.7rem 2.5rem;font-size:1.1rem}.btn-row{gap:.5rem}.btn-sec{padding:.45rem .9rem;font-size:.8rem}.features-list{display:none}}
 </style>
 </head>
 <body>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div style="color:#ffd700">جاري تحميل البيانات...</div>
+</div>
 <div class="screen" id="mainScreen">
   <div class="anim-layer">
     <div class="sky-shimmer"></div>
@@ -74,11 +82,11 @@ html,body{width:100%;height:100%;font-family:'Tajawal',sans-serif;overflow:hidde
   </div>
 
   <!-- الجواهر القابلة للنقر — إحداثيات مضبوطة بصرياً -->
-  <div class="gem-glow gem-btn" style="top:47%;left:33%;width:52px;height:52px;background:radial-gradient(circle,rgba(0,255,120,.5),transparent 65%);animation-delay:0s" onclick="enterPalace(1)" title="قلعة المعرفة"></div>
-  <div class="gem-glow gem-btn" style="top:41%;left:53.7%;width:54px;height:54px;background:radial-gradient(circle,rgba(50,150,255,.5),transparent 65%);animation-delay:.7s" onclick="enterPalace(2)" title="قلعة الفهم"></div>
-  <div class="gem-glow gem-btn" style="top:35%;left:69%;width:50px;height:50px;background:radial-gradient(circle,rgba(255,210,0,.5),transparent 65%);animation-delay:1.4s" onclick="enterPalace(3)" title="قلعة التطبيق"></div>
-  <div class="gem-glow gem-btn" style="top:29%;left:83.5%;width:46px;height:46px;background:radial-gradient(circle,rgba(255,50,60,.5),transparent 65%);animation-delay:2.1s" onclick="enterPalace(4)" title="قلعة التحليل"></div>
-  <div class="gem-glow gem-btn" style="top:3.8%;left:71%;width:60px;height:60px;background:radial-gradient(circle,rgba(255,215,0,.55),transparent 65%);animation-delay:0s;animation-duration:1.8s" onclick="enterPalace(5)" title="تحدي النهاية"></div>
+  <div class="gem-glow gem-btn" style="top:47%;left:33%;width:52px;height:52px;background:radial-gradient(circle,rgba(0,255,120,.5),transparent 65%);animation-delay:0s" onclick="enterPalace(1)" title="قصر المعرفة"></div>
+  <div class="gem-glow gem-btn" style="top:41%;left:53.7%;width:54px;height:54px;background:radial-gradient(circle,rgba(50,150,255,.5),transparent 65%);animation-delay:.7s" onclick="enterPalace(2)" title="قصر الفهم"></div>
+  <div class="gem-glow gem-btn" style="top:35%;left:69%;width:50px;height:50px;background:radial-gradient(circle,rgba(255,210,0,.5),transparent 65%);animation-delay:1.4s" onclick="enterPalace(3)" title="قصر التطبيق"></div>
+  <div class="gem-glow gem-btn" style="top:29%;left:83.5%;width:46px;height:46px;background:radial-gradient(circle,rgba(255,50,60,.5),transparent 65%);animation-delay:2.1s" onclick="enterPalace(4)" title="قصر التحليل"></div>
+  <div class="gem-glow gem-btn" style="top:3.8%;left:71%;width:60px;height:60px;background:radial-gradient(circle,rgba(255,215,0,.55),transparent 65%);animation-delay:0s;animation-duration:1.8s" onclick="enterPalace(5)" title="القلعة الملكية"></div>
   <button class="btn-sound" id="soundBtn" onclick="toggleSound()">🔇</button>
 
   <button class="btn-main" onclick="startAdventure()">🚀 ابدأ المغامرة ⏳</button>
@@ -96,7 +104,16 @@ html,body{width:100%;height:100%;font-family:'Tajawal',sans-serif;overflow:hidde
     <button class="popup-close" onclick="closePopup()">حسناً 👑</button>
   </div>
 </div>
+
 <script>
+// ============================================
+// GITHUB CONFIGURATION - REPLACE WITH YOUR NEW TOKEN
+// ============================================
+const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
+const GITHUB_REPO = 'a3m1883/science-island';
+const DATA_FILE_PATH = 'data/students.json';
+// ============================================
+
 let soundOn=false;
 const enc=[
   "أحسنتِ! كل خطوة تقربكِ من التاج الملكي",
@@ -104,12 +121,14 @@ const enc=[
   "بقي القليل للوصول إلى القلعة الملكية",
   "رائع! الجواهر تنتظركِ"
 ];
+
 function toggleSound(){
   soundOn=!soundOn;
   document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
   if(soundOn){speak("مرحباً بكِ في جزيرة العلوم. المغامرة تبدأ الآن");}
   else{speechSynthesis.cancel();}
 }
+
 function speak(t){
   if(!soundOn)return;
   speechSynthesis.cancel();
@@ -117,40 +136,132 @@ function speak(t){
   m.lang='ar-AE';m.rate=0.9;
   speechSynthesis.speak(m);
 }
+
 function showPopup(icon,title,body){
   document.getElementById('popupIcon').textContent=icon;
   document.getElementById('popupTitle').textContent=title;
   document.getElementById('popupBody').innerHTML=body;
   document.getElementById('popup').classList.add('active');
 }
+
 function closePopup(){document.getElementById('popup').classList.remove('active');}
+
+// GitHub API functions
+async function fetchAllData() {
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+    const response = await fetch(url, {
+      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    });
+    if (response.status === 404) {
+      return { students: [], leaderboard: [] };
+    }
+    const data = await response.json();
+    const content = atob(data.content);
+    return JSON.parse(content);
+  } catch(e) {
+    console.error('Error fetching data:', e);
+    return { students: [], leaderboard: [] };
+  }
+}
+
+async function getStudentProgressFromCloud(studentCode) {
+  try {
+    const allData = await fetchAllData();
+    const student = allData.students.find(s => s.studentCode === studentCode);
+    if (student && student.progress) {
+      return student.progress;
+    }
+    return null;
+  } catch(e) {
+    console.error('Error fetching student progress:', e);
+    return null;
+  }
+}
+
 function startAdventure(){
   speak(enc[0]);
-  // تحقق هل الطالبة سجّلت مسبقاً
+  // Check if student is registered
   let data = null;
   try{ data = JSON.parse(localStorage.getItem('scienceIslandStudent')); }catch(e){}
   if(data && data.name){
-    // مسجّلة — اذهب للخريطة مباشرة
+    // Registered - go to map
     location.href='map.html';
   } else {
-    // غير مسجّلة — اذهب للتسجيل
+    // Not registered - go to register
     location.href='register.html';
   }
 }
+
 function enterPalace(n){
-  const p=[null,
-    {name:'قلعة المعرفة',gem:'🔵',level:'التذكّر',c:'#00cc66'},
-    {name:'قلعة الفهم',gem:'🟢',level:'الفهم',c:'#3399ff'},
-    {name:'قلعة التطبيق',gem:'🟡',level:'التطبيق',c:'#ffcc00'},
-    {name:'قلعة التحليل',gem:'🔴',level:'التحليل',c:'#ff3355'},
-    {name:'القلعة الملكية',gem:'👑',level:'تحدي النهاية',c:'#ffd700'}
-  ][n];
+  const palaces = {
+    1: {name:'قصر المعرفة', gem:'💚', level:'التذكّر', c:'#00cc55'},
+    2: {name:'قصر الفهم', gem:'💙', level:'الفهم', c:'#2288ff'},
+    3: {name:'قصر التطبيق', gem:'🧡', level:'التطبيق', c:'#ff8800'},
+    4: {name:'قصر التحليل', gem:'💜', level:'التحليل', c:'#cc44ff'},
+    5: {name:'القلعة الملكية', gem:'👑', level:'تحدي النهاية', c:'#ffd700'}
+  };
+  const p = palaces[n];
   speak('أهلاً بكِ في '+p.name);
-  showPopup(p.gem,p.name,'<strong style="color:'+p.c+'">'+p.level+'</strong><br><br>أجيبي على الأسئلة واجمعي الجوهرة!<br><br><em style="color:rgba(255,255,255,.6)">سيُفتح بعد اكتمال التسجيل</em>');
+  showPopup(p.gem, p.name, '<strong style="color:'+p.c+'">'+p.level+'</strong><br><br>أجيبي على الأسئلة واجمعي الجوهرة!<br><br><em style="color:rgba(255,255,255,.6)">سيُفتح بعد اكتمال التسجيل</em>');
 }
-function showCertificates(){showPopup('📜','الشهادات الملكية','شهاداتكِ ستظهر هنا بعد إكمال المغامرة<br><strong style="color:#ffd700">اجمعي كل الجواهر للحصول على<br>شهادة ملكة جزيرة العلوم 👑</strong>');}
-function showLeaderboard(){showPopup('🏆','سجل الأبطال','أفضل الطالبات في جزيرة العلوم<br>ستظهر هنا بعد بدء المغامرات<br><strong style="color:#ffd700">كوني الأولى! 🌟</strong>');}
-function showHowToPlay(){showPopup('🗺️','كيف تلعبين؟','1️⃣ سجّلي اسمكِ والشعبة<br>2️⃣ ابدئي من قصر المعرفة 💚<br>3️⃣ أجيبي على الأسئلة واجمعي الجواهر<br>4️⃣ اصعدي للقلعة الملكية 🏰<br>5️⃣ توّجي نفسكِ ملكة الجزيرة 👑');}
+
+async function showCertificates() {
+  const loadingDiv = document.getElementById('loadingOverlay');
+  loadingDiv.classList.add('show');
+  
+  try {
+    const currentCode = localStorage.getItem('currentStudentCode');
+    if (!currentCode) {
+      showPopup('📜', 'الشهادات الملكية', 
+        '⚠️ لم تسجلي الدخول بعد.<br><br>الرجاء التسجيل أولاً للوصول إلى الشهادة.');
+      loadingDiv.classList.remove('show');
+      return;
+    }
+    
+    // Get progress from cloud
+    const progress = await getStudentProgressFromCloud(currentCode);
+    const localProgress = localStorage.getItem('scienceIslandProgress_' + currentCode);
+    const finalProgress = progress || (localProgress ? JSON.parse(localProgress) : null);
+    
+    if (finalProgress && finalProgress.completedCastles && finalProgress.completedCastles.includes(5)) {
+      // Has crown - go to certificate
+      location.href = 'certificate.html';
+    } else {
+      const gemsCount = finalProgress ? (finalProgress.gems ? finalProgress.gems.length - 1 : 0) : 0;
+      showPopup('📜', 'الشهادات الملكية', 
+        '⚠️ لم تحصلي على الشهادة بعد.<br><br>' +
+        '<strong style="color:#ffd700">تحتاجين إلى:</strong><br>' +
+        '✨ إكمال جميع القصور الأربعة (100% صحيح لكل قصر)<br>' +
+        '✨ جمع الجواهر الأربعة (💚 💙 🧡 💜)<br>' +
+        '✨ الوصول إلى القلعة الملكية وإكمالها<br><br>' +
+        `<strong style="color:#ffd700">تقدمك الحالي:</strong> ${gemsCount}/4 جواهر<br><br>` +
+        '<em style="color:rgba(255,255,255,.6)">تابعي رحلتك لتكوني ملكة الجزيرة!</em>');
+    }
+  } catch(e) {
+    console.error('Error checking certificate:', e);
+    showPopup('📜', 'الشهادات الملكية', 'حدث خطأ في التحقق من بياناتك. الرجاء المحاولة مرة أخرى.');
+  } finally {
+    loadingDiv.classList.remove('show');
+  }
+}
+
+function showLeaderboard() {
+  // Direct to leaderboard page
+  location.href = 'leaderboard.html';
+}
+
+function showHowToPlay(){
+  showPopup('🗺️', 'كيف تلعبين؟', 
+    '1️⃣ سجّلي اسمكِ والشعبة<br>' +
+    '2️⃣ ابدئي من قصر المعرفة 💚<br>' +
+    '3️⃣ أجيبي على جميع الأسئلة بشكل صحيح<br>' +
+    '4️⃣ اجمعي الجواهر الأربعة (💚 💙 🧡 💜)<br>' +
+    '5️⃣ انتقلي إلى القلعة الملكية 👑<br>' +
+    '6️⃣ توّجي نفسكِ ملكة الجزيرة واحصلي على الشهادة<br><br>' +
+    '<strong style="color:#ffd700">🌟 نصيحة:</strong> كل قصر يحتاج 10/10 إجابات صحيحة!');
+}
+
 function addSparkle(){
   const gems=[{top:'52%',left:'37%'},{top:'44%',left:'49%'},{top:'36%',left:'61%'},{top:'28%',left:'71%'}];
   const colors=['#00ffcc','#ffd700','#ff4499','#88ffcc','#ffaa00'];
@@ -164,6 +275,7 @@ function addSparkle(){
   document.querySelector('.anim-layer').appendChild(s);
   setTimeout(()=>s.remove(),4000);
 }
+
 setInterval(addSparkle,600);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePopup();});
 </script>
