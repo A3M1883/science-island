@@ -21,8 +21,8 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
 .pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
   animation:iconPulse 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px #55aaff)}
-@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #55aaff)}50%{filter:drop-shadow(0 0 18px #55aaff)}}
+  filter:drop-shadow(0 0 8px #2288ff)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #2288ff)}50%{filter:drop-shadow(0 0 18px #2288ff)}}
 .ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700}
 .psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
 .progw{margin-bottom:1rem}
@@ -59,7 +59,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
 .endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
-  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #55aaff)}
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #2288ff)}
 @keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
 .endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
@@ -74,6 +74,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .fail-icon{font-size:3rem;display:block;margin-bottom:.4rem}
 .fail-title{color:#ff8888;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
 .fail-msg{color:rgba(200,180,180,.8);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
+.loading-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,215,0,.3);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .cl{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
 .cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
 @keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
@@ -85,6 +89,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </style>
 </head>
 <body>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div style="color:#ffd700">جاري حفظ التقدم...</div>
+</div>
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
@@ -94,9 +102,9 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 <div class="wrap">
   <div class="ph">
-    <span class="pi">💎</span>
+    <span class="pi">💙</span>
     <div class="ptitle">قصر الفهم</div>
-    <div class="psub">مستوى: الفهم · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الخضراء!</div>
+    <div class="psub">مستوى: الفهم · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الزرقاء!</div>
   </div>
   <div class="progw">
     <div class="proginfo">
@@ -115,8 +123,8 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
   <div class="endscreen" id="endScreen">
-    <span class="endgem">💎</span>
-    <div class="endtitle">أحسنتِ! جمعتِ جوهرة الفهم !</div>
+    <span class="endgem">💙</span>
+    <div class="endtitle">أحسنتِ! جمعتِ جوهرة الفهم!</div>
     <div class="stars" id="starsRow">⭐⭐⭐</div>
     <div class="enddetail" id="endDetail"></div>
     <button class="btnmap" onclick="location.href='map.html'">🗺️ العودة للخريطة</button>
@@ -132,11 +140,19 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 
 <script>
-const PID = 2;  // Palace ID (2 for blue gem)
+// ============================================
+// GITHUB CONFIGURATION - REPLACE WITH YOUR NEW TOKEN
+// ============================================
+const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
+const GITHUB_REPO = 'a3m1883/science-island';
+const DATA_FILE_PATH = 'data/students.json';
+// ============================================
+
+const PID = 2;  // Palace ID (2 for BLUE gem 💙)
 const TOTAL = 10;
 const PASS_SCORE = 10;
 
-// Original questions with correct answers (index based on original order)
+// Original questions for Palace 2 (الفهم) - BLUE GEM
 const ORIGINAL_QS = [
   {"text": "أي مصدر للطاقة ينتج من حرق المادة العضوية؟", "opts": ["الطاقة الشمسية", "الطاقة الحرارية الجوفية", "طاقة الكتلة الحيوية", "طاقة الرياح"], "correctIndex": 2},
   {"text": "تسحب الجاذبية المجرات معاً مكونة:", "opts": ["النظام الشمسي", "النجوم", "التجمعات المحلية", "الكواكب"], "correctIndex": 2},
@@ -150,7 +166,7 @@ const ORIGINAL_QS = [
   {"text": "ما عيوب الطاقة الشمسية؟", "opts": ["تلوث البيئة", "غير متوفرة في الإمارات", "ألواحها باهظة الثمن", "لا تنتج كهرباء"], "correctIndex": 2}
 ];
 
-// Function to shuffle array (Fisher-Yates)
+// Function to shuffle array
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -161,20 +177,15 @@ function shuffleArray(arr) {
 
 // Function to randomize options for a question
 function randomizeQuestion(q) {
-  // Create array of option objects with their original indices
   const optionsWithIndices = q.opts.map((opt, idx) => ({
     text: opt,
     originalIndex: idx,
     isCorrect: idx === q.correctIndex
   }));
   
-  // Shuffle the options
   const shuffled = shuffleArray([...optionsWithIndices]);
-  
-  // Find the new index of the correct answer
   const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
   
-  // Return the randomized question
   return {
     text: q.text,
     opts: shuffled.map(opt => opt.text),
@@ -198,6 +209,93 @@ let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
 
+// GitHub API functions
+async function fetchAllData() {
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+    const response = await fetch(url, {
+      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    });
+    if (response.status === 404) {
+      return { students: [], leaderboard: [] };
+    }
+    const data = await response.json();
+    const content = atob(data.content);
+    return JSON.parse(content);
+  } catch(e) {
+    console.error('Error fetching data:', e);
+    return { students: [], leaderboard: [] };
+  }
+}
+
+async function updateCloudData(studentData, progressData) {
+  const loadingDiv = document.getElementById('loadingOverlay');
+  loadingDiv.classList.add('show');
+  
+  try {
+    const allData = await fetchAllData();
+    
+    const existingIndex = allData.students.findIndex(s => s.studentCode === studentData.studentCode);
+    if (existingIndex >= 0) {
+      allData.students[existingIndex].progress = progressData;
+      allData.students[existingIndex].lastUpdated = new Date().toISOString();
+    }
+    
+    const leaderboardEntry = {
+      name: studentData.name,
+      title: "الأميرة",
+      cls: studentData.cls,
+      gems: progressData.gems ? progressData.gems.length - 1 : 0,
+      points: progressData.points || 0,
+      studentCode: studentData.studentCode,
+      date: new Date().toLocaleDateString('ar-AE')
+    };
+    
+    const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === studentData.studentCode);
+    if (lbIndex >= 0) {
+      if (leaderboardEntry.points >= allData.leaderboard[lbIndex].points) {
+        allData.leaderboard[lbIndex] = leaderboardEntry;
+      }
+    } else {
+      allData.leaderboard.push(leaderboardEntry);
+    }
+    
+    allData.leaderboard.sort((a, b) => b.points - a.points);
+    
+    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
+    
+    let sha = null;
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+      const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+      if (response.ok) {
+        const fileData = await response.json();
+        sha = fileData.sha;
+      }
+    } catch(e) {}
+    
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Update student progress: ${studentData.name}`,
+        content: updatedContent,
+        sha: sha
+      })
+    });
+    
+    return true;
+  } catch(e) {
+    console.error('Error saving to GitHub:', e);
+    return false;
+  } finally {
+    loadingDiv.classList.remove('show');
+  }
+}
+
 function loadData() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -218,7 +316,6 @@ function loadData() {
     }
     document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
     
-    // Generate randomized questions (new order every time)
     QS = generateRandomizedQuestions();
     
     if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
@@ -236,44 +333,17 @@ function loadData() {
   }
 }
 
-function updateLeaderboard() {
-  if (!student || !student.name) return;
-  let lb = [];
-  try { lb = JSON.parse(localStorage.getItem("scienceIslandLeaderboard") || "[]"); } catch(e) {}
-  
-  const entry = {
-    name: student.name,
-    title: "الأميرة",
-    cls: student.cls || "—",
-    gems: progress.gems ? progress.gems.length : 0,
-    points: progress.points || 0,
-    date: new Date().toLocaleDateString("ar-AE")
-  };
-  
-  const idx = lb.findIndex(e => e.name === entry.name);
-  if (idx >= 0) {
-    if (entry.points >= lb[idx].points) lb[idx] = entry;
-  } else {
-    lb.push(entry);
-  }
-  lb.sort((a, b) => b.points - a.points);
-  try { localStorage.setItem("scienceIslandLeaderboard", JSON.stringify(lb)); } catch(e) {}
-}
-
-function saveProgress() {
+async function saveProgress() {
   if (!currentStudentCode) return;
   try {
     if (!progress) {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
-    console.log("Saving progress - Score: " + score + ", PID: " + PID + ", isAlreadyCompleted: " + isAlreadyCompleted);
-    
     if (!isAlreadyCompleted && score === 10) {
       if (!progress.gems) progress.gems = [];
       if (!progress.gems.includes(PID)) {
         progress.gems.push(PID);
-        console.log("Gem " + PID + " added! Total gems: " + progress.gems.length);
       }
       
       const pointsEarned = 100;
@@ -282,7 +352,6 @@ function saveProgress() {
       if (!progress.completedCastles) progress.completedCastles = [];
       if (!progress.completedCastles.includes(PID)) {
         progress.completedCastles.push(PID);
-        console.log("Castle " + PID + " marked as completed!");
       }
       
       if (!progress.castleScores) progress.castleScores = {};
@@ -299,9 +368,10 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    console.log("Saved data:", dataToSave);
+    if (student && student.studentCode) {
+      await updateCloudData(student, dataToSave);
+    }
     
-    updateLeaderboard();
   } catch(e) { console.error(e); }
 }
 
@@ -335,7 +405,6 @@ function check(idx, btn, q) {
     r.textContent = "✅ إجابة صحيحة! (+10 نقاط)"; r.className = "res ok";
   } else {
     btn.classList.add("wrong");
-    // Highlight the correct answer
     document.querySelectorAll(".opt")[q.correctIndex].classList.add("correct");
     r.textContent = "❌ الإجابة الصحيحة: " + q.opts[q.correctIndex]; r.className = "res no";
   }
@@ -363,7 +432,6 @@ function endPalace() {
 }
 
 function restart() {
-  // Generate new random order when retrying
   QS = generateRandomizedQuestions();
   cur = 0; score = 0; done = false;
   document.getElementById("endScreen").classList.remove("show");
