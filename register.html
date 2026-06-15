@@ -154,6 +154,11 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 }
 .btn-back:hover{background:rgba(255,215,0,.15)}
 
+.loading{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,215,0,.3);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 @media(max-width:768px){
   .char{display:none}
   .card{padding:1.3rem 1.2rem}
@@ -165,6 +170,7 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 <body>
 
 <div class="bg-stars" id="stars"></div>
+<div class="loading" id="loading"><div class="spinner"></div><div style="color:#ffd700">جاري حفظ البيانات...</div></div>
 <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="الصوت">🔇</button>
 
 <div class="page">
@@ -225,6 +231,11 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 </div>
 
 <script>
+// GitHub configuration - REPLACE WITH YOUR ACTUAL VALUES
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE'; // Create a token at Settings → Developer settings → Personal access tokens
+const GITHUB_REPO = 'YOUR_USERNAME/YOUR_REPO_NAME'; // e.g., 'username/science-island'
+const DATA_FILE_PATH = 'data/students.json';
+
 // Generate stars
 const starsEl = document.getElementById('stars');
 for(let i=0;i<70;i++){
@@ -248,7 +259,103 @@ function toggleSound(){
   document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
 }
 
-function handleRegister(){
+// GitHub API functions
+async function fetchAllData() {
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+    const response = await fetch(url, {
+      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    });
+    if (response.status === 404) {
+      return { students: [], leaderboard: [] };
+    }
+    const data = await response.json();
+    const content = atob(data.content);
+    return JSON.parse(content);
+  } catch(e) {
+    console.error('Error fetching data:', e);
+    return { students: [], leaderboard: [] };
+  }
+}
+
+async function saveStudentToGitHub(studentData, progressData) {
+  const loadingDiv = document.getElementById('loading');
+  loadingDiv.classList.add('show');
+  
+  try {
+    const allData = await fetchAllData();
+    
+    // Update or add student
+    const existingIndex = allData.students.findIndex(s => s.studentCode === studentData.studentCode);
+    if (existingIndex >= 0) {
+      allData.students[existingIndex] = { ...studentData, progress: progressData, lastUpdated: new Date().toISOString() };
+    } else {
+      allData.students.push({ ...studentData, progress: progressData, createdAt: new Date().toISOString(), lastUpdated: new Date().toISOString() });
+    }
+    
+    // Update leaderboard
+    const leaderboardEntry = {
+      name: studentData.name,
+      title: "الأميرة",
+      cls: studentData.cls,
+      gems: progressData.gems ? progressData.gems.length - 1 : 0,
+      points: progressData.points || 0,
+      studentCode: studentData.studentCode,
+      date: new Date().toLocaleDateString('ar-AE')
+    };
+    
+    const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === studentData.studentCode);
+    if (lbIndex >= 0) {
+      if (leaderboardEntry.points >= allData.leaderboard[lbIndex].points) {
+        allData.leaderboard[lbIndex] = leaderboardEntry;
+      }
+    } else {
+      allData.leaderboard.push(leaderboardEntry);
+    }
+    
+    // Sort leaderboard
+    allData.leaderboard.sort((a, b) => b.points - a.points);
+    
+    // Save back to GitHub
+    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
+    
+    // Get current file SHA if exists
+    let sha = null;
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+      const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+      if (response.ok) {
+        const fileData = await response.json();
+        sha = fileData.sha;
+      }
+    } catch(e) {}
+    
+    const putResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Update student data: ${studentData.name}`,
+        content: updatedContent,
+        sha: sha
+      })
+    });
+    
+    if (!putResponse.ok) throw new Error('Failed to save to GitHub');
+    
+    return true;
+  } catch(e) {
+    console.error('Error saving to GitHub:', e);
+    alert('حدث خطأ في حفظ البيانات. سيتم حفظها محلياً فقط.');
+    return false;
+  } finally {
+    loadingDiv.classList.remove('show');
+  }
+}
+
+async function handleRegister() {
   const name = document.getElementById('studentName').value.trim();
   const cls = document.getElementById('classDiv').value.trim();
   const teacher = document.getElementById('teacherName').value.trim();
@@ -263,37 +370,29 @@ function handleRegister(){
 
   const studentCode = generateStudentCode(name, school, cls);
   
-  const data={
+  const studentData = {
     name, cls, teacher, school,
     studentCode: studentCode,
     registeredAt: new Date().toISOString(),
     titleLabel: "الأميرة"
   };
 
-  // Initialize progress if new student
-  let existingProgress = null;
-  try { 
-    existingProgress = JSON.parse(localStorage.getItem('scienceIslandProgress_' + studentCode) || 'null');
-  } catch(e) {}
+  const initialProgress = {
+    gems: [],
+    level: 1,
+    points: 0,
+    completedCastles: [],
+    castleScores: {}
+  };
   
-  if (!existingProgress) {
-    const initialProgress = {
-      gems: [],
-      level: 1,
-      points: 0,
-      completedCastles: [],
-      castleScores: {} // Track which castles have been completed with 10/10
-    };
-    localStorage.setItem('scienceIslandProgress_' + studentCode, JSON.stringify(initialProgress));
-    data.progress = initialProgress;
-  } else {
-    data.progress = existingProgress;
-  }
+  // Save to GitHub
+  await saveStudentToGitHub(studentData, initialProgress);
   
-  // Store student data
-  localStorage.setItem('scienceIslandStudent', JSON.stringify(data));
+  // Also save locally for quick access
+  localStorage.setItem('scienceIslandStudent', JSON.stringify(studentData));
   localStorage.setItem('currentStudentCode', studentCode);
-  localStorage.setItem('scienceIslandStudent_' + studentCode, JSON.stringify(data));
+  localStorage.setItem('scienceIslandStudent_' + studentCode, JSON.stringify(studentData));
+  localStorage.setItem('scienceIslandProgress_' + studentCode, JSON.stringify(initialProgress));
   
   // Display code on success page
   document.getElementById('welcomeName').textContent = 'الأميرة ' + name;
