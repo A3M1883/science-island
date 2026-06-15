@@ -33,4 +33,202 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .cc{position:absolute;font-size:1.6rem;color:rgba(200,150,10,.38)}
 .cc.tl{top:16px;left:20px} .cc.tr{top:16px;right:20px}
 .cc.bl{bottom:16px;left:20px} .cc.br{bottom:16px;right:20px}
-.c-logo
+.c-logo{font-size:2.8rem;display:block;margin-bottom:.25rem;filter:drop-shadow(0 0 10px rgba(200,150,10,.5))}
+.c-org{font-size:.82rem;color:#6a3a00;margin-bottom:.1rem}
+.c-school{font-size:.88rem;font-weight:700;color:#4a2800;margin-bottom:.08rem}
+.c-unit{font-size:.78rem;color:#6a3a00;margin-bottom:.9rem}
+.c-title{font-size:clamp(1.4rem,3.8vw,2.1rem);font-weight:700;color:#8b4500;
+  border-top:1.5px solid rgba(200,150,10,.45);border-bottom:1.5px solid rgba(200,150,10,.45);
+  padding:.55rem 0;margin:.55rem 0;text-shadow:0 1px 2px rgba(200,150,10,.3)}
+.c-body{font-size:.9rem;color:#4a2800;line-height:2;margin-bottom:.4rem}
+.c-name{font-size:clamp(1.5rem,4.2vw,2.3rem);font-weight:700;color:#6b3000;
+  border-bottom:1.5px solid rgba(200,150,10,.55);padding-bottom:.28rem;margin:.28rem 0 .45rem}
+.c-details{font-size:.83rem;color:#6a3a00;line-height:1.85;margin-bottom:.75rem}
+.c-gems{display:flex;justify-content:center;gap:.55rem;font-size:1.35rem;margin:.55rem 0}
+.c-date{font-size:.76rem;color:#8b5a30;margin-top:.35rem}
+.c-footer{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;
+  margin-top:1.4rem;border-top:1px solid rgba(200,150,10,.32);padding-top:.9rem}
+.csig{text-align:center}
+.sigline{width:78%;height:1px;background:rgba(100,50,0,.38);margin:.45rem auto .13rem}
+.signame{font-size:.78rem;font-weight:700;color:#5a2800}
+.sigrole{font-size:.68rem;color:#7a4000}
+/* أزرار */
+.btnrow{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.3rem}
+.btn-g{background:linear-gradient(135deg,#c8960a,#ffd700);border:none;border-radius:38px;
+  padding:.72rem 1.9rem;font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:900;
+  color:#1a0800;cursor:pointer;box-shadow:0 0 16px rgba(255,215,0,.33);transition:all .2s}
+.btn-g:hover{transform:scale(1.04);box-shadow:0 0 26px rgba(255,215,0,.5)}
+.cl{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="cl" id="cl"></div>
+<div class="topbar">
+  <button class="tbtn" onclick="location.href='map.html'">↩ الخريطة</button>
+  <span style="font-size:.82rem;color:#ffd700;font-weight:700">📜 شهادة الإنجاز</span>
+  <button class="tbtn" onclick="location.href='leaderboard.html'">🏆 سجل الأبطال</button>
+</div>
+<div class="wrap">
+<div id="certContainer">
+  <div class="loading"><div class="spinner"></div><span>جاري تحميل بياناتك...</span></div>
+</div>
+<div class="btnrow" id="printBtn" style="display:none">
+  <button class="btn-g" onclick="printCert()">🖨️ طباعة / PDF</button>
+</div>
+</div>
+<script>
+// GitHub configuration - REPLACE WITH YOUR ACTUAL VALUES
+const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE';
+const GITHUB_REPO = 'YOUR_USERNAME/YOUR_REPO_NAME';
+const DATA_FILE_PATH = 'data/students.json';
+
+let studentData = null;
+let progressData = null;
+
+async function fetchStudentData() {
+  const currentCode = localStorage.getItem('currentStudentCode');
+  if (!currentCode) return null;
+  
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+    const response = await fetch(url, {
+      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    });
+    
+    if (response.status === 404) return null;
+    
+    const data = await response.json();
+    const content = JSON.parse(atob(data.content));
+    
+    const student = content.students.find(s => s.studentCode === currentCode);
+    if (student) {
+      return { student: student, progress: student.progress };
+    }
+    
+    // Fallback to localStorage
+    const localStudent = localStorage.getItem('scienceIslandStudent');
+    const localProgress = localStorage.getItem('scienceIslandProgress_' + currentCode);
+    if (localStudent) {
+      return { 
+        student: JSON.parse(localStudent), 
+        progress: localProgress ? JSON.parse(localProgress) : { gems: [], points: 0, completedCastles: [] }
+      };
+    }
+    
+    return null;
+  } catch(e) {
+    console.error('Error fetching student data:', e);
+    // Fallback to localStorage
+    const localStudent = localStorage.getItem('scienceIslandStudent');
+    const currentCode = localStorage.getItem('currentStudentCode');
+    const localProgress = localStorage.getItem('scienceIslandProgress_' + currentCode);
+    if (localStudent) {
+      return { 
+        student: JSON.parse(localStudent), 
+        progress: localProgress ? JSON.parse(localProgress) : { gems: [], points: 0, completedCastles: [] }
+      };
+    }
+    return null;
+  }
+}
+
+function renderCertificate(student, progress) {
+  if (!student || !student.name) {
+    document.getElementById('certContainer').innerHTML = `
+      <div style="text-align:center;padding:3rem;color:#ffd700">
+        <span style="font-size:4rem">📜</span>
+        <h2>لم تحصلي على الشهادة بعد</h2>
+        <p style="margin-top:1rem;color:rgba(200,220,255,.7)">أكملي جميع القصور الأربعة واحصلي على التاج الملكي للحصول على الشهادة</p>
+        <button class="btn-g" onclick="location.href='map.html'" style="margin-top:1.5rem">🗺️ الذهاب إلى الخريطة</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const hasAllGems = (progress.gems && progress.gems.length >= 4);
+  const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+  const hasCertificate = hasAllGems && hasCrown;
+  
+  const certHTML = `
+    <div id="certBox">
+      <span class="cc tl">✦</span><span class="cc tr">✦</span>
+      <span class="cc bl">✦</span><span class="cc br">✦</span>
+      <span class="c-logo">${hasCertificate ? '👑' : '🏆'}</span>
+      <div class="c-org">مجمع زايد التعليمي – البرشاء</div>
+      <div class="c-school">الحلقة الثانية والثالثة</div>
+      <div class="c-unit">مادة العلوم – الصف السادس</div>
+      <div class="c-title">${hasCertificate ? 'شهادة ملكة جزيرة العلوم' : 'شهادة تقديرية'}</div>
+      <div class="c-body">تُقدَّم هذه الشهادة إلى الطالبة المتميزة</div>
+      <div class="c-name">${student.titleLabel || 'الأميرة'} ${student.name}</div>
+      <div class="c-details">
+        الشعبة: <strong>${student.cls || '—'}</strong> &nbsp;|&nbsp; 
+        المدرسة: <strong>${student.school || '—'}</strong><br>
+        معلمة المادة: <strong>${student.teacher || '—'}</strong>
+      </div>
+      <div class="c-body">${hasCertificate ? 'لإكمالها مغامرة التاج الملكي وجمعها جميع الجواهر الأربعة' : 'لمشاركتها في مغامرة جزيرة العلوم'}</div>
+      <div class="c-gems">
+        ${progress.gems && progress.gems.includes(1) ? '💚' : '🖤'} 
+        ${progress.gems && progress.gems.includes(2) ? '💙' : '🖤'} 
+        ${progress.gems && progress.gems.includes(3) ? '🧡' : '🖤'} 
+        ${progress.gems && progress.gems.includes(4) ? '💜' : '🖤'}
+        ${hasCertificate ? '👑' : ''}
+      </div>
+      <div class="c-body">${hasCertificate ? 'وحصولها على التاج الملكي 👑' : `حصلت على ${progress.gems ? progress.gems.length : 0} جوهرة بإجمالي ${progress.points || 0} نقطة`}</div>
+      <div class="c-date">تاريخ الإنجاز: ${new Date().toLocaleDateString('ar-AE', {year: 'numeric', month: 'long', day: 'numeric'})}</div>
+      <div class="c-footer">
+        <div class="csig"><div class="sigline"></div><div class="signame">أ. ألفت صادق الدغيدي</div><div class="sigrole">تصميم وابتكار</div></div>
+        <div class="csig"><div class="sigline"></div><div class="signame">أ. منى البلوشي</div><div class="sigrole">النائب الأكاديمي</div></div>
+        <div class="csig"><div class="sigline"></div><div class="signame">أ. ميمونة الجوهري</div><div class="sigrole">مديرة المجمع</div></div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('certContainer').innerHTML = certHTML;
+  document.getElementById('printBtn').style.display = 'flex';
+  
+  if (hasCertificate) {
+    confetti();
+  }
+}
+
+function printCert() {
+  const style = document.querySelector("style").textContent;
+  const body = document.getElementById("certBox").outerHTML;
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>${style} body{background:#f8f0d0;padding:1.5rem} .cl,.topbar,.btnrow{display:none!important} @media print{body{padding:0}}</style>
+    </head><body>${body}<script>window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
+}
+
+function confetti() {
+  const w = document.getElementById("cl");
+  const cols = ["#ffd700","#00ff88","#ff88cc","#88ddff","#ffaa00","#cc88ff"];
+  for(let i=0;i<80;i++){
+    const c = document.createElement("div");
+    c.className = "cp";
+    const sz = 6 + Math.random() * 8;
+    c.style.cssText = "left:" + (Math.random() * 100) + "vw;background:" + cols[~~(Math.random() * cols.length)] +
+      ";animation-duration:" + (3 + Math.random() * 3) + "s;animation-delay:" + (Math.random() * 2) + "s;" +
+      "width:" + sz + "px;height:" + sz + "px;border-radius:" + (Math.random() > .5 ? "50%" : "2px") + ";";
+    w.appendChild(c);
+    setTimeout(() => c.remove(), 7000);
+  }
+}
+
+async function init() {
+  const data = await fetchStudentData();
+  if (data) {
+    renderCertificate(data.student, data.progress);
+  } else {
+    renderCertificate(null, null);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
