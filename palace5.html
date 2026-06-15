@@ -12,7 +12,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   color:#fff;overflow-x:hidden}
 .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem;
   padding:.5rem 1rem;background:rgba(4,8,40,.92);
-  border-bottom:1.5px solid rgba(255,215,0,.35);backdrop-filter:blur(10px);
+  border-bottom:1.5px solid rgba(255,215,0,.3);backdrop-filter:blur(10px);
   position:sticky;top:0;z-index:50}
 .tb-name{font-size:.78rem;font-weight:700;color:#ffd700;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tb-ttl{font-size:.78rem;font-weight:700;color:rgba(200,220,255,.8)}
@@ -34,8 +34,9 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .qtext{font-size:clamp(.94rem,2.5vw,1.15rem);font-weight:700;line-height:1.65;color:#e8f0ff;margin-bottom:.95rem}
 .opts{display:grid;gap:.58rem}
 .opt{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.2);
-  border-radius:11px;padding:.65rem .9rem;font-family:"Tajawal",sans-serif;
-  font-size:.93rem;font-weight:600;color:#ddeeff;text-align:right;cursor:pointer;
+  border-radius:11px;padding:.65rem .9rem;
+  font-family:"Tajawal",sans-serif;font-size:.93rem;font-weight:600;
+  color:#ddeeff;text-align:right;cursor:pointer;
   transition:all .17s;display:flex;align-items:center;gap:.52rem}
 .opt:hover:not(:disabled){background:rgba(255,215,0,.1);border-color:#ffd700;color:#fff}
 .opt.correct{background:rgba(0,200,80,.16);border-color:#00dd66;color:#aaffcc}
@@ -43,18 +44,23 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .opt:disabled{cursor:default}
 .optl{width:24px;height:24px;border-radius:50%;flex-shrink:0;
   background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);
-  display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:900;color:#ffd700}
+  display:flex;align-items:center;justify-content:center;
+  font-size:.74rem;font-weight:900;color:#ffd700}
 .res{text-align:center;font-size:.98rem;font-weight:700;padding:.4rem;margin-top:.65rem;border-radius:7px;display:none}
 .res.ok{color:#00ee77;display:block}
 .res.no{color:#ff6677;display:block}
 .btnnext{width:100%;margin-top:.85rem;
-  background:linear-gradient(135deg,#c8960a,#ffd700);border:none;border-radius:45px;padding:.7rem;
-  font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:900;color:#1a0800;cursor:pointer;display:none}
+  background:linear-gradient(135deg,#c8960a,#ffd700);
+  border:none;border-radius:45px;padding:.7rem;
+  font-family:"Tajawal",sans-serif;font-size:.98rem;font-weight:900;
+  color:#1a0800;cursor:pointer;display:none}
 .btnnext.show{display:block}
-
-/* Victory screen */
-.victory{display:none;text-align:center;padding:1.5rem .8rem 2rem}
-.victory.show{display:block}
+.loading-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,215,0,.3);border-top-color:#ffd700;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.endscreen{display:none;text-align:center;padding:1.5rem .8rem 2rem}
+.endscreen.show{display:block}
 .fw{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
 .cl{position:fixed;inset:0;pointer-events:none;z-index:101;overflow:hidden}
 .cp{position:absolute;top:-12px;border-radius:2px;animation:cf linear forwards}
@@ -83,13 +89,11 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   border-radius:40px;padding:.75rem 1.8rem;font-family:"Tajawal",sans-serif;
   font-size:.92rem;font-weight:700;color:rgba(200,220,255,.85);cursor:pointer}
 .btn-out:hover{background:rgba(255,215,0,.1);color:#ffd700}
-
-.fail{display:none;text-align:center;padding:1.8rem .8rem}
-.fail.show{display:block}
-.fi{font-size:3rem;display:block;margin-bottom:.4rem}
-.ft{color:#ff8888;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
-.fm{color:rgba(200,180,180,.8);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
-
+.failscreen{display:none;text-align:center;padding:1.8rem .8rem}
+.failscreen.show{display:block}
+.fail-icon{font-size:3rem;display:block;margin-bottom:.4rem}
+.fail-title{color:#ff8888;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
+.fail-msg{color:rgba(200,180,180,.8);font-size:.9rem;line-height:1.7;margin-bottom:1rem}
 @media (max-width: 768px) {
   .wrap{padding:1rem}
   .qcard{padding:1rem}
@@ -99,12 +103,16 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </style>
 </head>
 <body>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div style="color:#ffd700">جاري حفظ التاج الملكي...</div>
+</div>
 <div class="fw" id="fw"></div>
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
   <span class="tb-ttl">👑 القلعة الملكية</span>
-  <span class="tb-gems">💎 <span id="tbGems">4</span>/4</span>
+  <span class="tb-gems">👑 <span id="tbGems">0</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
 <div class="wrap">
@@ -120,7 +128,6 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     </div>
     <div class="progtrack"><div class="progfill" id="pf" style="width:0%"></div></div>
   </div>
-
   <div id="qSection">
     <div class="qcard" id="qCard">
       <div class="qnum" id="qNum">السؤال 1 من 10</div>
@@ -130,11 +137,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     </div>
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
-
-  <div class="victory" id="victoryScreen">
+  <div class="endscreen" id="endScreen">
     <span class="vcrown">👑</span>
     <div class="vtitle">تهانينا يا ملكة جزيرة العلوم!</div>
-    <div class="gems-won">💙 💚 🧡 💜 👑</div>
+    <div class="gems-won">💚 💙 🧡 💜 👑</div>
     <div class="vsub">لقد جمعتِ الجواهر الأربعة وحصلتِ على التاج الملكي!</div>
     <div class="vname" id="vName">—</div>
     <div class="score-card">
@@ -150,11 +156,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
       <button class="btn-out" onclick="location.href='map.html'">🗺️ الخريطة</button>
     </div>
   </div>
-
-  <div class="fail" id="failScreen">
-    <span class="fi">💪</span>
-    <div class="ft">قاربتِ على التاج!</div>
-    <div class="fm" id="failMsg"></div>
+  <div class="failscreen" id="failScreen">
+    <span class="fail-icon">💪</span>
+    <div class="fail-title">قاربتِ على التاج!</div>
+    <div class="fail-msg" id="failMsg"></div>
     <button class="btn-gold" onclick="restart()" style="background:linear-gradient(135deg,#1a3a8f,#2855c8);color:#ffd700">🔄 إعادة التحدي</button>
     <br>
     <button class="btn-out" onclick="location.href='map.html'" style="margin-top:.5rem;font-size:.85rem;padding:.5rem 1.5rem">↩ الخريطة</button>
@@ -162,11 +167,19 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 </div>
 
 <script>
-const PID = 5;  // Palace ID (5 for crown)
+// ============================================
+// GITHUB CONFIGURATION - REPLACE WITH YOUR NEW TOKEN
+// ============================================
+const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
+const GITHUB_REPO = 'a3m1883/science-island';
+const DATA_FILE_PATH = 'data/students.json';
+// ============================================
+
+const PID = 5;  // Palace ID (5 for CROWN 👑)
 const TOTAL = 10;
 const PASS_SCORE = 10;
 
-// Original questions with correct answers (index based on original order)
+// Original questions for Palace 5 (القلعة الملكية) - CROWN
 const ORIGINAL_QS = [
   {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "correctIndex": 1},
   {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "correctIndex": 0},
@@ -180,7 +193,7 @@ const ORIGINAL_QS = [
   {"text": "عندما يكون القمر والأرض والشمس على استقامة واحدة، فإن المد الناتج يسمى:", "opts": ["المد المنخفض", "المد التام (المد الربيعي)", "المد الضعيف", "المد المعتدل"], "correctIndex": 1}
 ];
 
-// Function to shuffle array (Fisher-Yates)
+// Function to shuffle array
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -191,20 +204,15 @@ function shuffleArray(arr) {
 
 // Function to randomize options for a question
 function randomizeQuestion(q) {
-  // Create array of option objects with their original indices
   const optionsWithIndices = q.opts.map((opt, idx) => ({
     text: opt,
     originalIndex: idx,
     isCorrect: idx === q.correctIndex
   }));
   
-  // Shuffle the options
   const shuffled = shuffleArray([...optionsWithIndices]);
-  
-  // Find the new index of the correct answer
   const newCorrectIndex = shuffled.findIndex(opt => opt.isCorrect);
   
-  // Return the randomized question
   return {
     text: q.text,
     opts: shuffled.map(opt => opt.text),
@@ -228,6 +236,95 @@ let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
 
+// GitHub API functions
+async function fetchAllData() {
+  try {
+    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+    const response = await fetch(url, {
+      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    });
+    if (response.status === 404) {
+      return { students: [], leaderboard: [] };
+    }
+    const data = await response.json();
+    const content = atob(data.content);
+    return JSON.parse(content);
+  } catch(e) {
+    console.error('Error fetching data:', e);
+    return { students: [], leaderboard: [] };
+  }
+}
+
+async function updateCloudData(studentData, progressData) {
+  const loadingDiv = document.getElementById('loadingOverlay');
+  loadingDiv.classList.add('show');
+  
+  try {
+    const allData = await fetchAllData();
+    
+    const existingIndex = allData.students.findIndex(s => s.studentCode === studentData.studentCode);
+    if (existingIndex >= 0) {
+      allData.students[existingIndex].progress = progressData;
+      allData.students[existingIndex].lastUpdated = new Date().toISOString();
+      allData.students[existingIndex].hasCrown = (progressData.completedCastles && progressData.completedCastles.includes(5));
+    }
+    
+    const leaderboardEntry = {
+      name: studentData.name,
+      title: "الأميرة",
+      cls: studentData.cls,
+      gems: progressData.gems ? progressData.gems.length - 1 : 0,
+      points: progressData.points || 0,
+      hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
+      studentCode: studentData.studentCode,
+      date: new Date().toLocaleDateString('ar-AE')
+    };
+    
+    const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === studentData.studentCode);
+    if (lbIndex >= 0) {
+      if (leaderboardEntry.points >= allData.leaderboard[lbIndex].points) {
+        allData.leaderboard[lbIndex] = leaderboardEntry;
+      }
+    } else {
+      allData.leaderboard.push(leaderboardEntry);
+    }
+    
+    allData.leaderboard.sort((a, b) => b.points - a.points);
+    
+    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
+    
+    let sha = null;
+    try {
+      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
+      const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+      if (response.ok) {
+        const fileData = await response.json();
+        sha = fileData.sha;
+      }
+    } catch(e) {}
+    
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Update student progress: ${studentData.name}`,
+        content: updatedContent,
+        sha: sha
+      })
+    });
+    
+    return true;
+  } catch(e) {
+    console.error('Error saving to GitHub:', e);
+    return false;
+  } finally {
+    loadingDiv.classList.remove('show');
+  }
+}
+
 function loadData() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -246,9 +343,8 @@ function loadData() {
     if (student && student.name) {
       document.getElementById("tbName").textContent = "الأميرة " + student.name;
     }
-    document.getElementById("tbGems").textContent = "4"; // Always 4/4 for final challenge
+    document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
     
-    // Generate randomized questions (new order every time)
     QS = generateRandomizedQuestions();
     
     if (isAlreadyCompleted && progress && progress.completedCastles && progress.completedCastles.includes(PID)) {
@@ -264,7 +360,7 @@ function loadData() {
 }
 
 function showVictoryScreen(isReloaded = false) {
-  document.getElementById("victoryScreen").classList.add("show");
+  document.getElementById("endScreen").classList.add("show");
   
   const lbl = student ? "الأميرة " + student.name : "الطالبة";
   document.getElementById("vName").textContent = lbl;
@@ -285,12 +381,12 @@ function showVictoryScreen(isReloaded = false) {
   }
   
   if (!isReloaded) {
-    launchFw();
+    launchFireworks();
     launchConfetti();
   }
 }
 
-function saveProgress() {
+async function saveProgress() {
   if (!currentStudentCode) return;
   try {
     if (!progress) {
@@ -306,7 +402,7 @@ function saveProgress() {
         console.log("Crown added! Total items: " + progress.gems.length);
       }
       
-      const pointsEarned = 100;
+      const pointsEarned = 200; // Extra points for completing the crown!
       progress.points = (progress.points || 0) + pointsEarned;
       
       if (!progress.completedCastles) progress.completedCastles = [];
@@ -329,34 +425,11 @@ function saveProgress() {
     };
     localStorage.setItem('scienceIslandProgress_' + currentStudentCode, JSON.stringify(dataToSave));
     
-    console.log("Saved data:", dataToSave);
+    if (student && student.studentCode) {
+      await updateCloudData(student, dataToSave);
+    }
     
-    updateLeaderboard();
   } catch(e) { console.error(e); }
-}
-
-function updateLeaderboard() {
-  if (!student || !student.name) return;
-  let lb = [];
-  try { lb = JSON.parse(localStorage.getItem("scienceIslandLeaderboard") || "[]"); } catch(e) {}
-  
-  const entry = {
-    name: student.name,
-    title: "الأميرة",
-    cls: student.cls || "—",
-    gems: progress.gems ? progress.gems.length - 1 : 0, // Subtract 1 for the crown (gem 5)
-    points: progress.points || 0,
-    date: new Date().toLocaleDateString("ar-AE")
-  };
-  
-  const idx = lb.findIndex(e => e.name === entry.name);
-  if (idx >= 0) {
-    if (entry.points >= lb[idx].points) lb[idx] = entry;
-  } else {
-    lb.push(entry);
-  }
-  lb.sort((a, b) => b.points - a.points);
-  try { localStorage.setItem("scienceIslandLeaderboard", JSON.stringify(lb)); } catch(e) {}
 }
 
 function showQ() {
@@ -413,10 +486,9 @@ function endPalace() {
 }
 
 function restart() {
-  // Generate new random order when retrying
   QS = generateRandomizedQuestions();
   cur = 0; score = 0; done = false;
-  document.getElementById("victoryScreen").classList.remove("show");
+  document.getElementById("endScreen").classList.remove("show");
   document.getElementById("failScreen").classList.remove("show");
   document.getElementById("qSection").style.display = "";
   showQ();
@@ -431,7 +503,7 @@ function exitPalace() {
 function goToCertificate() { location.href = 'certificate.html'; }
 function goToLeaderboard() { location.href = 'leaderboard.html'; }
 
-function launchFw() {
+function launchFireworks() {
   const fw = document.getElementById("fw");
   const cols = ["#ffd700", "#ff4488", "#00ff88", "#4488ff", "#ffaa00", "#cc88ff"];
   let n = 0;
