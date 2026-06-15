@@ -16,8 +16,6 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   border-radius:18px;padding:.27rem .8rem;font-family:"Tajawal",sans-serif;
   font-size:.75rem;font-weight:700;color:rgba(200,220,255,.85);cursor:pointer;transition:all .2s}
 .tbtn:hover{background:rgba(255,215,0,.12);color:#ffd700}
-.tbtn.del{border-color:rgba(255,80,80,.4);color:rgba(255,130,130,.7)}
-.tbtn.del:hover{background:rgba(255,50,50,.15);color:#ff8888}
 .wrap{max-width:760px;margin:0 auto;padding:1.4rem 1rem 3rem}
 .lbh{text-align:center;margin-bottom:1.3rem}
 .lbi{font-size:2.4rem;display:block;animation:trophyGlow 2.5s ease-in-out infinite;
@@ -46,6 +44,7 @@ tr:nth-child(3) td{color:#cd7f32;font-weight:700}
 .rn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:rgba(200,220,255,.6)}
 .gc{font-size:.95rem;letter-spacing:.08rem}
 .pts{color:#ffd700;font-weight:800}
+.crown-icon{font-size:1rem;margin-left:.2rem}
 .empty{text-align:center;padding:3rem 1rem;color:rgba(160,200,255,.45)}
 .ei{font-size:3rem;display:block;margin-bottom:.5rem}
 </style>
@@ -54,7 +53,7 @@ tr:nth-child(3) td{color:#cd7f32;font-weight:700}
 <div class="topbar">
   <button class="tbtn" onclick="location.href='map.html'">↩ الخريطة</button>
   <span style="font-size:.82rem;color:#ffd700;font-weight:700">🏆 سجل الأبطال</span>
-  <button class="tbtn del" onclick="clearLB()">🗑️ مسح</button>
+  <button class="tbtn" onclick="location.href='intro.html'">🏝️ الرئيسية</button>
 </div>
 <div class="wrap">
   <div class="lbh">
@@ -64,108 +63,122 @@ tr:nth-child(3) td{color:#cd7f32;font-weight:700}
   </div>
   <div id="lbContent"><div class="loading"><div class="spinner"></div><span>جاري تحميل البيانات...</span></div></div>
 </div>
+
 <script>
-// GitHub configuration - REPLACE WITH YOUR ACTUAL VALUES
-const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
-const GITHUB_REPO = 'a3m1883/science-island';
-const DATA_FILE_PATH = 'data/students.json';
+// ============================================
+// JSONBin.io CONFIGURATION
+// ============================================
+const JSONBIN_API_KEY = '$2a$10$mZzdzJHkljqyVEypW25Rh.VhLOqOXh90LsFE9AUO.kg1gq51akawS';
+const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
+// ============================================
 
-const gemsMap = (n) => {
+// Function to display gems based on count
+function getGemsDisplay(gemCount, hasCrown) {
   const gems = [];
-  if (n >= 1) gems.push('💚');
-  if (n >= 2) gems.push('💙');
-  if (n >= 3) gems.push('🧡');
-  if (n >= 4) gems.push('💜');
-  return gems.join('');
-};
+  if (gemCount >= 1) gems.push('💚');
+  if (gemCount >= 2) gems.push('💙');
+  if (gemCount >= 3) gems.push('🧡');
+  if (gemCount >= 4) gems.push('💜');
+  
+  let gemsString = gems.join(' ');
+  if (hasCrown) {
+    gemsString += ' 👑';
+  }
+  return gemsString || '🖤🖤🖤🖤';
+}
 
-const rc = (i) => i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : "rn";
-const re = (i) => i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+// Function to get rank class
+function getRankClass(index) {
+  if (index === 0) return 'r1';
+  if (index === 1) return 'r2';
+  if (index === 2) return 'r3';
+  return 'rn';
+}
 
-async function fetchLeaderboard() {
+// Function to get rank medal
+function getRankMedal(index) {
+  if (index === 0) return '🥇';
+  if (index === 1) return '🥈';
+  if (index === 2) return '🥉';
+  return '';
+}
+
+// JSONBin.io API functions
+async function fetchAllData() {
   try {
-    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-    const response = await fetch(url, {
-      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
     });
-    
-    if (response.status === 404) {
-      document.getElementById('lbContent').innerHTML = `<div class="empty"><span class="ei">🏝️</span>لا يوجد أبطال بعد!<br><small style="font-size:.8rem;color:rgba(160,200,255,.35);margin-top:.3rem;display:block">أكملي المغامرة لتظهري هنا</small></div>`;
-      return [];
+    if (!response.ok) {
+      console.error('Fetch failed:', response.status);
+      return { students: [], leaderboard: [] };
     }
-    
     const data = await response.json();
-    const content = JSON.parse(atob(data.content));
-    return content.leaderboard || [];
+    return data.record;
   } catch(e) {
-    console.error('Error fetching leaderboard:', e);
-    return [];
+    console.error('Error fetching data:', e);
+    return { students: [], leaderboard: [] };
   }
 }
 
 async function loadLeaderboard() {
-  const lb = await fetchLeaderboard();
-  const w = document.getElementById("lbContent");
-  
-  if (!lb.length) {
-    w.innerHTML = `<div class="empty"><span class="ei">🏝️</span>لا يوجد أبطال بعد!<br><small style="font-size:.8rem;color:rgba(160,200,255,.35);margin-top:.3rem;display:block">أكملي المغامرة لتظهري هنا</small></div>`;
-    return;
-  }
-  
-  const rows = lb.slice(0, 50).map((e, i) => `
-    <tr>
-      <td><span class="rb ${rc(i)}">${i+1}${re(i)}</span></td>
-      <td style="text-align:right;font-weight:700">${e.title || ""} ${e.name}</td>
-      <td>${e.cls || "—"}</td>
-      <td class="gc">${gemsMap(e.gems)} <span style="font-size:.68rem;color:rgba(200,220,255,.5)">(${e.gems}/4)</span></td>
-      <td class="pts">${(e.points || 0).toLocaleString("ar-EG")}</td>
-      <td style="font-size:.7rem;color:rgba(160,200,255,.5)">${e.date || "—"}</td>
-    </tr>
-  `).join("");
-  
-  w.innerHTML = `
-    <table>
-      <thead><tr><th>#</th><th>الطالبة</th><th>الشعبة</th><th>الجواهر</th><th>النقاط</th><th>التاريخ</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
-
-async function clearLB() {
-  if (!confirm("مسح سجل الأبطال؟ هذا الإجراء نهائي!")) return;
-  
   try {
-    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-    const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-    const data = await response.json();
-    const content = JSON.parse(atob(data.content));
+    const allData = await fetchAllData();
+    const leaderboard = allData.leaderboard || [];
+    const w = document.getElementById("lbContent");
     
-    content.leaderboard = [];
+    if (!leaderboard.length) {
+      w.innerHTML = `<div class="empty"><span class="ei">🏝️</span>لا يوجد أبطال بعد!<br><small style="font-size:.8rem;color:rgba(160,200,255,.35);margin-top:.3rem;display:block">أكملي المغامرة لتظهري هنا</small></div>`;
+      return;
+    }
     
-    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+    // Sort by points (highest first)
+    const sorted = [...leaderboard].sort((a, b) => b.points - a.points);
     
-    await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: 'Clear leaderboard',
-        content: updatedContent,
-        sha: data.sha
-      })
-    });
+    const rows = sorted.slice(0, 50).map((entry, i) => {
+      const hasCrown = entry.hasCrown === true;
+      const gemsDisplay = getGemsDisplay(entry.gems || 0, hasCrown);
+      const medal = getRankMedal(i);
+      const rankClass = getRankClass(i);
+      
+      return `
+        <tr>
+          <td><span class="rb ${rankClass}">${i+1}${medal}</span></td>
+          <td style="text-align:right;font-weight:700">${entry.title || 'الأميرة'} ${entry.name} ${hasCrown ? '👑' : ''}</td>
+          <td>${entry.cls || '—'}</td>
+          <td class="gc">${gemsDisplay}</td>
+          <td class="pts">${(entry.points || 0).toLocaleString("ar-EG")}</td>
+          <td style="font-size:.7rem;color:rgba(160,200,255,.5)">${entry.date || '—'}</td>
+        </tr>
+      `;
+    }).join("");
     
-    loadLeaderboard();
-    alert('تم مسح سجل الأبطال');
+    w.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>الطالبة</th>
+            <th>الشعبة</th>
+            <th>الجواهر</th>
+            <th>النقاط</th>
+            <th>التاريخ</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
   } catch(e) {
-    console.error('Error clearing leaderboard:', e);
-    alert('حدث خطأ في مسح البيانات');
+    console.error('Error loading leaderboard:', e);
+    document.getElementById("lbContent").innerHTML = `<div class="empty"><span class="ei">⚠️</span>حدث خطأ في تحميل البيانات<br><small style="font-size:.8rem">الرجاء المحاولة مرة أخرى</small></div>`;
   }
 }
 
+// Load leaderboard when page loads
 loadLeaderboard();
+
+// Refresh every 30 seconds
+setInterval(loadLeaderboard, 30000);
 </script>
 </body>
 </html>
