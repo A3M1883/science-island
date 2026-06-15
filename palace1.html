@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
-<title>💚 قصر المعرفة – جزيرة العلوم</title>
+<title>💙 قصر المعرفة – جزيرة العلوم</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -21,14 +21,14 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .ph{text-align:center;padding:.8rem 0 .5rem;border-bottom:1px solid rgba(255,215,0,.2);margin-bottom:1.1rem}
 .pi{font-size:2.2rem;display:block;margin-bottom:.18rem;
   animation:iconPulse 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 0 8px #00cc55)}
-@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #00cc55)}50%{filter:drop-shadow(0 0 18px #00cc55)}}
+  filter:drop-shadow(0 0 8px #2288ff)}
+@keyframes iconPulse{0%,100%{filter:drop-shadow(0 0 5px #2288ff)}50%{filter:drop-shadow(0 0 18px #2288ff)}}
 .ptitle{font-size:clamp(1.2rem,3.5vw,1.8rem);font-weight:900;color:#ffd700}
 .psub{color:rgba(160,200,255,.65);font-size:.82rem;margin-top:.12rem}
 .progw{margin-bottom:1rem}
 .proginfo{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(180,210,255,.6);margin-bottom:.28rem}
 .progtrack{height:9px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden;border:1px solid rgba(255,215,0,.15)}
-.progfill{height:100%;background:linear-gradient(90deg,#00cc55,#00ff88);border-radius:5px;transition:width .5s}
+.progfill{height:100%;background:linear-gradient(90deg,#2288ff,#55aaff);border-radius:5px;transition:width .5s}
 .qcard{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,215,0,.28);
   border-radius:16px;padding:1.3rem 1.2rem;margin-bottom:.9rem}
 .qnum{color:rgba(255,215,0,.62);font-size:.74rem;font-weight:700;margin-bottom:.4rem}
@@ -59,7 +59,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 .endscreen{display:none;text-align:center;padding:1.8rem .8rem}
 .endscreen.show{display:block}
 .endgem{font-size:clamp(3rem,8vw,5rem);display:block;margin:0 auto .4rem;
-  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #00cc55)}
+  animation:gemDrop .55s ease-out;filter:drop-shadow(0 0 18px #2288ff)}
 @keyframes gemDrop{from{transform:scale(0) rotate(-18deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}to{transform:scale(1);opacity:1}}
 .endtitle{font-size:clamp(1.3rem,3.8vw,2rem);font-weight:900;color:#ffd700;margin-bottom:.35rem}
 .stars{font-size:1.8rem;letter-spacing:.2rem;margin:.4rem 0}
@@ -96,15 +96,15 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 <div class="cl" id="cl"></div>
 <div class="topbar">
   <span class="tb-name" id="tbName">—</span>
-  <span class="tb-ttl">💚 قصر المعرفة</span>
+  <span class="tb-ttl">💙 قصر المعرفة</span>
   <span class="tb-gems">💎 <span id="tbGems">0</span>/4</span>
   <button onclick="exitPalace()" style="background:rgba(255,215,0,.15);border:1px solid #ffd700;color:#ffd700;border-radius:20px;padding:.25rem .75rem;font-family:Tajawal,sans-serif;font-weight:700;font-size:.78rem;cursor:pointer">↩ خروج</button>
 </div>
 <div class="wrap">
   <div class="ph">
-    <span class="pi">💚</span>
+    <span class="pi">💙</span>
     <div class="ptitle">قصر المعرفة</div>
-    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الخضراء!</div>
+    <div class="psub">مستوى: التذكر · أجيبي على 10 أسئلة بشكل صحيح للحصول على 100 نقطة والجوهرة الزرقاء!</div>
   </div>
   <div class="progw">
     <div class="proginfo">
@@ -123,7 +123,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
     <button class="btnnext" id="btnNext" onclick="nextQ()">التالي ←</button>
   </div>
   <div class="endscreen" id="endScreen">
-    <span class="endgem">💚</span>
+    <span class="endgem">💙</span>
     <div class="endtitle">أحسنتِ! جمعتِ جوهرة المعرفة!</div>
     <div class="stars" id="starsRow">⭐⭐⭐</div>
     <div class="enddetail" id="endDetail"></div>
@@ -141,18 +141,19 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 
 <script>
 // ============================================
-// GITHUB CONFIGURATION - REPLACE WITH YOUR NEW TOKEN
+// JSONBin.io CONFIGURATION
 // ============================================
-const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
-const GITHUB_REPO = 'a3m1883/science-island';
-const DATA_FILE_PATH = 'data/students.json';
+// PUT YOUR MASTER KEY HERE (X-Master-Key from JSONBin.io)
+const JSONBIN_API_KEY = 'YOUR_MASTER_KEY_HERE';  
+// PUT YOUR BIN ID HERE (from your bin URL: https://jsonbin.io/v3/b/YOUR_BIN_ID)
+const JSONBIN_BIN_ID = 'YOUR_BIN_ID_HERE';
 // ============================================
 
-const PID = 1;  // Palace ID (1 for GREEN gem 💚)
+const PID = 1;  // Palace ID (1 for BLUE gem 💙)
 const TOTAL = 10;
 const PASS_SCORE = 10;
 
-// Original questions for Palace 1 (المعرفة) - GREEN GEM
+// Original questions for Palace 1 (المعرفة) - BLUE GEM
 const ORIGINAL_QS = [
   {"text": "يستخرج الألومنيوم من:", "opts": ["خام الهيماتيت", "خام البوكسيت", "الكبريت", "الفلوريت"], "correctIndex": 1},
   {"text": "في أي عضية تحدث عملية البناء الضوئي؟", "opts": ["الميتوكوندريا", "البلاستيدات الخضراء", "الريبوسومات", "الفجوات"], "correctIndex": 1},
@@ -209,22 +210,42 @@ let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
 
-// GitHub API functions
+// JSONBin.io API functions
 async function fetchAllData() {
   try {
-    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-    const response = await fetch(url, {
-      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
     });
-    if (response.status === 404) {
+    if (!response.ok) {
+      console.error('Fetch failed:', response.status);
       return { students: [], leaderboard: [] };
     }
     const data = await response.json();
-    const content = atob(data.content);
-    return JSON.parse(content);
+    return data.record;
   } catch(e) {
     console.error('Error fetching data:', e);
     return { students: [], leaderboard: [] };
+  }
+}
+
+async function saveAllData(data) {
+  try {
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      console.error('Save failed:', response.status);
+      return false;
+    }
+    return true;
+  } catch(e) {
+    console.error('Error saving data:', e);
+    return false;
   }
 }
 
@@ -245,8 +266,9 @@ async function updateCloudData(studentData, progressData) {
       name: studentData.name,
       title: "الأميرة",
       cls: studentData.cls,
-      gems: progressData.gems ? progressData.gems.length - 1 : 0,
+      gems: progressData.gems ? progressData.gems.length : 0,
       points: progressData.points || 0,
+      hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
       studentCode: studentData.studentCode,
       date: new Date().toLocaleDateString('ar-AE')
     };
@@ -262,34 +284,10 @@ async function updateCloudData(studentData, progressData) {
     
     allData.leaderboard.sort((a, b) => b.points - a.points);
     
-    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
-    
-    let sha = null;
-    try {
-      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-      const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-      if (response.ok) {
-        const fileData = await response.json();
-        sha = fileData.sha;
-      }
-    } catch(e) {}
-    
-    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `Update student progress: ${studentData.name}`,
-        content: updatedContent,
-        sha: sha
-      })
-    });
-    
-    return true;
+    const saved = await saveAllData(allData);
+    return saved;
   } catch(e) {
-    console.error('Error saving to GitHub:', e);
+    console.error('Error saving to JSONBin:', e);
     return false;
   } finally {
     loadingDiv.classList.remove('show');
@@ -422,7 +420,7 @@ function endPalace() {
   if (score >= PASS_SCORE) {
     saveProgress();
     document.getElementById("endScreen").classList.add("show");
-    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة والجوهرة الخضراء! 🎉💚`;
+    document.getElementById("endDetail").innerHTML = `أجبتِ على جميع الأسئلة العشرة بشكل صحيح!<br>حصلتِ على 100 نقطة والجوهرة الزرقاء! 🎉💙`;
     document.getElementById("starsRow").textContent = "⭐⭐⭐";
     confetti();
   } else {
