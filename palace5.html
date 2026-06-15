@@ -140,7 +140,7 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
   <div class="endscreen" id="endScreen">
     <span class="vcrown">👑</span>
     <div class="vtitle">تهانينا يا ملكة جزيرة العلوم!</div>
-    <div class="gems-won">💚 💙 🧡 💜 👑</div>
+    <div class="gems-won">💙 💚 🧡 💜 👑</div>
     <div class="vsub">لقد جمعتِ الجواهر الأربعة وحصلتِ على التاج الملكي!</div>
     <div class="vname" id="vName">—</div>
     <div class="score-card">
@@ -168,11 +168,10 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 
 <script>
 // ============================================
-// GITHUB CONFIGURATION - REPLACE WITH YOUR NEW TOKEN
+// JSONBin.io CONFIGURATION
 // ============================================
-const GITHUB_TOKEN = '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';  // 👈 PUT YOUR NEW TOKEN HERE
-const GITHUB_REPO = 'a3m1883/science-island';
-const DATA_FILE_PATH = 'data/students.json';
+const JSONBIN_API_KEY = '$2a$10$mZzdzJHkljqyVEypW25Rh.VhLOqOXh90LsFE9AUO.kg1gq51akawS';
+const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 // ============================================
 
 const PID = 5;  // Palace ID (5 for CROWN 👑)
@@ -236,22 +235,42 @@ let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
 
-// GitHub API functions
+// JSONBin.io API functions
 async function fetchAllData() {
   try {
-    const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-    const response = await fetch(url, {
-      headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
     });
-    if (response.status === 404) {
+    if (!response.ok) {
+      console.error('Fetch failed:', response.status);
       return { students: [], leaderboard: [] };
     }
     const data = await response.json();
-    const content = atob(data.content);
-    return JSON.parse(content);
+    return data.record;
   } catch(e) {
     console.error('Error fetching data:', e);
     return { students: [], leaderboard: [] };
+  }
+}
+
+async function saveAllData(data) {
+  try {
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      console.error('Save failed:', response.status);
+      return false;
+    }
+    return true;
+  } catch(e) {
+    console.error('Error saving data:', e);
+    return false;
   }
 }
 
@@ -273,7 +292,7 @@ async function updateCloudData(studentData, progressData) {
       name: studentData.name,
       title: "الأميرة",
       cls: studentData.cls,
-      gems: progressData.gems ? progressData.gems.length - 1 : 0,
+      gems: progressData.gems ? progressData.gems.length : 0,
       points: progressData.points || 0,
       hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
       studentCode: studentData.studentCode,
@@ -291,34 +310,10 @@ async function updateCloudData(studentData, progressData) {
     
     allData.leaderboard.sort((a, b) => b.points - a.points);
     
-    const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(allData, null, 2))));
-    
-    let sha = null;
-    try {
-      const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`;
-      const response = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-      if (response.ok) {
-        const fileData = await response.json();
-        sha = fileData.sha;
-      }
-    } catch(e) {}
-    
-    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `Update student progress: ${studentData.name}`,
-        content: updatedContent,
-        sha: sha
-      })
-    });
-    
-    return true;
+    const saved = await saveAllData(allData);
+    return saved;
   } catch(e) {
-    console.error('Error saving to GitHub:', e);
+    console.error('Error saving to JSONBin:', e);
     return false;
   } finally {
     loadingDiv.classList.remove('show');
@@ -393,22 +388,18 @@ async function saveProgress() {
       progress = { gems: [], level: 1, points: 0, completedCastles: [], castleScores: {} };
     }
     
-    console.log("Saving progress - Score: " + score + ", PID: " + PID + ", isAlreadyCompleted: " + isAlreadyCompleted);
-    
     if (!isAlreadyCompleted && score === 10) {
       if (!progress.gems) progress.gems = [];
       if (!progress.gems.includes(PID)) {
         progress.gems.push(PID);
-        console.log("Crown added! Total items: " + progress.gems.length);
       }
       
-      const pointsEarned = 200; // Extra points for completing the crown!
+      const pointsEarned = 200;
       progress.points = (progress.points || 0) + pointsEarned;
       
       if (!progress.completedCastles) progress.completedCastles = [];
       if (!progress.completedCastles.includes(PID)) {
         progress.completedCastles.push(PID);
-        console.log("Castle " + PID + " marked as completed!");
       }
       
       if (!progress.castleScores) progress.castleScores = {};
