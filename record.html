@@ -199,7 +199,7 @@ function updateStats() {
   
   document.getElementById('totalStudents').textContent = total;
   document.getElementById('totalGems').textContent = totalGems;
-  document.getElementById('totalPoints').textContent = totalPoints.toLocaleString('ar-EG');
+  document.getElementById('totalPoints').textContent = totalPoints.toLocaleString('en-US');
   document.getElementById('crownCount').textContent = crownCount;
 }
 
@@ -228,18 +228,19 @@ function renderTable() {
     const gemsCount = progress.gems?.length || 0;
     const hasCrown = progress.completedCastles?.includes(5) || false;
     const castlesCompleted = progress.completedCastles?.length || 0;
+    const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
     
     return `
       <tr>
         <td>${index + 1}</td>
-        <td style="text-align:right;font-weight:700">👸 ${student.name}</td>
+        <td style="text-align:right;font-weight:700">${title} ${student.name} ${hasCrown ? '👑' : '👸'}</td>
         <td>${student.cls || '—'}</td>
         <td>${student.school || '—'}</td>
         <td>${student.teacher || '—'}</td>
         <td><span class="gems">${getGemsDisplay(progress.gems)}</span></td>
         <td>${gemsCount}/4 ${hasCrown ? '<span class="crown">👑</span>' : ''}</td>
         <td>${castlesCompleted}/5</td>
-        <td class="points" style="color:#ffd700;font-weight:800">${(progress.points || 0).toLocaleString('ar-EG')}</td>
+        <td class="points" style="color:#ffd700;font-weight:800">${(progress.points || 0).toLocaleString('en-US')}</td>
         <td style="white-space:nowrap">
           <button class="detail-btn" onclick="showDetails('${student.studentCode}')">📋 تفاصيل</button>
           <button class="delete-btn" onclick="showDeleteConfirm('${student.studentCode}', '${student.name}')">🗑️ حذف</button>
@@ -336,6 +337,8 @@ function showDetails(studentCode) {
   
   const progress = student.progress || { gems: [], points: 0, completedCastles: [], castleScores: {} };
   const gems = progress.gems || [];
+  const hasCrown = progress.completedCastles?.includes(5) || false;
+  const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
   
   const palaces = [
     { id: 1, name: 'قصر المعرفة', gem: '💙', required: 1 },
@@ -357,14 +360,14 @@ function showDetails(studentCode) {
   }).join('');
   
   const modalContent = `
-    <div class="detail-row"><span class="detail-label">👸 الاسم الكامل:</span><span class="detail-value">${student.name}</span></div>
+    <div class="detail-row"><span class="detail-label">👸 الاسم الكامل:</span><span class="detail-value">${title} ${student.name}</span></div>
     <div class="detail-row"><span class="detail-label">🔑 كود الطالبة:</span><span class="detail-value">${student.studentCode}</span></div>
     <div class="detail-row"><span class="detail-label">📚 الشعبة:</span><span class="detail-value">${student.cls || '—'}</span></div>
     <div class="detail-row"><span class="detail-label">🏫 المدرسة:</span><span class="detail-value">${student.school || '—'}</span></div>
     <div class="detail-row"><span class="detail-label">👩‍🏫 معلمة العلوم:</span><span class="detail-value">${student.teacher || '—'}</span></div>
     <div class="detail-row"><span class="detail-label">💎 الجواهر المجمعة:</span><span class="detail-value">${gems.length}/4 ${getGemsDisplay(gems)}</span></div>
-    <div class="detail-row"><span class="detail-label">🏆 النقاط الإجمالية:</span><span class="detail-value" style="color:#ffd700;font-weight:800">${(progress.points || 0).toLocaleString('ar-EG')}</span></div>
-    <div class="detail-row"><span class="detail-label">👑 التاج الملكي:</span><span class="detail-value">${progress.completedCastles?.includes(5) ? '✅ تم الحصول على التاج' : '❌ لم يتم بعد'}</span></div>
+    <div class="detail-row"><span class="detail-label">🏆 النقاط الإجمالية:</span><span class="detail-value" style="color:#ffd700;font-weight:800">${(progress.points || 0).toLocaleString('en-US')}</span></div>
+    <div class="detail-row"><span class="detail-label">👑 التاج الملكي:</span><span class="detail-value">${hasCrown ? '✅ تم الحصول على التاج' : '❌ لم يتم بعد'}</span></div>
     <div class="detail-row"><span class="detail-label">📅 تاريخ التسجيل:</span><span class="detail-value">${student.registeredAt ? new Date(student.registeredAt).toLocaleDateString('ar-AE') : '—'}</span></div>
     <div class="detail-row"><span class="detail-label">🕐 آخر تحديث:</span><span class="detail-value">${student.lastUpdated ? new Date(student.lastUpdated).toLocaleString('ar-AE') : '—'}</span></div>
     <div style="margin-top:1rem"><span class="detail-label">🏰 تقدم القصور:</span></div>
