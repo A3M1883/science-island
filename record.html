@@ -156,6 +156,7 @@ async function fetchAllData() {
     const data = await response.json();
     console.log('Data received:', data);
     console.log('Students count:', data.record?.students?.length || 0);
+    console.log('Leaderboard count:', data.record?.leaderboard?.length || 0);
     
     return data.record;
   } catch(e) {
@@ -204,33 +205,56 @@ async function loadStudents() {
     `;
     debugInfo.classList.add('show');
     
-    // Make sure we have the students array
-    allStudents = allData.students || [];
-    
-    // If students array is empty but leaderboard has data, try to reconstruct
-    if (allStudents.length === 0 && allData.leaderboard && allData.leaderboard.length > 0) {
-      console.log('Students array empty, but leaderboard has data. Attempting to reconstruct...');
-      // Try to reconstruct from leaderboard
-      allStudents = allData.leaderboard.map(lb => ({
-        name: lb.name,
-        cls: lb.cls || '',
-        teacher: '',
-        school: '',
-        studentCode: lb.studentCode || '',
-        registeredAt: '',
-        titleLabel: lb.title || 'الأميرة',
-        progress: {
-          gems: lb.gems ? Array.from({length: lb.gems}, (_, i) => i + 1) : [],
-          level: 1,
-          points: lb.points || 0,
-          completedCastles: lb.hasCrown ? [1, 2, 3, 4, 5] : [],
-          castleScores: {}
-        },
-        createdAt: '',
-        lastUpdated: '',
-        hasCrown: lb.hasCrown || false
-      }));
+    // Check if students array is empty but leaderboard has data
+    if ((!allData.students || allData.students.length === 0) && allData.leaderboard && allData.leaderboard.length > 0) {
+      console.log('Students array empty, but leaderboard has', allData.leaderboard.length, 'entries. Reconstructing all...');
+      
+      // Reconstruct ALL students from leaderboard
+      allStudents = allData.leaderboard.map(lb => {
+        // Determine gems array from gems count
+        const gemIds = [];
+        const gemCount = lb.gems || 0;
+        for (let i = 1; i <= gemCount; i++) {
+          if (i <= 4) gemIds.push(i);
+        }
+        // If has crown, add gem 5
+        if (lb.hasCrown) {
+          gemIds.push(5);
+        }
+        
+        // Determine completed castles
+        const completed = [];
+        if (gemCount >= 1) completed.push(1);
+        if (gemCount >= 2) completed.push(2);
+        if (gemCount >= 3) completed.push(3);
+        if (gemCount >= 4) completed.push(4);
+        if (lb.hasCrown) completed.push(5);
+        
+        return {
+          name: lb.name || 'Unknown',
+          cls: lb.cls || '',
+          teacher: lb.teacher || '',
+          school: lb.school || '',
+          studentCode: lb.studentCode || '',
+          registeredAt: lb.registeredAt || new Date().toISOString(),
+          titleLabel: lb.hasCrown ? 'الملكة' : (lb.title || 'الأميرة'),
+          progress: {
+            gems: gemIds,
+            level: Math.min(gemCount + 1, 6),
+            points: lb.points || 0,
+            completedCastles: completed,
+            castleScores: {}
+          },
+          createdAt: lb.createdAt || new Date().toISOString(),
+          lastUpdated: lb.lastUpdated || new Date().toISOString(),
+          hasCrown: lb.hasCrown || false
+        };
+      });
+      
       console.log('Reconstructed', allStudents.length, 'students from leaderboard');
+    } else {
+      // Use students array directly
+      allStudents = allData.students || [];
     }
     
     filteredStudents = [...allStudents];
