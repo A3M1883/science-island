@@ -137,6 +137,7 @@ async function loadLeaderboard() {
     
     const rows = sorted.slice(0, 50).map((entry, i) => {
       const hasCrown = entry.hasCrown === true;
+      const title = hasCrown ? "الملكة" : (entry.title || "الأميرة");
       const gemsDisplay = getGemsDisplay(entry.gems || 0, hasCrown);
       const medal = getRankMedal(i);
       const rankClass = getRankClass(i);
@@ -144,7 +145,7 @@ async function loadLeaderboard() {
       return `
         <tr>
           <td><span class="rb ${rankClass}">${i+1}${medal}</span></td>
-          <td style="text-align:right;font-weight:700">${entry.title || 'الأميرة'} ${entry.name} ${hasCrown ? '👑' : ''}</td>
+          <td style="text-align:right;font-weight:700">${title} ${entry.name} ${hasCrown ? '👑' : '👸'}</td>
           <td>${entry.cls || '—'}</td>
           <td class="gc">${gemsDisplay}</td>
           <td class="pts">${(entry.points || 0).toLocaleString("ar-EG")}</td>
