@@ -196,14 +196,6 @@ async function loadStudents() {
   try {
     const allData = await fetchAllData();
     
-    // Debug: Show what was received
-    debugInfo.innerHTML = `
-      <strong>📊 معلومات التحميل:</strong><br>
-      عدد الطالبات في قاعدة البيانات: ${allData.students?.length || 0}<br>
-      عدد الطالبات في لوحة المتصدرين: ${allData.leaderboard?.length || 0}<br>
-      <span style="color:rgba(200,220,255,.5);font-size:.7rem">آخر تحديث: ${new Date().toLocaleString('ar-AE')}</span>
-    `;
-    debugInfo.classList.add('show');
     
     // Check if students array is empty but leaderboard has data
     if ((!allData.students || allData.students.length === 0) && allData.leaderboard && allData.leaderboard.length > 0) {
