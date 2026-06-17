@@ -19,19 +19,27 @@ body{font-family:'Tajawal',sans-serif;background:linear-gradient(160deg,#040e2e,
 .btn-outline:hover{background:rgba(255,215,0,.15)}
 .btn-danger{background:rgba(200,50,50,.15);border:1px solid rgba(255,80,80,.5);color:#ff8888}
 .btn-danger:hover{background:rgba(200,50,50,.3);color:#ffaaaa}
-.search-box{display:flex;gap:.5rem;flex-wrap:wrap}
+.search-box{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .search-box input{padding:.7rem 1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.3);border-radius:10px;color:#fff;font-family:'Tajawal',sans-serif;width:250px}
 .search-box input::placeholder{color:rgba(200,220,255,.5)}
+.search-box select{padding:.7rem 1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.3);border-radius:10px;color:#fff;font-family:'Tajawal',sans-serif;min-width:120px;cursor:pointer}
+.search-box select option{background:#0a1640;color:#fff}
+.sort-buttons{display:flex;gap:.3rem;flex-wrap:wrap}
+.sort-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.3);border-radius:8px;padding:.4rem .8rem;font-family:'Tajawal',sans-serif;font-size:.75rem;font-weight:700;color:rgba(200,220,255,.8);cursor:pointer;transition:all .2s}
+.sort-btn:hover{background:rgba(255,215,0,.1);color:#ffd700}
+.sort-btn.active{background:rgba(255,215,0,.15);border-color:#ffd700;color:#ffd700}
 .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
 .stat-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,215,0,.2);border-radius:15px;padding:1rem;text-align:center}
 .stat-card .number{font-size:2rem;font-weight:900;color:#ffd700}
 .stat-card .label{font-size:.8rem;color:rgba(200,220,255,.7)}
 .students-table{background:rgba(255,255,255,.05);border-radius:15px;overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-th{background:rgba(255,215,0,.1);color:#ffd700;padding:1rem;text-align:center;font-weight:800}
+table{width:100%;border-collapse:collapse;min-width:800px}
+th{background:rgba(255,215,0,.1);color:#ffd700;padding:1rem;text-align:center;font-weight:800;white-space:nowrap;cursor:pointer;transition:all .2s}
+th:hover{background:rgba(255,215,0,.18)}
+th .sort-icon{margin-right:.3rem;font-size:.7rem}
 td{padding:.8rem;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);color:#e0e8ff;vertical-align:middle}
 tr:hover td{background:rgba(255,215,0,.05)}
-.gems{font-size:1.2rem;letter-spacing:.2rem}
+.gems{font-size:1.2rem;letter-spacing:.15rem;white-space:nowrap}
 .crown{color:#ffd700;font-size:1.2rem}
 .detail-btn{background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:8px;padding:.3rem .8rem;font-size:.7rem;color:#ffd700;cursor:pointer;transition:all .2s}
 .detail-btn:hover{background:rgba(255,215,0,.3)}
@@ -63,8 +71,12 @@ tr:hover td{background:rgba(255,215,0,.05)}
 @media(max-width:768px){
   body{padding:1rem}
   th,td{padding:.5rem;font-size:.7rem}
-  .gems{font-size:.8rem}
+  .gems{font-size:.9rem}
   .detail-btn,.delete-btn{padding:.2rem .5rem;font-size:.6rem}
+  .top-bar{flex-direction:column;align-items:stretch}
+  .search-box{flex-direction:column}
+  .search-box input{width:100%}
+  .sort-buttons{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -77,11 +89,19 @@ tr:hover td{background:rgba(255,215,0,.05)}
 
   <div class="top-bar">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 بحث باسم الطالبة أو الكود..." onkeyup="filterTable()">
-      <button class="btn btn-outline" onclick="clearSearch()">🗑️ مسح البحث</button>
+      <input type="text" id="searchInput" placeholder="🔍 بحث باسم الطالبة أو الكود..." onkeyup="filterAndSort()">
+      <select id="schoolFilter" onchange="filterAndSort()">
+        <option value="">🏫 جميع المدارس</option>
+      </select>
+      <div class="sort-buttons">
+        <button class="sort-btn active" data-sort="name" onclick="setSort('name')">👤 الاسم</button>
+        <button class="sort-btn" data-sort="points" onclick="setSort('points')">🏆 النقاط</button>
+        <button class="sort-btn" data-sort="school" onclick="setSort('school')">🏫 المدرسة</button>
+        <button class="sort-btn" data-sort="gems" onclick="setSort('gems')">💎 الجواهر</button>
+      </div>
     </div>
     <div>
-      <button class="btn" onclick="refreshData()">🔄 تحديث البيانات</button>
+      <button class="btn" onclick="refreshData()">🔄 تحديث</button>
       <button class="btn btn-outline" onclick="location.href='intro.html'">🏝️ الرئيسية</button>
       <button class="btn btn-outline" onclick="location.href='map.html'">🗺️ الخريطة</button>
       <button class="btn btn-outline" onclick="location.href='leaderboard.html'">🏆 سجل الأبطال</button>
@@ -93,7 +113,7 @@ tr:hover td{background:rgba(255,215,0,.05)}
 
   <div class="stats-cards" id="statsCards">
     <div class="stat-card"><div class="number" id="totalStudents">0</div><div class="label">👩‍🎓 إجمالي الطالبات</div></div>
-    <div class="stat-card"><div class="number" id="totalGems">0</div><div class="label">💎 إجمالي الجواهر المجمعة</div></div>
+    <div class="stat-card"><div class="number" id="totalGems">0</div><div class="label">💎 إجمالي الجواهر</div></div>
     <div class="stat-card"><div class="number" id="totalPoints">0</div><div class="label">🏆 إجمالي النقاط</div></div>
     <div class="stat-card"><div class="number" id="crownCount">0</div><div class="label">👑 ملكات الجزيرة</div></div>
   </div>
@@ -135,6 +155,8 @@ const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 let allStudents = [];
 let filteredStudents = [];
 let studentToDelete = null;
+let currentSort = 'name';
+let sortAscending = true;
 
 // JSONBin.io API functions
 async function fetchAllData() {
@@ -186,6 +208,95 @@ async function saveAllData(data) {
   }
 }
 
+function populateSchoolFilter() {
+  const select = document.getElementById('schoolFilter');
+  const schools = [...new Set(allStudents.map(s => s.school).filter(Boolean))].sort();
+  
+  // Keep the "All Schools" option
+  select.innerHTML = '<option value="">🏫 جميع المدارس</option>';
+  
+  schools.forEach(school => {
+    const option = document.createElement('option');
+    option.value = school;
+    option.textContent = school;
+    select.appendChild(option);
+  });
+}
+
+function setSort(sortType) {
+  // Toggle ascending/descending if same sort
+  if (currentSort === sortType) {
+    sortAscending = !sortAscending;
+  } else {
+    currentSort = sortType;
+    sortAscending = true;
+  }
+  
+  // Update button styles
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.sort === sortType) {
+      btn.classList.add('active');
+    }
+  });
+  
+  filterAndSort();
+}
+
+function filterAndSort() {
+  const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+  const schoolFilter = document.getElementById('schoolFilter').value;
+  
+  // Filter
+  filteredStudents = allStudents.filter(student => {
+    const matchName = student.name.toLowerCase().includes(searchTerm) ||
+                      (student.studentCode && student.studentCode.toLowerCase().includes(searchTerm)) ||
+                      (student.cls && student.cls.toString().includes(searchTerm));
+    
+    const matchSchool = !schoolFilter || student.school === schoolFilter;
+    
+    return matchName && matchSchool;
+  });
+  
+  // Sort
+  filteredStudents.sort((a, b) => {
+    let valA, valB;
+    
+    switch(currentSort) {
+      case 'name':
+        valA = a.name || '';
+        valB = b.name || '';
+        break;
+      case 'points':
+        valA = a.progress?.points || 0;
+        valB = b.progress?.points || 0;
+        break;
+      case 'school':
+        valA = a.school || '';
+        valB = b.school || '';
+        break;
+      case 'gems':
+        valA = a.progress?.gems?.length || 0;
+        valB = b.progress?.gems?.length || 0;
+        break;
+      default:
+        valA = a.name || '';
+        valB = b.name || '';
+    }
+    
+    // Handle strings vs numbers
+    if (typeof valA === 'string') {
+      valA = valA.toLowerCase();
+      valB = valB.toLowerCase();
+      return sortAscending ? valA.localeCompare(valB) : valB.localeCompare(valA);
+    } else {
+      return sortAscending ? valA - valB : valB - valA;
+    }
+  });
+  
+  renderTable();
+}
+
 async function loadStudents() {
   const tableContent = document.getElementById('tableContent');
   const debugInfo = document.getElementById('debugInfo');
@@ -196,25 +307,29 @@ async function loadStudents() {
   try {
     const allData = await fetchAllData();
     
+    // Debug: Show what was received
+    debugInfo.innerHTML = `
+      <strong>📊 معلومات التحميل:</strong><br>
+      عدد الطالبات في قاعدة البيانات: ${allData.students?.length || 0}<br>
+      عدد الطالبات في لوحة المتصدرين: ${allData.leaderboard?.length || 0}<br>
+      <span style="color:rgba(200,220,255,.5);font-size:.7rem">آخر تحديث: ${new Date().toLocaleString('ar-AE')}</span>
+    `;
+    debugInfo.classList.add('show');
     
     // Check if students array is empty but leaderboard has data
     if ((!allData.students || allData.students.length === 0) && allData.leaderboard && allData.leaderboard.length > 0) {
       console.log('Students array empty, but leaderboard has', allData.leaderboard.length, 'entries. Reconstructing all...');
       
-      // Reconstruct ALL students from leaderboard
       allStudents = allData.leaderboard.map(lb => {
-        // Determine gems array from gems count
         const gemIds = [];
         const gemCount = lb.gems || 0;
         for (let i = 1; i <= gemCount; i++) {
           if (i <= 4) gemIds.push(i);
         }
-        // If has crown, add gem 5
         if (lb.hasCrown) {
           gemIds.push(5);
         }
         
-        // Determine completed castles
         const completed = [];
         if (gemCount >= 1) completed.push(1);
         if (gemCount >= 2) completed.push(2);
@@ -245,14 +360,16 @@ async function loadStudents() {
       
       console.log('Reconstructed', allStudents.length, 'students from leaderboard');
     } else {
-      // Use students array directly
       allStudents = allData.students || [];
     }
     
     filteredStudents = [...allStudents];
     
+    // Populate school filter
+    populateSchoolFilter();
+    
     updateStats();
-    renderTable();
+    filterAndSort();
     
     if (allStudents.length === 0) {
       tableContent.innerHTML = `<div class="empty-state"><span>📭</span>لا توجد طالبات مسجلات<br><small>سجلي طالبات جديدة لظهورهن هنا</small></div>`;
@@ -279,12 +396,13 @@ function getGemsDisplay(gems) {
   let display = '';
   for (let i = 1; i <= 4; i++) {
     if (gems && gems.includes(i)) {
-      display += i === 1 ? '💙 ' : i === 2 ? '💚 ' : i === 3 ? '🧡 ' : '💜 ';
+      display += i === 1 ? '💙' : i === 2 ? '💚' : i === 3 ? '🧡' : '💜';
     } else {
-      display += '⬜ ';
+      display += '⬜';
     }
+    if (i < 4) display += ' ';
   }
-  return display.trim();
+  return display;
 }
 
 function renderTable() {
@@ -298,6 +416,8 @@ function renderTable() {
     }
     return;
   }
+  
+  const sortIcon = sortAscending ? '⬆' : '⬇';
   
   const rows = filteredStudents.map((student, index) => {
     const progress = student.progress || { gems: [], points: 0, completedCastles: [] };
@@ -313,7 +433,7 @@ function renderTable() {
         <td>${student.cls || '—'}</td>
         <td>${student.school || '—'}</td>
         <td>${student.teacher || '—'}</td>
-        <td><span class="gems">${getGemsDisplay(progress.gems)}</span></td>
+        <td class="gems">${getGemsDisplay(progress.gems)}</td>
         <td>${gemsCount}/4 ${hasCrown ? '<span class="crown">👑</span>' : ''}</td>
         <td>${castlesCompleted}/5</td>
         <td class="points" style="color:#ffd700;font-weight:800">${(progress.points || 0).toLocaleString('en-US')}</td>
@@ -329,15 +449,15 @@ function renderTable() {
     <table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>الطالبة</th>
-          <th>الشعبة</th>
-          <th>المدرسة</th>
-          <th>معلمة العلوم</th>
-          <th>الجواهر</th>
-          <th>المجموع</th>
-          <th>القصور</th>
-          <th>النقاط</th>
+          <th onclick="setSort('name')"># ${currentSort === 'name' ? sortIcon : ''}</th>
+          <th onclick="setSort('name')">الطالبة ${currentSort === 'name' ? sortIcon : ''}</th>
+          <th onclick="setSort('cls')">الشعبة ${currentSort === 'cls' ? sortIcon : ''}</th>
+          <th onclick="setSort('school')">المدرسة ${currentSort === 'school' ? sortIcon : ''}</th>
+          <th onclick="setSort('teacher')">معلمة العلوم ${currentSort === 'teacher' ? sortIcon : ''}</th>
+          <th onclick="setSort('gems')">الجواهر ${currentSort === 'gems' ? sortIcon : ''}</th>
+          <th onclick="setSort('gems')">المجموع ${currentSort === 'gems' ? sortIcon : ''}</th>
+          <th onclick="setSort('gems')">القصور ${currentSort === 'gems' ? sortIcon : ''}</th>
+          <th onclick="setSort('points')">النقاط ${currentSort === 'points' ? sortIcon : ''}</th>
           <th>الإجراءات</th>
         </tr>
       </thead>
@@ -370,23 +490,19 @@ async function confirmDelete() {
   try {
     const allData = await fetchAllData();
     
-    // Remove student from students array
     const studentIndex = allData.students.findIndex(s => s.studentCode === studentToDelete);
     if (studentIndex !== -1) {
       allData.students.splice(studentIndex, 1);
     }
     
-    // Remove student from leaderboard
     const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === studentToDelete);
     if (lbIndex !== -1) {
       allData.leaderboard.splice(lbIndex, 1);
     }
     
-    // Save back to JSONBin
     const saved = await saveAllData(allData);
     
     if (saved) {
-      // Also clear local storage for this student
       localStorage.removeItem('scienceIslandStudent_' + studentToDelete);
       localStorage.removeItem('scienceIslandProgress_' + studentToDelete);
       if (localStorage.getItem('currentStudentCode') === studentToDelete) {
@@ -408,7 +524,6 @@ async function confirmDelete() {
 }
 
 function showDetails(studentCode) {
-  // Find student by code or name
   let student = allStudents.find(s => s.studentCode === studentCode);
   if (!student) {
     student = allStudents.find(s => s.name === studentCode);
@@ -462,26 +577,10 @@ function closeModal() {
   document.getElementById('modal').classList.remove('show');
 }
 
-function filterTable() {
-  const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-  
-  if (searchTerm === '') {
-    filteredStudents = [...allStudents];
-  } else {
-    filteredStudents = allStudents.filter(student => 
-      student.name.toLowerCase().includes(searchTerm) ||
-      (student.studentCode && student.studentCode.toLowerCase().includes(searchTerm)) ||
-      (student.cls && student.cls.toString().includes(searchTerm))
-    );
-  }
-  
-  renderTable();
-}
-
 function clearSearch() {
   document.getElementById('searchInput').value = '';
-  filteredStudents = [...allStudents];
-  renderTable();
+  document.getElementById('schoolFilter').value = '';
+  filterAndSort();
 }
 
 async function refreshData() {
