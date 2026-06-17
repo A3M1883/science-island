@@ -564,20 +564,28 @@ async function handleRegister() {
       
       console.log('Saved to localStorage, studentCode:', foundStudent.studentCode);
       
-      // Get the display elements - safely check if they exist
-      const welcomeNameEl = document.getElementById('welcomeName');
-      const studentCodeDisplayEl = document.getElementById('studentCodeDisplay');
-      const successTitleEl = document.getElementById('successTitle');
-      const successSubEl = document.getElementById('successSub');
-      const successPageEl = document.getElementById('successPage');
+      // Get the success page elements
+      const successPage = document.getElementById('successPage');
+      const successTitle = document.getElementById('successTitle');
+      const successSub = document.getElementById('successSub');
+      const welcomeName = document.getElementById('welcomeName');
+      const studentCodeDisplay = document.getElementById('studentCodeDisplay');
       
-      // Check if all elements exist before setting them
-      if (successTitleEl) {
-        successTitleEl.textContent = '👋 مرحباً بعودتك!';
+      // Set the content - check each element exists first
+      if (successTitle) {
+        successTitle.textContent = '👋 مرحباً بعودتك!';
       }
       
-      if (successSubEl) {
-        successSubEl.innerHTML = `
+      if (welcomeName) {
+        welcomeName.textContent = title + ' ' + foundStudent.name;
+      }
+      
+      if (studentCodeDisplay) {
+        studentCodeDisplay.textContent = '🔑 ' + foundStudent.studentCode;
+      }
+      
+      if (successSub) {
+        successSub.innerHTML = `
           أهلاً وسهلاً <span class="success-name">${title} ${foundStudent.name}</span><br>
           تم استعادة بياناتك بنجاح! ${hasCrown ? '👑' : '👸'}<br>
           <span style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${foundStudent.studentCode}</span>
@@ -585,16 +593,8 @@ async function handleRegister() {
         `;
       }
       
-      if (welcomeNameEl) {
-        welcomeNameEl.textContent = title + ' ' + foundStudent.name;
-      }
-      
-      if (studentCodeDisplayEl) {
-        studentCodeDisplayEl.textContent = '🔑 ' + foundStudent.studentCode;
-      }
-      
-      if (successPageEl) {
-        successPageEl.className = 'success-page show welcome';
+      if (successPage) {
+        successPage.className = 'success-page show welcome';
       }
       
       speak("مرحباً بعودتك");
@@ -643,27 +643,28 @@ async function handleRegister() {
     localStorage.setItem('scienceIslandStudent_' + studentCode, JSON.stringify(studentData));
     localStorage.setItem('scienceIslandProgress_' + studentCode, JSON.stringify(initialProgress));
     
-    // Get display elements - safely check if they exist
-    const welcomeNameEl = document.getElementById('welcomeName');
-    const studentCodeDisplayEl = document.getElementById('studentCodeDisplay');
-    const successTitleEl = document.getElementById('successTitle');
-    const successSubEl = document.getElementById('successSub');
-    const successPageEl = document.getElementById('successPage');
+    // Get the success page elements
+    const successPage = document.getElementById('successPage');
+    const successTitle = document.getElementById('successTitle');
+    const successSub = document.getElementById('successSub');
+    const welcomeName = document.getElementById('welcomeName');
+    const studentCodeDisplay = document.getElementById('studentCodeDisplay');
     
-    if (welcomeNameEl) {
-      welcomeNameEl.textContent = 'الأميرة ' + name;
+    // Set the content - check each element exists first
+    if (welcomeName) {
+      welcomeName.textContent = 'الأميرة ' + name;
     }
     
-    if (studentCodeDisplayEl) {
-      studentCodeDisplayEl.textContent = '🔑 ' + studentCode;
+    if (studentCodeDisplay) {
+      studentCodeDisplay.textContent = '🔑 ' + studentCode;
     }
     
-    if (successTitleEl) {
-      successTitleEl.textContent = '✅ تم حفظ بياناتك بنجاح!';
+    if (successTitle) {
+      successTitle.textContent = '✅ تم حفظ بياناتك بنجاح!';
     }
     
-    if (successSubEl) {
-      successSubEl.innerHTML = `
+    if (successSub) {
+      successSub.innerHTML = `
         أهلاً وسهلاً <span class="success-name">الأميرة ${name}</span><br>
         رحلتك نحو التاج الملكي بدأت! 👸<br>
         <span style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${studentCode}</span>
@@ -671,8 +672,8 @@ async function handleRegister() {
       `;
     }
     
-    if (successPageEl) {
-      successPageEl.className = 'success-page show';
+    if (successPage) {
+      successPage.className = 'success-page show';
     }
     
     // Auto redirect after 2.5 seconds
