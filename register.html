@@ -80,6 +80,7 @@ html,body{width:100%;min-height:100%;font-family:'Tajawal',sans-serif;overflow-x
 .fields{display:flex;flex-direction:column;gap:.75rem}
 .field-group{display:flex;flex-direction:column;gap:.3rem}
 .field-label{font-size:.82rem;font-weight:700;color:rgba(180,210,255,.75);padding-right:.2rem}
+.field-label .required{color:#ff6666;margin-right:.2rem}
 .field-input{
   background:rgba(255,255,255,.06);
   border:1.5px solid rgba(255,215,0,.28);
@@ -98,6 +99,7 @@ html,body{width:100%;min-height:100%;font-family:'Tajawal',sans-serif;overflow-x
 }
 .field-input::placeholder{color:rgba(150,170,220,.45)}
 select.field-input option{background:#0a1640;color:#e8f0ff}
+.field-input:disabled{opacity:.5;cursor:not-allowed}
 
 .btn-enter{
   width:100%;margin-top:1.2rem;
@@ -112,12 +114,19 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 }
 .btn-enter:hover{transform:translateY(-2px) scale(1.02);}
 .btn-enter:active{transform:scale(.98)}
+.btn-enter:disabled{opacity:.5;cursor:not-allowed}
 
 .error-msg{
   display:none;text-align:center;margin-top:.6rem;
   color:#ff8888;font-size:.85rem;font-weight:700;
 }
 .error-msg.show{display:block}
+
+.success-msg{
+  display:none;text-align:center;margin-top:.6rem;
+  color:#88ff88;font-size:.85rem;font-weight:700;
+}
+.success-msg.show{display:block}
 
 .footer-staff{
   position:relative;z-index:5;
@@ -140,6 +149,7 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
   gap:1.2rem;
 }
 .success-page.show{display:flex}
+.success-page.welcome{background:linear-gradient(135deg,#0f3005,#1f6e0d,#0f3005);}
 .success-icon{font-size:4rem;animation:successPop .5s ease-out}
 @keyframes successPop{from{transform:scale(0)}to{transform:scale(1)}}
 .success-title{color:#ffd700;font-size:1.8rem;font-weight:900;text-align:center}
@@ -170,7 +180,7 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 <body>
 
 <div class="bg-stars" id="stars"></div>
-<div class="loading" id="loading"><div class="spinner"></div><div style="color:#ffd700">جاري حفظ البيانات...</div></div>
+<div class="loading" id="loading"><div class="spinner"></div><div style="color:#ffd700">جاري البحث عن بياناتك...</div></div>
 <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="الصوت">🔇</button>
 
 <div class="page">
@@ -178,16 +188,16 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
     <div class="card" id="regCard">
       <div class="card-crown">👑</div>
       <div class="card-title">مرحبًا بكِ في بوابة جزيرة العلوم الملكية</div>
-      <div class="card-sub">أدخلي بياناتك لتبدئي رحلتك نحو التاج الملكي ✨</div>
+      <div class="card-sub">أدخلي بياناتك لبدء رحلتك نحو التاج الملكي ✨</div>
       <div class="card-divider"></div>
 
       <div class="fields">
         <div class="field-group">
-          <label class="field-label" for="studentName">✦ اسم الطالبة كاملاً</label>
-          <input class="field-input" id="studentName" type="text" placeholder="أدخلي اسمك الكامل هنا...">
+          <label class="field-label" for="studentName">✦ الاسم الكامل <span class="required">*</span></label>
+          <input class="field-input" id="studentName" type="text" placeholder="أدخلي اسمك الكامل هنا..." onkeyup="checkExistingStudent()">
         </div>
-        <div class="field-group">
-          <label class="field-label" for="classDiv">✦ الشعبة الدراسية</label>
+        <div class="field-group" id="classGroup">
+          <label class="field-label" for="classDiv">✦ الشعبة الدراسية <span class="required">*</span></label>
           <select class="field-input" id="classDiv">
             <option value="" disabled selected>-- اختاري شعبتك --</option>
             <option value="5">5</option>
@@ -196,18 +206,19 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
             <option value="8">8</option>
           </select>
         </div>
-        <div class="field-group">
-          <label class="field-label" for="teacherName">✦ اسم معلمة العلوم</label>
+        <div class="field-group" id="teacherGroup">
+          <label class="field-label" for="teacherName">✦ اسم معلمة العلوم <span class="required">*</span></label>
           <input class="field-input" id="teacherName" type="text" placeholder="أدخلي اسم معلمة المادة...">
         </div>
-        <div class="field-group">
-          <label class="field-label" for="schoolName">✦ المدرسة</label>
-          <input class="field-input" id="schoolName" type="text" value="مجمع زايد التعليمي – البرشاء">
+        <div class="field-group" id="schoolGroup">
+          <label class="field-label" for="schoolName">✦ المدرسة <span class="required">*</span></label>
+          <input class="field-input" id="schoolName" type="text" placeholder="أدخلي اسم مدرستك...">
         </div>
       </div>
 
-      <button class="btn-enter" onclick="handleRegister()">🚀 دخول الجزيرة</button>
+      <button class="btn-enter" id="registerBtn" onclick="handleRegister()">🚀 دخول الجزيرة</button>
       <div class="error-msg" id="errorMsg">⚠️ يرجى ملء جميع الحقول المطلوبة</div>
+      <div class="success-msg" id="existingMsg">✅ تم العثور على حساب موجود! اضغطي "دخول الجزيرة" للمتابعة</div>
     </div>
   </div>
 
@@ -220,12 +231,12 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 
 <div class="success-page" id="successPage">
   <div class="success-icon">✅</div>
-  <div class="success-title">تم حفظ بياناتك بنجاح!</div>
-  <div class="success-sub">
+  <div class="success-title" id="successTitle">تم حفظ بياناتك بنجاح!</div>
+  <div class="success-sub" id="successSub">
     أهلاً وسهلاً <span class="success-name" id="welcomeName"></span><br>
     رحلتك نحو التاج الملكي بدأت! 👑<br>
-    <span id="studentCode" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem"></span>
-    <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
+    <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem"></span>
+    <br><small style="color:#aaa" id="codeLabel">كود الطالبة - احتفظي به للمعلمة</small>
   </div>
   <button class="btn-back" onclick="goToMap()">🗺️ ادخلي الجزيرة الآن</button>
 </div>
@@ -237,6 +248,9 @@ select.field-input option{background:#0a1640;color:#e8f0ff}
 const JSONBIN_API_KEY = '$2a$10$mZzdzJHkljqyVEypW25Rh.VhLOqOXh90LsFE9AUO.kg1gq51akawS';
 const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 // ============================================
+
+let existingStudent = null;
+let isExistingUser = false;
 
 // Generate stars
 const starsEl = document.getElementById('stars');
@@ -313,6 +327,62 @@ async function saveAllData(data) {
   }
 }
 
+async function checkExistingStudent() {
+  const name = document.getElementById('studentName').value.trim();
+  const existingMsg = document.getElementById('existingMsg');
+  const errorMsg = document.getElementById('errorMsg');
+  const registerBtn = document.getElementById('registerBtn');
+  
+  // Hide messages
+  existingMsg.classList.remove('show');
+  errorMsg.classList.remove('show');
+  isExistingUser = false;
+  existingStudent = null;
+  
+  if (name.length < 3) {
+    registerBtn.textContent = '🚀 دخول الجزيرة';
+    registerBtn.disabled = false;
+    return;
+  }
+  
+  try {
+    const allData = await fetchAllData();
+    const students = allData.students || [];
+    
+    // Search for exact name match (case insensitive)
+    const found = students.find(s => s.name.toLowerCase() === name.toLowerCase());
+    
+    if (found) {
+      isExistingUser = true;
+      existingStudent = found;
+      existingMsg.textContent = `✅ تم العثور على حساب لـ "${found.name}"! اضغطي "دخول الجزيرة" للمتابعة`;
+      existingMsg.classList.add('show');
+      registerBtn.textContent = '👋 مرحباً بعودتك!';
+      registerBtn.disabled = false;
+      
+      // Auto-fill the form with existing data
+      document.getElementById('classDiv').value = found.cls || '';
+      document.getElementById('teacherName').value = found.teacher || '';
+      document.getElementById('schoolName').value = found.school || '';
+      
+      // Disable fields for existing user
+      document.getElementById('classDiv').disabled = true;
+      document.getElementById('teacherName').disabled = true;
+      document.getElementById('schoolName').disabled = true;
+    } else {
+      registerBtn.textContent = '🚀 دخول الجزيرة';
+      registerBtn.disabled = false;
+      // Enable fields for new user
+      document.getElementById('classDiv').disabled = false;
+      document.getElementById('teacherName').disabled = false;
+      document.getElementById('schoolName').disabled = false;
+    }
+  } catch(e) {
+    console.error('Error checking existing student:', e);
+    registerBtn.disabled = false;
+  }
+}
+
 async function saveStudentToJSONBin(studentData, progressData) {
   const loadingDiv = document.getElementById('loading');
   loadingDiv.classList.add('show');
@@ -320,12 +390,24 @@ async function saveStudentToJSONBin(studentData, progressData) {
   try {
     const allData = await fetchAllData();
     
-    // Update or add student
+    // Check if student already exists
     const existingIndex = allData.students.findIndex(s => s.studentCode === studentData.studentCode);
     if (existingIndex >= 0) {
-      allData.students[existingIndex] = { ...studentData, progress: progressData, lastUpdated: new Date().toISOString() };
+      // Update existing student
+      allData.students[existingIndex] = { 
+        ...studentData, 
+        progress: progressData, 
+        lastUpdated: new Date().toISOString(),
+        createdAt: allData.students[existingIndex].createdAt || new Date().toISOString()
+      };
     } else {
-      allData.students.push({ ...studentData, progress: progressData, createdAt: new Date().toISOString(), lastUpdated: new Date().toISOString() });
+      // Add new student
+      allData.students.push({ 
+        ...studentData, 
+        progress: progressData, 
+        createdAt: new Date().toISOString(), 
+        lastUpdated: new Date().toISOString() 
+      });
     }
     
     // Update leaderboard
@@ -335,6 +417,7 @@ async function saveStudentToJSONBin(studentData, progressData) {
       cls: studentData.cls,
       gems: progressData.gems ? progressData.gems.length : 0,
       points: progressData.points || 0,
+      hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
       studentCode: studentData.studentCode,
       date: new Date().toLocaleDateString('ar-AE')
     };
@@ -368,13 +451,51 @@ async function handleRegister() {
   const teacher = document.getElementById('teacherName').value.trim();
   const school = document.getElementById('schoolName').value.trim();
   const errEl = document.getElementById('errorMsg');
+  const existingMsg = document.getElementById('existingMsg');
 
+  // Validate all fields are filled
   if(!name || !cls || !teacher || !school){
     errEl.classList.add('show');
+    existingMsg.classList.remove('show');
     return;
   }
   errEl.classList.remove('show');
 
+  // If existing user, just load their data and proceed
+  if (isExistingUser && existingStudent) {
+    // Load existing progress
+    const progress = existingStudent.progress || { 
+      gems: [], 
+      level: 1, 
+      points: 0, 
+      completedCastles: [], 
+      castleScores: {} 
+    };
+    
+    // Save to localStorage
+    localStorage.setItem('scienceIslandStudent', JSON.stringify(existingStudent));
+    localStorage.setItem('currentStudentCode', existingStudent.studentCode);
+    localStorage.setItem('scienceIslandStudent_' + existingStudent.studentCode, JSON.stringify(existingStudent));
+    localStorage.setItem('scienceIslandProgress_' + existingStudent.studentCode, JSON.stringify(progress));
+    
+    // Show welcome back message
+    document.getElementById('successTitle').textContent = '👋 مرحباً بعودتك!';
+    document.getElementById('successSub').innerHTML = `
+      أهلاً وسهلاً <span class="success-name">الأميرة ${existingStudent.name}</span><br>
+      تم استعادة بياناتك بنجاح! 👑<br>
+      <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${existingStudent.studentCode}</span>
+      <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
+    `;
+    document.getElementById('welcomeName').textContent = 'الأميرة ' + existingStudent.name;
+    document.getElementById('studentCodeDisplay').textContent = '🔑 ' + existingStudent.studentCode;
+    document.getElementById('successPage').className = 'success-page show welcome';
+    
+    speak("مرحباً بعودتك");
+    setTimeout(()=>{ window.location.href = 'map.html'; }, 2500);
+    return;
+  }
+
+  // New user - create account
   const studentCode = generateStudentCode(name, school, cls);
   
   const studentData = {
@@ -409,18 +530,38 @@ async function handleRegister() {
   
   // Display code on success page
   document.getElementById('welcomeName').textContent = 'الأميرة ' + name;
-  document.getElementById('studentCode').textContent = '🔑 ' + studentCode;
-  document.getElementById('successPage').classList.add('show');
+  document.getElementById('studentCodeDisplay').textContent = '🔑 ' + studentCode;
+  document.getElementById('successTitle').textContent = '✅ تم حفظ بياناتك بنجاح!';
+  document.getElementById('successSub').innerHTML = `
+    أهلاً وسهلاً <span class="success-name">الأميرة ${name}</span><br>
+    رحلتك نحو التاج الملكي بدأت! 👑<br>
+    <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${studentCode}</span>
+    <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
+  `;
+  document.getElementById('successPage').className = 'success-page show';
   
   // Auto redirect after 2.5 seconds
   setTimeout(()=>{ 
-    window.location.href = 'intro.html';
+    window.location.href = 'map.html';
   }, 2500);
 }
 
 function goToMap() {
-  window.location.href = 'intro.html';
+  window.location.href = 'map.html';
 }
+
+// Enable fields when user types a new name (clears existing user state)
+document.getElementById('studentName').addEventListener('focus', function() {
+  if (isExistingUser) {
+    isExistingUser = false;
+    existingStudent = null;
+    document.getElementById('existingMsg').classList.remove('show');
+    document.getElementById('registerBtn').textContent = '🚀 دخول الجزيرة';
+    document.getElementById('classDiv').disabled = false;
+    document.getElementById('teacherName').disabled = false;
+    document.getElementById('schoolName').disabled = false;
+  }
+});
 </script>
 </body>
 </html>
