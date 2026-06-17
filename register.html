@@ -413,7 +413,7 @@ async function saveStudentToJSONBin(studentData, progressData) {
     // Update leaderboard
     const leaderboardEntry = {
       name: studentData.name,
-      title: "الأميرة",
+      title: studentData.titleLabel || "الأميرة",
       cls: studentData.cls,
       gems: progressData.gems ? progressData.gems.length : 0,
       points: progressData.points || 0,
@@ -472,6 +472,14 @@ async function handleRegister() {
       castleScores: {} 
     };
     
+    // Determine title based on crown
+    const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+    const title = hasCrown ? "الملكة" : (existingStudent.titleLabel || "الأميرة");
+    
+    // Update student data with correct title
+    existingStudent.titleLabel = title;
+    existingStudent.lastUpdated = new Date().toISOString();
+    
     // Save to localStorage
     localStorage.setItem('scienceIslandStudent', JSON.stringify(existingStudent));
     localStorage.setItem('currentStudentCode', existingStudent.studentCode);
@@ -481,12 +489,12 @@ async function handleRegister() {
     // Show welcome back message
     document.getElementById('successTitle').textContent = '👋 مرحباً بعودتك!';
     document.getElementById('successSub').innerHTML = `
-      أهلاً وسهلاً <span class="success-name">الأميرة ${existingStudent.name}</span><br>
-      تم استعادة بياناتك بنجاح! 👑<br>
+      أهلاً وسهلاً <span class="success-name">${title} ${existingStudent.name}</span><br>
+      تم استعادة بياناتك بنجاح! ${hasCrown ? '👑' : '👸'}<br>
       <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${existingStudent.studentCode}</span>
       <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
     `;
-    document.getElementById('welcomeName').textContent = 'الأميرة ' + existingStudent.name;
+    document.getElementById('welcomeName').textContent = title + ' ' + existingStudent.name;
     document.getElementById('studentCodeDisplay').textContent = '🔑 ' + existingStudent.studentCode;
     document.getElementById('successPage').className = 'success-page show welcome';
     
@@ -495,7 +503,7 @@ async function handleRegister() {
     return;
   }
 
-  // New user - create account
+  // New user - create account (always starts as "الأميرة")
   const studentCode = generateStudentCode(name, school, cls);
   
   const studentData = {
@@ -534,7 +542,7 @@ async function handleRegister() {
   document.getElementById('successTitle').textContent = '✅ تم حفظ بياناتك بنجاح!';
   document.getElementById('successSub').innerHTML = `
     أهلاً وسهلاً <span class="success-name">الأميرة ${name}</span><br>
-    رحلتك نحو التاج الملكي بدأت! 👑<br>
+    رحلتك نحو التاج الملكي بدأت! 👸<br>
     <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${studentCode}</span>
     <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
   `;
