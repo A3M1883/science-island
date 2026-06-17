@@ -174,11 +174,10 @@ const JSONBIN_API_KEY = '$2a$10$mZzdzJHkljqyVEypW25Rh.VhLOqOXh90LsFE9AUO.kg1gq51
 const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 // ============================================
 
-const PID = 5;  // Palace ID (5 for CROWN 👑)
+const PID = 5;
 const TOTAL = 10;
 const PASS_SCORE = 10;
 
-// Original questions for Palace 5 (القلعة الملكية) - CROWN
 const ORIGINAL_QS = [
   {"text": "إذا فقدت الخلية قدرتها على التحكم في مرور المواد، فأي التراكيب التالية تعرض للضرر؟", "opts": ["النواة", "غشاء الخلية", "الميتوكوندريا", "الفجوة"], "correctIndex": 1},
   {"text": "لماذا تعد الإدارة الحكيمة للموارد الأرضية مهمة؟", "opts": ["لضمان توفر الموارد للأجيال القادمة", "لزيادة استهلاك الموارد", "لإلغاء القوانين البيئية", "لتقليل عدد الكائنات الحية"], "correctIndex": 0},
@@ -192,7 +191,6 @@ const ORIGINAL_QS = [
   {"text": "عندما يكون القمر والأرض والشمس على استقامة واحدة، فإن المد الناتج يسمى:", "opts": ["المد المنخفض", "المد التام (المد الربيعي)", "المد الضعيف", "المد المعتدل"], "correctIndex": 1}
 ];
 
-// Function to shuffle array
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -201,7 +199,6 @@ function shuffleArray(arr) {
   return arr;
 }
 
-// Function to randomize options for a question
 function randomizeQuestion(q) {
   const optionsWithIndices = q.opts.map((opt, idx) => ({
     text: opt,
@@ -219,7 +216,6 @@ function randomizeQuestion(q) {
   };
 }
 
-// Generate randomized question set
 function generateRandomizedQuestions() {
   const randomized = [];
   for (let i = 0; i < ORIGINAL_QS.length; i++) {
@@ -228,9 +224,7 @@ function generateRandomizedQuestions() {
   return randomized;
 }
 
-// Store the current randomized questions
 let QS = [];
-
 let cur = 0, score = 0, done = false;
 let student = null, progress = null, currentStudentCode = null;
 let isAlreadyCompleted = false;
@@ -288,13 +282,17 @@ async function updateCloudData(studentData, progressData) {
       allData.students[existingIndex].hasCrown = (progressData.completedCastles && progressData.completedCastles.includes(5));
     }
     
+    // Determine title
+    const hasCrown = progressData.completedCastles && progressData.completedCastles.includes(5);
+    const title = hasCrown ? "الملكة" : (studentData.titleLabel || "الأميرة");
+    
     const leaderboardEntry = {
       name: studentData.name,
-      title: "الأميرة",
+      title: title,
       cls: studentData.cls,
       gems: progressData.gems ? progressData.gems.length : 0,
       points: progressData.points || 0,
-      hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
+      hasCrown: hasCrown,
       studentCode: studentData.studentCode,
       date: new Date().toLocaleDateString('ar-AE')
     };
@@ -320,6 +318,49 @@ async function updateCloudData(studentData, progressData) {
   }
 }
 
+async function updatePlayerTitleToQueen() {
+  const currentCode = localStorage.getItem('currentStudentCode');
+  if (!currentCode) return;
+  
+  try {
+    // Get student data
+    let studentData = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
+    if (!studentData) return;
+    
+    // Update title
+    studentData.titleLabel = "الملكة";
+    studentData.lastUpdated = new Date().toISOString();
+    
+    // Save locally
+    localStorage.setItem('scienceIslandStudent', JSON.stringify(studentData));
+    localStorage.setItem('scienceIslandStudent_' + currentCode, JSON.stringify(studentData));
+    
+    // Update in cloud
+    const allData = await fetchAllData();
+    const existingIndex = allData.students.findIndex(s => s.studentCode === currentCode);
+    if (existingIndex >= 0) {
+      allData.students[existingIndex].titleLabel = "الملكة";
+      allData.students[existingIndex].lastUpdated = new Date().toISOString();
+      allData.students[existingIndex].hasCrown = true;
+      
+      // Update leaderboard
+      const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === currentCode);
+      if (lbIndex >= 0) {
+        allData.leaderboard[lbIndex].title = "الملكة";
+        allData.leaderboard[lbIndex].hasCrown = true;
+      }
+      
+      await saveAllData(allData);
+    }
+    
+    // Update display
+    document.getElementById("vName").textContent = "الملكة " + studentData.name;
+    
+  } catch(e) {
+    console.error('Error updating title to Queen:', e);
+  }
+}
+
 function loadData() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -336,9 +377,11 @@ function loadData() {
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
     if (student && student.name) {
-      document.getElementById("tbName").textContent = "الأميرة " + student.name;
+      const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+      const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
+      document.getElementById("tbName").textContent = title + " " + student.name;
     }
-    document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
+    document.getElementById("tbGems").textContent = "4";
     
     QS = generateRandomizedQuestions();
     
@@ -357,8 +400,16 @@ function loadData() {
 function showVictoryScreen(isReloaded = false) {
   document.getElementById("endScreen").classList.add("show");
   
-  const lbl = student ? "الأميرة " + student.name : "الطالبة";
+  // Update title to Queen
+  const hasCrown = true;
+  const title = hasCrown ? "الملكة" : (student ? student.titleLabel || "الأميرة" : "الأميرة");
+  const lbl = student ? title + " " + student.name : "الطالبة";
   document.getElementById("vName").textContent = lbl;
+  
+  // Call the update function only if not reloaded
+  if (!isReloaded) {
+    updatePlayerTitleToQueen();
+  }
   
   const totalPoints = progress ? (progress.points || 0) : 0;
   document.getElementById("vPts").textContent = totalPoints.toLocaleString("ar-EG");
