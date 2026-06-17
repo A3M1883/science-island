@@ -208,19 +208,19 @@ html,body{width:100%;height:100%;font-family:"Tajawal",sans-serif;overflow:hidde
     <div class="stat-row"><span class="stat-lbl">🏆 النقاط</span><span class="stat-val" id="statPoints">—</span></div>
   </div>
 
-  <!-- قصر المعرفة (c1) - متاح دائماً أولاً -->
+  <!-- قصر المعرفة (c1) -->
   <div class="castle-zone" id="c1" style="top:38%;left:13%;width:14%;height:22%" onclick="enterCastle(1)"></div>
 
-  <!-- قصر الفهم (c2) - يحتاج 1 جوهرة -->
+  <!-- قصر الفهم (c2) -->
   <div class="castle-zone" id="c2" style="top:32%;left:72%;width:14%;height:22%" onclick="enterCastle(2)"></div>
 
-  <!-- قصر التطبيق (c3) - يحتاج 2 جوهرة -->
+  <!-- قصر التطبيق (c3) -->
   <div class="castle-zone" id="c3" style="top:59%;left:60%;width:14%;height:22%" onclick="enterCastle(3)"></div>
 
-  <!-- قصر التحليل (c4) - يحتاج 3 جوهرة -->
+  <!-- قصر التحليل (c4) -->
   <div class="castle-zone" id="c4" style="top:58%;left:30%;width:14%;height:22%" onclick="enterCastle(4)"></div>
 
-  <!-- القلعة الملكية (c5) - تحتاج 4 جواهر -->
+  <!-- القلعة الملكية (c5) -->
   <div class="castle-zone" id="c5" style="top:15%;left:37%;width:26%;height:28%;border-radius:8px" onclick="enterCastle(5)"></div>
 
   <div id="sparkleLayer" style="position:absolute;inset:0;z-index:10;pointer-events:none"></div>
@@ -264,7 +264,9 @@ function loadData() {
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
     if (student && student.name) {
-      document.getElementById("playerName").textContent = "الأميرة " + student.name;
+      const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+      const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
+      document.getElementById("playerName").textContent = title + " " + student.name;
     }
   } catch(e) { console.error(e); }
 }
@@ -281,6 +283,12 @@ function refreshData() {
       progress.completedCastles = parsed.completedCastles || [];
       progress.castleScores = parsed.castleScores || {};
     }
+  }
+  // Update name with title
+  if (student && student.name) {
+    const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+    const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
+    document.getElementById("playerName").textContent = title + " " + student.name;
   }
   updateStats();
 }
