@@ -166,9 +166,12 @@ function renderCertificate(student, progress) {
   const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
   const hasCertificate = hasAllGems && hasCrown;
   
+  // Determine title
+  const title = (hasCrown || hasCertificate) ? "الملكة" : (student.titleLabel || "الأميرة");
+  
   // Calculate gems display
-  const gem1 = progress.gems && progress.gems.includes(1) ? '💚' : '🖤';
-  const gem2 = progress.gems && progress.gems.includes(2) ? '💙' : '🖤';
+  const gem1 = progress.gems && progress.gems.includes(1) ? '💙' : '🖤';
+  const gem2 = progress.gems && progress.gems.includes(2) ? '💚' : '🖤';
   const gem3 = progress.gems && progress.gems.includes(3) ? '🧡' : '🖤';
   const gem4 = progress.gems && progress.gems.includes(4) ? '💜' : '🖤';
   
@@ -176,13 +179,13 @@ function renderCertificate(student, progress) {
     <div id="certBox">
       <span class="cc tl">✦</span><span class="cc tr">✦</span>
       <span class="cc bl">✦</span><span class="cc br">✦</span>
-      <span class="c-logo">${hasCertificate ? '👑' : '🏆'}</span>
+      <span class="c-logo">${hasCertificate ? '👑' : '👸'}</span>
       <div class="c-org">مجمع زايد التعليمي – البرشاء</div>
       <div class="c-school">الحلقة الثانية والثالثة</div>
       <div class="c-unit">مادة العلوم – الصف السادس</div>
       <div class="c-title">${hasCertificate ? 'شهادة ملكة جزيرة العلوم' : 'شهادة تقديرية'}</div>
       <div class="c-body">تُقدَّم هذه الشهادة إلى الطالبة المتميزة</div>
-      <div class="c-name">${student.titleLabel || 'الأميرة'} ${student.name}</div>
+      <div class="c-name">${title} ${student.name}</div>
       <div class="c-details">
         الشعبة: <strong>${student.cls || '—'}</strong> &nbsp;|&nbsp; 
         المدرسة: <strong>${student.school || '—'}</strong><br>
