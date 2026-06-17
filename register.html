@@ -251,6 +251,7 @@ const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 
 let existingStudent = null;
 let isExistingUser = false;
+let allExistingCodes = [];
 
 // Generate stars
 const starsEl = document.getElementById('stars');
@@ -262,11 +263,89 @@ for(let i=0;i<70;i++){
   starsEl.appendChild(s);
 }
 
-// Generate student code
-function generateStudentCode(name, school, cls) {
-  const prefix = name.substring(0, 3).toUpperCase();
-  const timestamp = Date.now().toString(36).substring(0, 6).toUpperCase();
-  return `${prefix}-${cls}-${timestamp}`;
+// Helper function to transliterate Arabic to English letters
+function transliterateToEnglish(text) {
+  const map = {
+    'ا': 'A', 'ب': 'B', 'ت': 'T', 'ث': 'TH', 'ج': 'J', 'ح': 'H', 'خ': 'KH',
+    'د': 'D', 'ذ': 'TH', 'ر': 'R', 'ز': 'Z', 'س': 'S', 'ش': 'SH', 'ص': 'S',
+    'ض': 'D', 'ط': 'T', 'ظ': 'Z', 'ع': 'A', 'غ': 'GH', 'ف': 'F', 'ق': 'Q',
+    'ك': 'K', 'ل': 'L', 'م': 'M', 'ن': 'N', 'ه': 'H', 'و': 'W', 'ي': 'Y',
+    'أ': 'A', 'إ': 'E', 'آ': 'A', 'ة': 'H', 'ى': 'A',
+    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+    '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+    '🍓': 'RMY', ' ': ''
+  };
+  
+  let result = '';
+  for (let char of text) {
+    result += map[char] || char;
+  }
+  // Remove any non-alphanumeric characters and take first 3 letters
+  result = result.replace(/[^A-Za-z0-9]/g, '');
+  return result.substring(0, 3).toUpperCase();
+}
+
+// Function to generate a unique 4-character random string
+function generateRandomString(length = 4) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+// Function to load all existing codes from cloud
+async function loadExistingCodes() {
+  try {
+    const allData = await fetchAllData();
+    const students = allData.students || [];
+    allExistingCodes = students.map(s => s.studentCode);
+    console.log('Loaded existing codes:', allExistingCodes.length);
+  } catch(e) {
+    console.error('Error loading existing codes:', e);
+    allExistingCodes = [];
+  }
+}
+
+// Generate a unique student code
+async function generateUniqueStudentCode(name, cls) {
+  // First, load all existing codes
+  await loadExistingCodes();
+  
+  // Get first 3 letters of name (transliterated to English)
+  const namePrefix = transliterateToEnglish(name);
+  
+  // If name is too short, pad with 'X'
+  const prefix = namePrefix.length >= 3 ? namePrefix.substring(0, 3) : namePrefix + 'X'.repeat(3 - namePrefix.length);
+  
+  // Try up to 100 times to generate a unique code
+  let attempts = 0;
+  let code = '';
+  let isUnique = false;
+  
+  while (!isUnique && attempts < 100) {
+    attempts++;
+    const randomPart = generateRandomString(4);
+    code = prefix + cls + randomPart;
+    
+    // Check if code is unique (not in existing codes)
+    isUnique = !allExistingCodes.includes(code);
+    
+    if (!isUnique) {
+      console.log(`Code ${code} already exists, retrying... (attempt ${attempts})`);
+    }
+  }
+  
+  if (!isUnique) {
+    // If we couldn't generate a unique code after 100 attempts, add a timestamp
+    const timestamp = Date.now().toString(36).substring(0, 3).toUpperCase();
+    code = prefix + cls + timestamp + generateRandomString(2);
+    console.log('Generated fallback code with timestamp:', code);
+  }
+  
+  console.log('Generated unique code:', code);
+  return code;
 }
 
 let soundOn=false;
@@ -419,7 +498,7 @@ async function saveStudentToJSONBin(studentData, progressData) {
       points: progressData.points || 0,
       hasCrown: progressData.completedCastles && progressData.completedCastles.includes(5),
       studentCode: studentData.studentCode,
-      date: new Date().toLocaleDateString('ar-AE')
+      date: new Date().toLocaleDateString('en-US')
     };
     
     const lbIndex = allData.leaderboard.findIndex(lb => lb.studentCode === studentData.studentCode);
@@ -503,8 +582,8 @@ async function handleRegister() {
     return;
   }
 
-  // New user - create account (always starts as "الأميرة")
-  const studentCode = generateStudentCode(name, school, cls);
+  // New user - generate unique code
+  const studentCode = await generateUniqueStudentCode(name, cls);
   
   const studentData = {
     name, cls, teacher, school,
