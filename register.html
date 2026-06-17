@@ -280,12 +280,10 @@ function transliterateToEnglish(text) {
   for (let char of text) {
     result += map[char] || char;
   }
-  // Remove any non-alphanumeric characters and take first 3 letters
   result = result.replace(/[^A-Za-z0-9]/g, '');
   return result.substring(0, 3).toUpperCase();
 }
 
-// Function to generate a unique 4-character random string
 function generateRandomString(length = 4) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';
@@ -295,7 +293,6 @@ function generateRandomString(length = 4) {
   return result;
 }
 
-// Function to load all existing codes from cloud
 async function loadExistingCodes() {
   try {
     const allData = await fetchAllData();
@@ -308,18 +305,12 @@ async function loadExistingCodes() {
   }
 }
 
-// Generate a unique student code
 async function generateUniqueStudentCode(name, cls) {
-  // First, load all existing codes
   await loadExistingCodes();
   
-  // Get first 3 letters of name (transliterated to English)
   const namePrefix = transliterateToEnglish(name);
-  
-  // If name is too short, pad with 'X'
   const prefix = namePrefix.length >= 3 ? namePrefix.substring(0, 3) : namePrefix + 'X'.repeat(3 - namePrefix.length);
   
-  // Try up to 100 times to generate a unique code
   let attempts = 0;
   let code = '';
   let isUnique = false;
@@ -328,20 +319,12 @@ async function generateUniqueStudentCode(name, cls) {
     attempts++;
     const randomPart = generateRandomString(4);
     code = prefix + cls + randomPart;
-    
-    // Check if code is unique (not in existing codes)
     isUnique = !allExistingCodes.includes(code);
-    
-    if (!isUnique) {
-      console.log(`Code ${code} already exists, retrying... (attempt ${attempts})`);
-    }
   }
   
   if (!isUnique) {
-    // If we couldn't generate a unique code after 100 attempts, add a timestamp
     const timestamp = Date.now().toString(36).substring(0, 3).toUpperCase();
     code = prefix + cls + timestamp + generateRandomString(2);
-    console.log('Generated fallback code with timestamp:', code);
   }
   
   console.log('Generated unique code:', code);
@@ -412,7 +395,6 @@ async function checkExistingStudent() {
   const errorMsg = document.getElementById('errorMsg');
   const registerBtn = document.getElementById('registerBtn');
   
-  // Hide messages
   existingMsg.classList.remove('show');
   errorMsg.classList.remove('show');
   isExistingUser = false;
@@ -451,7 +433,6 @@ async function checkExistingStudent() {
     } else {
       registerBtn.textContent = '🚀 دخول الجزيرة';
       registerBtn.disabled = false;
-      // Enable fields for new user
       document.getElementById('classDiv').disabled = false;
       document.getElementById('teacherName').disabled = false;
       document.getElementById('schoolName').disabled = false;
@@ -469,10 +450,8 @@ async function saveStudentToJSONBin(studentData, progressData) {
   try {
     const allData = await fetchAllData();
     
-    // Check if student already exists
     const existingIndex = allData.students.findIndex(s => s.studentCode === studentData.studentCode);
     if (existingIndex >= 0) {
-      // Update existing student
       allData.students[existingIndex] = { 
         ...studentData, 
         progress: progressData, 
@@ -480,7 +459,6 @@ async function saveStudentToJSONBin(studentData, progressData) {
         createdAt: allData.students[existingIndex].createdAt || new Date().toISOString()
       };
     } else {
-      // Add new student
       allData.students.push({ 
         ...studentData, 
         progress: progressData, 
@@ -489,7 +467,6 @@ async function saveStudentToJSONBin(studentData, progressData) {
       });
     }
     
-    // Update leaderboard
     const leaderboardEntry = {
       name: studentData.name,
       title: studentData.titleLabel || "الأميرة",
@@ -510,10 +487,8 @@ async function saveStudentToJSONBin(studentData, progressData) {
       allData.leaderboard.push(leaderboardEntry);
     }
     
-    // Sort leaderboard by points (highest first)
     allData.leaderboard.sort((a, b) => b.points - a.points);
     
-    // Save back to JSONBin
     const saved = await saveAllData(allData);
     return saved;
   } catch(e) {
@@ -525,112 +500,151 @@ async function saveStudentToJSONBin(studentData, progressData) {
 }
 
 async function handleRegister() {
-  const name = document.getElementById('studentName').value.trim();
-  const cls = document.getElementById('classDiv').value.trim();
-  const teacher = document.getElementById('teacherName').value.trim();
-  const school = document.getElementById('schoolName').value.trim();
-  const errEl = document.getElementById('errorMsg');
-  const existingMsg = document.getElementById('existingMsg');
+  // Get the button and disable it to prevent double-clicks
+  const registerBtn = document.getElementById('registerBtn');
+  registerBtn.disabled = true;
+  
+  try {
+    const name = document.getElementById('studentName').value.trim();
+    const cls = document.getElementById('classDiv').value.trim();
+    const teacher = document.getElementById('teacherName').value.trim();
+    const school = document.getElementById('schoolName').value.trim();
+    const errEl = document.getElementById('errorMsg');
+    const existingMsg = document.getElementById('existingMsg');
 
-  // Validate all fields are filled
-  if(!name || !cls || !teacher || !school){
-    errEl.classList.add('show');
-    existingMsg.classList.remove('show');
-    return;
-  }
-  errEl.classList.remove('show');
+    // Validate all fields are filled
+    if(!name || !cls || !teacher || !school){
+      errEl.classList.add('show');
+      existingMsg.classList.remove('show');
+      registerBtn.disabled = false;
+      return;
+    }
+    errEl.classList.remove('show');
 
-  // If existing user, just load their data and proceed
-  if (isExistingUser && existingStudent) {
-    // Load existing progress
-    const progress = existingStudent.progress || { 
-      gems: [], 
-      level: 1, 
-      points: 0, 
-      completedCastles: [], 
-      castleScores: {} 
+    // IMPORTANT: Check if we have an existing user
+    // Re-check the cloud data to make sure we have the most recent data
+    const allData = await fetchAllData();
+    const students = allData.students || [];
+    
+    // Try to find the student again (in case the variable was cleared)
+    let foundStudent = existingStudent;
+    if (!foundStudent) {
+      foundStudent = students.find(s => s.name.toLowerCase() === name.toLowerCase());
+    }
+    
+    console.log('Found student:', foundStudent);
+    console.log('isExistingUser:', isExistingUser);
+
+    // If existing user, load their data and proceed
+    if (foundStudent) {
+      console.log('Logging in existing user:', foundStudent.name);
+      
+      // Load existing progress
+      const progress = foundStudent.progress || { 
+        gems: [], 
+        level: 1, 
+        points: 0, 
+        completedCastles: [], 
+        castleScores: {} 
+      };
+      
+      // Determine title based on crown
+      const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+      const title = hasCrown ? "الملكة" : (foundStudent.titleLabel || "الأميرة");
+      
+      // Update student data with correct title
+      foundStudent.titleLabel = title;
+      foundStudent.lastUpdated = new Date().toISOString();
+      
+      // Save to localStorage
+      localStorage.setItem('scienceIslandStudent', JSON.stringify(foundStudent));
+      localStorage.setItem('currentStudentCode', foundStudent.studentCode);
+      localStorage.setItem('scienceIslandStudent_' + foundStudent.studentCode, JSON.stringify(foundStudent));
+      localStorage.setItem('scienceIslandProgress_' + foundStudent.studentCode, JSON.stringify(progress));
+      
+      console.log('Saved to localStorage, studentCode:', foundStudent.studentCode);
+      
+      // Show welcome back message
+      document.getElementById('successTitle').textContent = '👋 مرحباً بعودتك!';
+      document.getElementById('successSub').innerHTML = `
+        أهلاً وسهلاً <span class="success-name">${title} ${foundStudent.name}</span><br>
+        تم استعادة بياناتك بنجاح! ${hasCrown ? '👑' : '👸'}<br>
+        <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${foundStudent.studentCode}</span>
+        <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
+      `;
+      document.getElementById('welcomeName').textContent = title + ' ' + foundStudent.name;
+      document.getElementById('studentCodeDisplay').textContent = '🔑 ' + foundStudent.studentCode;
+      document.getElementById('successPage').className = 'success-page show welcome';
+      
+      speak("مرحباً بعودتك");
+      
+      // Redirect after 2.5 seconds
+      setTimeout(() => {
+        window.location.href = 'map.html';
+      }, 2500);
+      
+      registerBtn.disabled = false;
+      return;
+    }
+
+    // New user - create account
+    console.log('Creating new user:', name);
+    
+    const studentCode = await generateUniqueStudentCode(name, cls);
+    
+    const studentData = {
+      name, cls, teacher, school,
+      studentCode: studentCode,
+      registeredAt: new Date().toISOString(),
+      titleLabel: "الأميرة"
+    };
+
+    const initialProgress = {
+      gems: [],
+      level: 1,
+      points: 0,
+      completedCastles: [],
+      castleScores: {}
     };
     
-    // Determine title based on crown
-    const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
-    const title = hasCrown ? "الملكة" : (existingStudent.titleLabel || "الأميرة");
+    // Save to JSONBin (cloud)
+    const saved = await saveStudentToJSONBin(studentData, initialProgress);
     
-    // Update student data with correct title
-    existingStudent.titleLabel = title;
-    existingStudent.lastUpdated = new Date().toISOString();
+    if (!saved) {
+      alert('⚠️ تم حفظ البيانات محلياً فقط بسبب مشكلة في الاتصال بالإنترنت. سيتم حفظها في السحاب لاحقاً.');
+    } else {
+      speak("تم تسجيل بياناتك بنجاح");
+    }
     
-    // Save to localStorage
-    localStorage.setItem('scienceIslandStudent', JSON.stringify(existingStudent));
-    localStorage.setItem('currentStudentCode', existingStudent.studentCode);
-    localStorage.setItem('scienceIslandStudent_' + existingStudent.studentCode, JSON.stringify(existingStudent));
-    localStorage.setItem('scienceIslandProgress_' + existingStudent.studentCode, JSON.stringify(progress));
+    // Also save locally for quick access
+    localStorage.setItem('scienceIslandStudent', JSON.stringify(studentData));
+    localStorage.setItem('currentStudentCode', studentCode);
+    localStorage.setItem('scienceIslandStudent_' + studentCode, JSON.stringify(studentData));
+    localStorage.setItem('scienceIslandProgress_' + studentCode, JSON.stringify(initialProgress));
     
-    // Show welcome back message
-    document.getElementById('successTitle').textContent = '👋 مرحباً بعودتك!';
+    // Display code on success page
+    document.getElementById('welcomeName').textContent = 'الأميرة ' + name;
+    document.getElementById('studentCodeDisplay').textContent = '🔑 ' + studentCode;
+    document.getElementById('successTitle').textContent = '✅ تم حفظ بياناتك بنجاح!';
     document.getElementById('successSub').innerHTML = `
-      أهلاً وسهلاً <span class="success-name">${title} ${existingStudent.name}</span><br>
-      تم استعادة بياناتك بنجاح! ${hasCrown ? '👑' : '👸'}<br>
-      <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${existingStudent.studentCode}</span>
+      أهلاً وسهلاً <span class="success-name">الأميرة ${name}</span><br>
+      رحلتك نحو التاج الملكي بدأت! 👸<br>
+      <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${studentCode}</span>
       <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
     `;
-    document.getElementById('welcomeName').textContent = title + ' ' + existingStudent.name;
-    document.getElementById('studentCodeDisplay').textContent = '🔑 ' + existingStudent.studentCode;
-    document.getElementById('successPage').className = 'success-page show welcome';
+    document.getElementById('successPage').className = 'success-page show';
     
-    speak("مرحباً بعودتك");
-    setTimeout(()=>{ window.location.href = 'map.html'; }, 2500);
-    return;
+    // Auto redirect after 2.5 seconds
+    setTimeout(() => {
+      window.location.href = 'map.html';
+    }, 2500);
+    
+  } catch(e) {
+    console.error('Error in handleRegister:', e);
+    alert('حدث خطأ. الرجاء المحاولة مرة أخرى.');
+  } finally {
+    registerBtn.disabled = false;
   }
-
-  // New user - generate unique code
-  const studentCode = await generateUniqueStudentCode(name, cls);
-  
-  const studentData = {
-    name, cls, teacher, school,
-    studentCode: studentCode,
-    registeredAt: new Date().toISOString(),
-    titleLabel: "الأميرة"
-  };
-
-  const initialProgress = {
-    gems: [],
-    level: 1,
-    points: 0,
-    completedCastles: [],
-    castleScores: {}
-  };
-  
-  // Save to JSONBin (cloud)
-  const saved = await saveStudentToJSONBin(studentData, initialProgress);
-  
-  if (!saved) {
-    alert('⚠️ تم حفظ البيانات محلياً فقط بسبب مشكلة في الاتصال بالإنترنت. سيتم حفظها في السحاب لاحقاً.');
-  } else {
-    speak("تم تسجيل بياناتك بنجاح");
-  }
-  
-  // Also save locally for quick access
-  localStorage.setItem('scienceIslandStudent', JSON.stringify(studentData));
-  localStorage.setItem('currentStudentCode', studentCode);
-  localStorage.setItem('scienceIslandStudent_' + studentCode, JSON.stringify(studentData));
-  localStorage.setItem('scienceIslandProgress_' + studentCode, JSON.stringify(initialProgress));
-  
-  // Display code on success page
-  document.getElementById('welcomeName').textContent = 'الأميرة ' + name;
-  document.getElementById('studentCodeDisplay').textContent = '🔑 ' + studentCode;
-  document.getElementById('successTitle').textContent = '✅ تم حفظ بياناتك بنجاح!';
-  document.getElementById('successSub').innerHTML = `
-    أهلاً وسهلاً <span class="success-name">الأميرة ${name}</span><br>
-    رحلتك نحو التاج الملكي بدأت! 👸<br>
-    <span id="studentCodeDisplay" style="background:rgba(255,215,0,.2);padding:.3rem .8rem;border-radius:12px;display:inline-block;margin-top:.5rem">🔑 ${studentCode}</span>
-    <br><small style="color:#aaa">كود الطالبة - احتفظي به للمعلمة</small>
-  `;
-  document.getElementById('successPage').className = 'success-page show';
-  
-  // Auto redirect after 2.5 seconds
-  setTimeout(()=>{ 
-    window.location.href = 'map.html';
-  }, 2500);
 }
 
 function goToMap() {
@@ -644,6 +658,7 @@ document.getElementById('studentName').addEventListener('focus', function() {
     existingStudent = null;
     document.getElementById('existingMsg').classList.remove('show');
     document.getElementById('registerBtn').textContent = '🚀 دخول الجزيرة';
+    document.getElementById('registerBtn').disabled = false;
     document.getElementById('classDiv').disabled = false;
     document.getElementById('teacherName').disabled = false;
     document.getElementById('schoolName').disabled = false;
