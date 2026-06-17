@@ -33,9 +33,18 @@ th{background:rgba(255,215,0,.1);color:#ffd700;font-size:.8rem;font-weight:800;
 td{padding:.58rem .65rem;text-align:center;border-bottom:1px solid rgba(255,255,255,.06);
   font-size:.83rem;color:#ddeeff;vertical-align:middle}
 tr:hover td{background:rgba(255,215,0,.04)}
+/* Rank 1 - Gold */
 tr:nth-child(1) td{color:#ffd700;font-weight:800;font-size:.9rem}
-tr:nth-child(2) td{color:#c0c0c0;font-weight:700}
-tr:nth-child(3) td{color:#cd7f32;font-weight:700}
+tr:nth-child(1) td .pts{color:#ffd700;font-weight:900}
+/* Rank 2 - Silver */
+tr:nth-child(2) td{color:#c0c0c0;font-weight:700;font-size:.88rem}
+tr:nth-child(2) td .pts{color:#c0c0c0;font-weight:800}
+/* Rank 3 - Bronze */
+tr:nth-child(3) td{color:#cd7f32;font-weight:700;font-size:.86rem}
+tr:nth-child(3) td .pts{color:#cd7f32;font-weight:800}
+/* Rank 4+ - White */
+tr:nth-child(n+4) td{color:#ddeeff;font-weight:400;font-size:.83rem}
+tr:nth-child(n+4) td .pts{color:#ffffff;font-weight:700}
 .rb{display:inline-flex;align-items:center;justify-content:center;
   width:27px;height:27px;border-radius:50%;font-size:.78rem;font-weight:900}
 .r1{background:rgba(255,215,0,.18);border:1.5px solid #ffd700;color:#ffd700}
@@ -43,7 +52,7 @@ tr:nth-child(3) td{color:#cd7f32;font-weight:700}
 .r3{background:rgba(205,127,50,.18);border:1.5px solid #cd7f32;color:#cd7f32}
 .rn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:rgba(200,220,255,.6)}
 .gc{font-size:.95rem;letter-spacing:.08rem}
-.pts{color:#ffd700;font-weight:800}
+.pts{font-weight:800}
 .crown-icon{font-size:1rem;margin-left:.2rem}
 .empty{text-align:center;padding:3rem 1rem;color:rgba(160,200,255,.45)}
 .ei{font-size:3rem;display:block;margin-bottom:.5rem}
@@ -75,8 +84,8 @@ const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 // Function to display gems based on count
 function getGemsDisplay(gemCount, hasCrown) {
   const gems = [];
-  if (gemCount >= 1) gems.push('💚');
-  if (gemCount >= 2) gems.push('💙');
+  if (gemCount >= 1) gems.push('💙');
+  if (gemCount >= 2) gems.push('💚');
   if (gemCount >= 3) gems.push('🧡');
   if (gemCount >= 4) gems.push('💜');
   
@@ -84,7 +93,7 @@ function getGemsDisplay(gemCount, hasCrown) {
   if (hasCrown) {
     gemsString += ' 👑';
   }
-  return gemsString || '🖤🖤🖤🖤';
+  return gemsString || '⬜ ⬜ ⬜ ⬜';
 }
 
 // Function to get rank class
@@ -145,10 +154,10 @@ async function loadLeaderboard() {
       return `
         <tr>
           <td><span class="rb ${rankClass}">${i+1}${medal}</span></td>
-          <td style="text-align:right;font-weight:700">${title} ${entry.name} ${hasCrown ? '👑' : '👸'}</td>
+          <td style="text-align:right;font-weight:700">${title} ${entry.name} ${hasCrown ? '👑' : ''}</td>
           <td>${entry.cls || '—'}</td>
           <td class="gc">${gemsDisplay}</td>
-          <td class="pts">${(entry.points || 0).toLocaleString("ar-EG")}</td>
+          <td class="pts">${(entry.points || 0).toLocaleString("en-US")}</td>
           <td style="font-size:.7rem;color:rgba(160,200,255,.5)">${entry.date || '—'}</td>
         </tr>
       `;
