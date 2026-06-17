@@ -143,10 +143,8 @@ html,body{width:100%;min-height:100%;font-family:"Tajawal",sans-serif;
 // ============================================
 // JSONBin.io CONFIGURATION
 // ============================================
-// PUT YOUR MASTER KEY HERE (X-Master-Key from JSONBin.io)
-const JSONBIN_API_KEY = 'YOUR_MASTER_KEY_HERE';  
-// PUT YOUR BIN ID HERE (from your bin URL: https://jsonbin.io/v3/b/YOUR_BIN_ID)
-const JSONBIN_BIN_ID = 'YOUR_BIN_ID_HERE';
+const JSONBIN_API_KEY = '$2a$10$mZzdzJHkljqyVEypW25Rh.VhLOqOXh90LsFE9AUO.kg1gq51akawS';
+const JSONBIN_BIN_ID = '6a2ff230f5f4af5e29f50af7';
 // ============================================
 
 const PID = 1;  // Palace ID (1 for BLUE gem 💙)
@@ -310,7 +308,9 @@ function loadData() {
     }
     student = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
     if (student && student.name) {
-      document.getElementById("tbName").textContent = "الأميرة " + student.name;
+      const hasCrown = progress.completedCastles && progress.completedCastles.includes(5);
+      const title = hasCrown ? "الملكة" : (student.titleLabel || "الأميرة");
+      document.getElementById("tbName").textContent = title + " " + student.name;
     }
     document.getElementById("tbGems").textContent = progress ? (progress.gems?.length || 0) : 0;
     
