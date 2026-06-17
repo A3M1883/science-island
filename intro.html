@@ -217,20 +217,22 @@ async function showCertificates() {
     const progress = await getStudentProgressFromCloud(currentCode);
     const localProgress = localStorage.getItem('scienceIslandProgress_' + currentCode);
     const finalProgress = progress || (localProgress ? JSON.parse(localProgress) : null);
+    const studentData = JSON.parse(localStorage.getItem('scienceIslandStudent') || 'null');
     
     if (finalProgress && finalProgress.completedCastles && finalProgress.completedCastles.includes(5)) {
       // Has crown - go to certificate
       location.href = 'certificate.html';
     } else {
       const gemsCount = finalProgress ? (finalProgress.gems ? finalProgress.gems.length : 0) : 0;
+      const title = studentData?.titleLabel || 'الأميرة';
       showPopup('📜', 'الشهادات الملكية', 
         '⚠️ لم تحصلي على الشهادة بعد.<br><br>' +
         '<strong style="color:#ffd700">تحتاجين إلى:</strong><br>' +
         '✨ إكمال جميع القصور الأربعة (100% صحيح لكل قصر)<br>' +
-        '✨ جمع الجواهر الأربعة (💚 💙 🧡 💜)<br>' +
+        '✨ جمع الجواهر الأربعة (💙 💚 🧡 💜)<br>' +
         '✨ الوصول إلى القلعة الملكية وإكمالها<br><br>' +
         `<strong style="color:#ffd700">تقدمك الحالي:</strong> ${gemsCount}/4 جواهر<br><br>` +
-        '<em style="color:rgba(255,255,255,.6)">تابعي رحلتك لتكوني ملكة الجزيرة!</em>');
+        `<em style="color:rgba(255,255,255,.6)">تابعي رحلتك ${title} لتكوني ملكة الجزيرة!</em>`);
     }
   } catch(e) {
     console.error('Error checking certificate:', e);
